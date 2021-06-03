@@ -57,7 +57,7 @@ jobs:
     - name: Prepare to Compile
       run: |
         dts=$((${{ env.START_DATE }} + 9000))
-        echo "DT=$(date -d @$dts '+%Y年%m月%d日 %H:%M')" >> $GITHUB_ENV
+        echo "DT=$(date -d @$dts '+%m月%d日 %H:%M')" >> $GITHUB_ENV
 
     - name: Clone source code
       working-directory: /workdir
