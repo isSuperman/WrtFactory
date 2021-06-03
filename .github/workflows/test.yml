@@ -1,0 +1,71 @@
+
+name: test
+
+env:
+  REPO_URL: https://github.com/coolsnowwolf/lede
+  REPO_BRANCH: master
+  CTIME: spend_time_formate.sh
+  FUPDATE: commit_formate.sh
+  TZ: Asia/Shanghai
+
+on:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@main
+
+    - name: Initialization environment
+      env:
+        DEBIAN_FRONTEND: noninteractive
+      run: |
+        sudo timedatectl set-timezone "$TZ"
+        sudo mkdir -p /workdir
+        sudo chown $USER:$GROUPS /workdir
+
+    - name: Clone source code
+      working-directory: /workdir
+      run: |
+        df -hT $PWD
+        git clone $REPO_URL -b $REPO_BRANCH openwrt
+        ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
+        echo "START_DATE=$(date +%s)"  >> $GITHUB_ENV
+        sleep 10s
+        echo "END_DATE=$(date +%s)"  >> $GITHUB_ENV
+
+    - name: Generate time
+      id: test
+      run: |
+        dts=$(($START_DATE + 9000))
+        echo "now:$START_DATE"
+        echo "test:$(date -d @$dts)"
+        echo "DT=$(date -d @$dts '+%Y年%m月%d日 %H:%M')" >> $GITHUB_ENV
+        [ -e $FUPDATE ] && mv $FUPDATE openwrt/commit_formate.sh
+        cd openwrt
+        chmod +x $FUPDATE
+        ./$FUPDATE immortalwrt lean-lede
+        echo "DATE_INFO=$(cat day3.log)" >> $GITHUB_ENV
+        
+    - name: Cau Spend Time
+      id: spend_time
+      run: |
+         echo "预计${{ env.DT }}完成"
+         [ -e $CTIME ] && mv $CTIME openwrt/spend_time_formate.sh
+         cd openwrt
+         chmod +x $CTIME
+         ./$CTIME ${{ env.START_DATE }} ${{ env.END_DATE }} 2>&1 | tee cau_time.log
+         echo "SPEND_TIME=$(cat cau_time.log)" >> $GITHUB_ENV
+        
+    - name: Cau Spend Time
+      id: caculate
+      run: |
+       
+        
+        curl -X POST 'https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage' -H 'Content-Type: application/x-www-form-urlencoded' --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&disable_web_page_preview=true&text=*Openwrt Update Checker：*\n\n⚙️ 固件开始编译\.\.\.\.\n🔮 预计${{ env.DT }}完成\n\n*What\'s New*\n${{ env.DATE_INFO }}\n\n耗时：${{ env.SPEND_TIME }}' 
+
+        

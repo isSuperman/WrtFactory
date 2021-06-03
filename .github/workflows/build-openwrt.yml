@@ -1,0 +1,227 @@
+#
+# Copyright (c) 2021 isSuperman
+#
+# This is free software, licensed under the MIT License.
+# See /LICENSE for more information.
+#
+# https://github.com/isSuperman/WrtFactory
+# Description: Build Wrt Firmware using GitHub Actions
+#
+
+name: Build OpenWrt
+
+on:
+  repository_dispatch:
+  workflow_dispatch:
+
+env:
+  REPO_URL: https://github.com/coolsnowwolf/lede
+  REPO_BRANCH: master
+  FEEDS_CONF: feeds.conf.default
+  CONFIG_FILE: .config
+  UPDATE_FEEDS_BEFORE: update_feeds_before.sh
+  UPDATE_FEEDS_AFTER: update_feeds_after.sh
+  CTIME: spend_time_formate.sh
+  FUPDATE: commit_formate.sh
+  UPLOAD_BIN_DIR: false
+  UPLOAD_FIRMWARE: true
+  UPLOAD_COWTRANSFER: true
+  UPLOAD_FILEIO: true
+  UPLOAD_LITTERBOX: true
+  UPLOAD_RELEASE: false
+  TZ: Asia/Shanghai
+
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@main
+
+    - name: Initialization environment
+      env:
+        DEBIAN_FRONTEND: noninteractive
+      run: |
+        sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
+        sudo -E apt-get -qq update
+        sudo -E apt-get -qq install $(curl -fsSL git.io/depends-ubuntu-1804)
+        sudo -E apt-get -qq autoremove --purge
+        sudo -E apt-get -qq clean
+        sudo timedatectl set-timezone "$TZ"
+        sudo mkdir -p /workdir
+        sudo chown $USER:$GROUPS /workdir
+        echo "START_DATE=$(date +%s)" >> $GITHUB_ENV
+        
+    - name: Prepare to Compile
+      run: |
+        dts=$((${{ env.START_DATE }} + 9000))
+        echo "DT=$(date -d @$dts '+%Y年%m月%d日 %H:%M')" >> $GITHUB_ENV
+
+    - name: Clone source code
+      working-directory: /workdir
+      run: |
+        curl -X POST 'https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage' -H 'Content-Type: application/x-www-form-urlencoded' --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&disable_web_page_preview=true&text=*Openwrt Update Checker：*\n\n⚙️ 固件开始编译\.\.\.\.\n🔮 预计${{ env.DT }}结束' 
+        df -hT $PWD
+        git clone $REPO_URL -b $REPO_BRANCH openwrt
+        ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
+        
+    - name: Generate commit info
+      id: commitinfo
+      run: |
+        [ -e $FUPDATE ] && mv $FUPDATE openwrt/commit_formate.sh
+        cd openwrt
+        chmod +x $FUPDATE
+        ./$FUPDATE immortalwrt lean-lede
+        echo "DATE_INFO=$(cat day3.log)" >> $GITHUB_ENV
+
+    - name: Load custom feeds
+      run: |
+        [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
+        chmod +x $UPDATE_FEEDS_BEFORE
+        cd openwrt
+        $GITHUB_WORKSPACE/$UPDATE_FEEDS_BEFORE
+
+    - name: Update feeds
+      run: cd openwrt && ./scripts/feeds update -a
+
+    - name: Install feeds
+      run: cd openwrt && ./scripts/feeds install -a
+
+    - name: Load custom configuration
+      run: |
+        [ -e files ] && mv files openwrt/files
+        [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
+        chmod +x $UPDATE_FEEDS_AFTER
+        cd openwrt
+        $GITHUB_WORKSPACE/$UPDATE_FEEDS_AFTER
+
+    - name: Download package
+      id: package
+      run: |
+        cd openwrt
+        make defconfig
+        make download -j8
+        find dl -size -1024c -exec ls -l {} \;
+        find dl -size -1024c -exec rm -f {} \;
+
+    - name: Compile the firmware
+      id: compile
+      run: |
+        cd openwrt
+        echo -e "$(nproc) thread compile"
+        make -j$(nproc) || make -j1 || make -j1 V=s
+        echo "::set-output name=status::success"
+        grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/' > DEVICE_NAME
+        [ -s DEVICE_NAME ] && echo "DEVICE_NAME=_$(cat DEVICE_NAME)" >> $GITHUB_ENV
+        echo "FILE_DATE=$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
+        echo "COME_DATE=$(date +"%Y\-%m\-%d %H:%M")" >> $GITHUB_ENV
+        echo "END_DATE=$(date +%s)"  >> $GITHUB_ENV
+
+    - name: Check space usage
+      if: (!cancelled())
+      run: df -hT
+
+    - name: Upload bin directory
+      uses: actions/upload-artifact@main
+      if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
+      with:
+        name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
+        path: openwrt/bin
+
+    - name: Organize files
+      id: organize
+      if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
+      run: |
+        cd openwrt/bin/targets/*/*
+        rm -rf packages
+        echo "FIRMWARE=$PWD" >> $GITHUB_ENV
+        echo "::set-output name=status::success"
+        
+    - name: Cau Spend Time
+      id: caculate
+      if: steps.compile.outputs.status == 'success'
+      run: |
+        [ -e $CTIME ] && mv $CTIME openwrt/spend_time_formate.sh
+        cd openwrt
+        chmod +x $CTIME
+        ./$CTIME ${{ env.START_DATE }} ${{ env.END_DATE }} 2>&1 | tee cau_time.log
+        echo "SPEND_TIME=$(cat cau_time.log)" >> $GITHUB_ENV
+
+    - name: Upload firmware directory
+      uses: actions/upload-artifact@main
+      if: steps.organize.outputs.status == 'success' && !cancelled()
+      with:
+        name: firmware_${{ env.FILE_DATE }}
+        path: ${{ env.FIRMWARE }}/*.vmdk
+
+    - name: Upload firmware to cowtransfer
+      id: cowtransfer
+      if: steps.organize.outputs.status == 'success' && env.UPLOAD_COWTRANSFER == 'true' && !cancelled()
+      run: |
+        curl -fsSL git.io/file-transfer | sh
+        ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE}/*.vmdk 2>&1 | tee cowtransfer.log
+        echo "$(cat cowtransfer.log | grep https | cut -f3 -d" ")" > cow.log
+        sed -i 's/\./\\\./g' cow.log
+        echo "COW_URL=$(cat cow.log)" >> $GITHUB_ENV
+        
+    - name: Upload firmware to Fileio
+      id: fileio
+      if: steps.organize.outputs.status == 'success' && env.UPLOAD_FILEIO == 'true' && !cancelled()
+      run: |
+        curl -fsSL git.io/file-transfer | sh
+        ./transfer fio --no-progress ${FIRMWARE}/*.vmdk 2>&1 | tee fileio.log
+        echo "$(cat fileio.log | grep https | cut -f3 -d" ")" > fio.log
+        sed -i 's/\./\\\./g' fio.log
+        echo "FILEIO_URL=$(cat fio.log)" >> $GITHUB_ENV
+        
+    - name: Upload firmware to Litterbox
+      id: litterbox
+      if: steps.organize.outputs.status == 'success' && env.UPLOAD_LITTERBOX == 'true' && !cancelled()
+      run: |
+        curl -fsSL git.io/file-transfer | sh
+        ./transfer lit --no-progress ${FIRMWARE}/*.vmdk 2>&1 | tee litterbox.log
+        echo "$(cat litterbox.log | grep https | cut -f3 -d" ")" > lit.log
+        sed -i 's/\./\\\./g' lit.log
+        echo "LITTERBOX_URL=$(cat lit.log)" >> $GITHUB_ENV
+
+    - name: Generate release tag
+      id: tag
+      if: env.UPLOAD_RELEASE == 'true' && !cancelled()
+      run: |
+        echo "::set-output name=release_tag::$(date +"%Y.%m.%d-%H%M")"
+        touch release.txt
+        [ $UPLOAD_COWTRANSFER = true ] && echo "🔗 [Cowtransfer](${{ steps.cowtransfer.outputs.url }})" >> release.txt
+        [ $UPLOAD_WETRANSFER = true ] && echo "🔗 [WeTransfer](${{ steps.wetransfer.outputs.url }})" >> release.txt
+        echo "::set-output name=status::success"
+
+    - name: Upload firmware to release
+      uses: softprops/action-gh-release@v1
+      if: steps.tag.outputs.status == 'success' && !cancelled()
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ steps.tag.outputs.release_tag }}
+        body_path: release.txt
+        files: ${{ env.FIRMWARE }}/*
+
+    - name: Delete workflow runs
+      uses: GitRML/delete-workflow-runs@main
+      with:
+        retain_days: 1
+        keep_minimum_runs: 3
+
+    - name: Remove old Releases
+      uses: dev-drprasad/delete-older-releases@v0.1.0
+      if: env.UPLOAD_RELEASE == 'true' && !cancelled()
+      with:
+        keep_latest: 3
+        delete_tags: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Push to tele
+      if: steps.cacheHash.outputs.cache-hit != 'true'
+      run: |
+        curl -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -H "Content-Type: application/x-www-form-urlencoded" --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&disable_web_page_preview=true&text=*Openwrt Update Checker：*\n\n*What\'s New*\n ${{ env.DATE_INFO }}\n\n*Compile Info*\n${{ env.COME_DATE }} 编译成功！🎉\n\n[Github](https://github\.com/isSuperman/op-firemae/actions)  [CowTransfer](${{ env.COW_URL }})  [Fileio](${{ env.FILEIO_URL }})  [LitterBox](${{ env.LITTERBOX_URL }})\n\n用时：${{ env.SPEND_TIME }}'
