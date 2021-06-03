@@ -58,7 +58,7 @@ jobs:
          cd openwrt
          curl -sL https://git.io/spend_time_formate_sh > $SPEND_TIME
          chmod +x $SPEND_TIME
-         ./$SPEND_TIME ${{ env.START_DATE }} ${{ env.END_DATE }} en 2>&1 | tee cau_time.log
+         ./$SPEND_TIME ${{ env.START_DATE }} ${{ env.END_DATE }} 'en' 2>&1 | tee cau_time.log
          echo "SPEND_TIME=$(cat cau_time.log)" >> $GITHUB_ENV
         
     - name: Cau Spend Time
