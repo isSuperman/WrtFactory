@@ -21,8 +21,8 @@ env:
   CONFIG_FILE: .config
   UPDATE_FEEDS_BEFORE: update_feeds_before.sh
   UPDATE_FEEDS_AFTER: update_feeds_after.sh
-  CTIME: spend_time_formate.sh
-  FUPDATE: commit_formate.sh
+  SPEND_TIME: spend_time_formate.sh
+  COMMIT_INFO: commit_formate.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_COWTRANSFER: true
@@ -70,10 +70,10 @@ jobs:
     - name: Generate commit info
       id: commitinfo
       run: |
-        [ -e $FUPDATE ] && mv $FUPDATE openwrt/commit_formate.sh
+        [ -e $COMMIT_INFO ] && mv $COMMIT_INFO openwrt/commit_formate.sh
         cd openwrt
-        chmod +x $FUPDATE
-        ./$FUPDATE immortalwrt lean-lede
+        chmod +x $COMMIT_INFO
+        ./$COMMIT_INFO immortalwrt lean-lede
         echo "DATE_INFO=$(cat day3.log)" >> $GITHUB_ENV
 
     - name: Load custom feeds
@@ -143,10 +143,10 @@ jobs:
       id: caculate
       if: steps.compile.outputs.status == 'success'
       run: |
-        [ -e $CTIME ] && mv $CTIME openwrt/spend_time_formate.sh
+        [ -e $SPEND_TIME ] && mv $SPEND_TIME openwrt/spend_time_formate.sh
         cd openwrt
-        chmod +x $CTIME
-        ./$CTIME ${{ env.START_DATE }} ${{ env.END_DATE }} 2>&1 | tee cau_time.log
+        chmod +x $SPEND_TIME
+        ./$SPEND_TIME ${{ env.START_DATE }} ${{ env.END_DATE }} 2>&1 | tee cau_time.log
         echo "SPEND_TIME=$(cat cau_time.log)" >> $GITHUB_ENV
 
     - name: Upload firmware directory
