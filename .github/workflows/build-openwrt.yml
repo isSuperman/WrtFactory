@@ -70,8 +70,8 @@ jobs:
     - name: Generate commit info
       id: commitinfo
       run: |
-        [ -e $COMMIT_INFO ] && mv $COMMIT_INFO openwrt/commit_formate.sh
         cd openwrt
+        curl -sL https://git.io/commit_formate_sh > $COMMIT_INFO
         chmod +x $COMMIT_INFO
         ./$COMMIT_INFO immortalwrt lean-lede
         echo "DATE_INFO=$(cat day3.log)" >> $GITHUB_ENV
@@ -143,8 +143,8 @@ jobs:
       id: caculate
       if: steps.compile.outputs.status == 'success'
       run: |
-        [ -e $SPEND_TIME ] && mv $SPEND_TIME openwrt/spend_time_formate.sh
         cd openwrt
+        curl -sL https://git.io/spend_time_formate_sh > $SPEND_TIME
         chmod +x $SPEND_TIME
         ./$SPEND_TIME ${{ env.START_DATE }} ${{ env.END_DATE }} 2>&1 | tee cau_time.log
         echo "SPEND_TIME=$(cat cau_time.log)" >> $GITHUB_ENV
