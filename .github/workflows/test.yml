@@ -41,10 +41,15 @@ jobs:
     - name: Generate time
       id: test
       run: |
-        dts=$(($START_DATE + 9000))
-        echo "now:$START_DATE"
-        echo "test:$(date -d @$dts)"
-        echo "DT=$(date -d @$dts '+%Y年%m月%d日 %H:%M')" >> $GITHUB_ENV
+        dts=$((${{ env.START_DATE }} + 9000))
+        dt_day=$(date -d @$dts '+%d')
+        dt_hour=$(date -d @$dts '+%H')
+        dt_time=$(date -d @$dts '+%H:%m')
+        curl -sL https://git.io/eta_formate_sh > $ETA
+        chmod +x $ETA
+        ./$ETA $dt_day $dt_hour > dta_desc.log
+        echo "$(cat dta_desc.log) $dt_time" > dt_str.log
+        echo "DT=$(cat dt_str.log)" >> $GITHUB_ENV
         cd openwrt
         curl -sL https://git.io/commit_formate_sh > $COMMIT_INFO
         chmod +x $COMMIT_INFO
