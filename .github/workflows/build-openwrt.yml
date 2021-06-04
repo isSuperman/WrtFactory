@@ -23,6 +23,7 @@ env:
   UPDATE_FEEDS_AFTER: update_feeds_after.sh
   SPEND_TIME: spend_time_formate.sh
   COMMIT_INFO: commit_formate.sh
+  ETA: ETA_formate.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_COWTRANSFER: true
@@ -57,12 +58,19 @@ jobs:
     - name: Prepare to Compile
       run: |
         dts=$((${{ env.START_DATE }} + 9000))
-        echo "DT=$(date -d @$dts '+%m月%d日 %H:%M')" >> $GITHUB_ENV
+        dt_day=$(date -d @$dts '%d')
+        dt_hour=$(date -d @$dts '%H')
+        dt_time=$(date -d @$dts '%H:%m')
+        curl -sL https://git.io/eta_formate_sh > $ETA
+        chmod +x $ETA
+        ./$ETA dt_day dt_hour > dta_desc.log
+        dt_str="$(cat dta_desc.log) $dt_time"
+        echo "DT=$dt_str" >> $GITHUB_ENV
 
     - name: Clone source code
       working-directory: /workdir
       run: |
-        curl -X POST 'https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage' -H 'Content-Type: application/x-www-form-urlencoded' --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&disable_web_page_preview=true&text=*Openwrt Update Checker：*\n固件开始编译\.\.\.\n预计${{ env.DT }}结束🧭' 
+        curl -X POST 'https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage' -H 'Content-Type: application/x-www-form-urlencoded' --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&disable_web_page_preview=true&text=*Openwrt Update Checker：*\n固件开始编译\.\.\.\n预计${{ env.DT }} 结束🧭' 
         df -hT $PWD
         git clone $REPO_URL -b $REPO_BRANCH openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
