@@ -75,6 +75,13 @@ jobs:
         chmod +x $COMMIT_INFO
         ./$COMMIT_INFO immortalwrt lean-lede
         echo "DATE_INFO=$(cat day3.log)" >> $GITHUB_ENV
+        
+    - name: Load custom theme argon
+      id: argon
+      run: |
+        cd openwrt/package/lean
+        rm -rf luci-theme-argon
+        git clone https://github.com/jerrykuku/luci-theme-argon.git
 
     - name: Load custom feeds
       run: |
