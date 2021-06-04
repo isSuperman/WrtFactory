@@ -58,13 +58,18 @@ jobs:
     - name: Prepare to Compile
       run: |
         dts=$((${{ env.START_DATE }} + 9000))
+        echo "dts is $dts"
         dt_day=$(date -d @$dts '+%d')
+        echo "dt_day is $dt_day"
         dt_hour=$(date -d @$dts '+%H')
+        echo "dt_hour is $dt_hour"
         dt_time=$(date -d @$dts '+%H:%m')
+        echo "dy_time is $dt_time"
         curl -sL https://git.io/eta_formate_sh > $ETA
         chmod +x $ETA
         ./$ETA dt_day dt_hour > dta_desc.log
         dt_str="$(cat dta_desc.log) $dt_time"
+        echo "dt_str is $dt_str"
         echo "DT=$dt_str" >> $GITHUB_ENV
 
     - name: Clone source code
