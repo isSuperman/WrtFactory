@@ -42,7 +42,7 @@ jobs:
     - name: Generate time
       id: test
       run: |
-        dts=$((${{ env.START_DATE }} + 9000))
+        dts=`expr ${{ env.START_DATE }} + 9000`
         dt_day=$(date -d @$dts '+%d')
         dt_hour=$(date -d @$dts '+%H')
         dt_time=$(date -d @$dts '+%H:%m')
