@@ -6,6 +6,7 @@ env:
   REPO_BRANCH: master
   SPEND_TIME: spend_time_formate.sh
   COMMIT_INFO: commit_formate.sh
+  ETA: ETA_formate.sh
   TZ: Asia/Shanghai
 
 on:
