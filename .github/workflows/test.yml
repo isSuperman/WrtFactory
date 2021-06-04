@@ -43,9 +43,9 @@ jobs:
       id: test
       run: |
         dts=`expr ${{ env.START_DATE }} + 9000`
-        dt_day=$(date -d @$dts '+%d')
-        dt_hour=$(date -d @$dts '+%H')
-        dt_time=$(date -d @$dts '+%H:%m')
+        dt_day=`date -d @$dts "+%d"`
+        dt_hour=`date -d @$dts "+%H"`
+        dt_time=`date -d @$dts "+%H:%m"`
         echo "time is ${dt_time}"
         curl -sL https://git.io/eta_formate_sh > $ETA
         chmod +x $ETA
