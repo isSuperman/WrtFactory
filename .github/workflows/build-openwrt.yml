@@ -132,7 +132,7 @@ jobs:
         grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/' > DEVICE_NAME
         [ -s DEVICE_NAME ] && echo "DEVICE_NAME=_$(cat DEVICE_NAME)" >> $GITHUB_ENV
         echo "FILE_DATE=$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
-        echo "COME_DATE=$(date +"%m\-%d %H:%M")" >> $GITHUB_ENV
+        echo "COME_DATE=$(date +"%Y\-%m\-%d %H:%M")" >> $GITHUB_ENV
         echo "END_DATE=$(date +%s)"  >> $GITHUB_ENV
 
     - name: Check space usage
@@ -240,4 +240,4 @@ jobs:
     - name: Push to tele
       if: steps.cacheHash.outputs.cache-hit != 'true'
       run: |
-        curl -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -H "Content-Type: application/x-www-form-urlencoded" --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&disable_web_page_preview=true&text=*Openwrt Update Checker：*\n${{ env.COME_DATE }} 编译成功！🎉\n\n*What\'s New*\n${{ env.DATE_INFO }}\n\n[Github](https://github\.com/isSuperman/op-firemae/actions)  [CowTransfer](${{ env.COW_URL }})  [Fileio](${{ env.FILEIO_URL }})  [LitterBox](${{ env.LITTERBOX_URL }})\n\nSpend Time: ${{ env.SPEND_TIME }}'
+        curl -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -H "Content-Type: application/x-www-form-urlencoded" --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&disable_web_page_preview=true&text=*Openwrt Update Checker：*\n${{ env.COME_DATE }} \n编译成功！🎉\n\n*What\'s New*\n${{ env.DATE_INFO }}\n\n[Github](https://github\.com/isSuperman/op-firemae/actions)  [CowTransfer](${{ env.COW_URL }})  [Fileio](${{ env.FILEIO_URL }})  [LitterBox](${{ env.LITTERBOX_URL }})\n\nSpend Time: ${{ env.SPEND_TIME }}'
