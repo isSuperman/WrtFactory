@@ -89,13 +89,9 @@ jobs:
       id: argon
       run: |
         cd openwrt/package/lean
-        # 删除自带的argon主题
         rm -rf luci-theme-argon
-        # clone 新版argon主题
         git clone -b 18.06 https://github.com/jerrykuku/luci-theme-argon.git
-        # clone argon配置app
         git clone https://github.com/jerrykuku/luci-app-argon-config.git
-        # clone 甜糖插件源码
         git clone https://github.com/jerrykuku/luci-app-ttnode.git
 
     - name: Load custom feeds
