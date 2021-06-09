@@ -71,7 +71,7 @@ jobs:
     - name: Clone source code
       working-directory: /workdir
       run: |
-        curl -X POST 'https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage' -H 'Content-Type: application/x-www-form-urlencoded' --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&disable_web_page_preview=true&text=*Openwrt Update Checker：*\n固件开始编译\.\.\.\n预计${{ env.DT }} 结束🧭' 
+        curl -X POST 'https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage' -H 'Content-Type: application/x-www-form-urlencoded' --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&disable_web_page_preview=true&text=*Wrt Update Checker：*\n固件开始编译\.\.\.\n预计${{ env.DT }} 结束🧭' 
         df -hT $PWD
         git clone $REPO_URL -b $REPO_BRANCH openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
@@ -243,4 +243,4 @@ jobs:
     - name: Push to tele
       if: steps.cacheHash.outputs.cache-hit != 'true'
       run: |
-        curl -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -H "Content-Type: application/x-www-form-urlencoded" --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&disable_web_page_preview=true&text=*Openwrt Update Checker：*\n\n_Date: ${{ env.COME_DATE }}_\n_Result: success 🎉_\n\n*What\'s New*\n${{ env.DATE_INFO }}\n\>\>\> up to date ${{ env.RECENT_DATE }}\n\n[Github](https://github\.com/isSuperman/op-firemae/actions)  [CowTransfer](${{ env.COW_URL }})  [Fileio](${{ env.FILEIO_URL }})  [LitterBox](${{ env.LITTERBOX_URL }})\n\n_Spend Time: ${{ env.SPEND_TIME }}_'
+        curl -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -H "Content-Type: application/x-www-form-urlencoded" --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&disable_web_page_preview=true&text=*Wrt Update Checker：*\n\n_Date: ${{ env.COME_DATE }}_\n_Result: success 🎉_\n\n*What\'s New*\n${{ env.DATE_INFO }}\n\>\>\> up to date ${{ env.RECENT_DATE }}\n\n[Github](https://github\.com/isSuperman/op-firemae/actions)  [CowTransfer](${{ env.COW_URL }})  [Fileio](${{ env.FILEIO_URL }})  [LitterBox](${{ env.LITTERBOX_URL }})\n\n_Spend Time: ${{ env.SPEND_TIME }}_'
