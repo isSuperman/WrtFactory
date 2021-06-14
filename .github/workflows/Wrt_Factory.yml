@@ -158,6 +158,12 @@ jobs:
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "::set-output name=status::success"
         
+    - name: Check compile status
+      id: checkcompile
+      if: steps.compile.outputs.status != 'success'
+      run: |
+        curl -X POST 'https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage' -H 'Content-Type: application/x-www-form-urlencoded' --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&disable_web_page_preview=true&text=*Wrt Update Checker：*\n固件编译出错，请检查❌' 
+    
     - name: Cau Spend Time
       id: caculate
       if: steps.compile.outputs.status == 'success'
