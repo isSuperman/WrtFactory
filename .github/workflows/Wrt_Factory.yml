@@ -180,45 +180,45 @@ jobs:
       if: steps.organize.outputs.status == 'success' && env.UPLOAD_COWTRANSFER == 'true' && !cancelled()
       run: |
         curl -fsSL git.io/file-transfer | sh
-        ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE}/openwrt-x86-64-combined-squashfs.vmdk 2>&1 | tee cowtransfer.log
+        ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined.vmdk 2>&1 | tee cowtransfer.log
         echo "$(cat cowtransfer.log | grep https | cut -f3 -d" ")" > cow.log
         sed -i 's/\./\\\./g' cow.log
         echo "COW_URL=$(cat cow.log)" >> $GITHUB_ENV
         
-        ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE}/openwrt-x86-64-uefi-gpt-squashfs.vmdk 2>&1 | tee cowtransfer-uefi.log
-        echo "$(cat cowtransfer-uefi.log | grep https | cut -f3 -d" ")" > cow-uefi.log
-        sed -i 's/\./\\\./g' cow-uefi.log
-        echo "COW_UEFI_URL=$(cat cow-uefi.log)" >> $GITHUB_ENV
+        ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined-efi.vmdk 2>&1 | tee cowtransfer-efi.log
+        echo "$(cat cowtransfer-efi.log | grep https | cut -f3 -d" ")" > cow-efi.log
+        sed -i 's/\./\\\./g' cow-efi.log
+        echo "COW_EFI_URL=$(cat cow-efi.log)" >> $GITHUB_ENV
         
     - name: Upload firmware to Fileio
       id: fileio
       if: steps.organize.outputs.status == 'success' && env.UPLOAD_FILEIO == 'true' && !cancelled()
       run: |
         curl -fsSL git.io/file-transfer | sh
-        ./transfer fio --no-progress ${FIRMWARE}/openwrt-x86-64-combined-squashfs.vmdk 2>&1 | tee fileio.log
+        ./transfer fio --no-progress ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined.vmdk 2>&1 | tee fileio.log
         echo "$(cat fileio.log | grep https | cut -f3 -d" ")" > fio.log
         sed -i 's/\./\\\./g' fio.log
         echo "FILEIO_URL=$(cat fio.log)" >> $GITHUB_ENV
         
-        ./transfer fio --no-progress ${FIRMWARE}/openwrt-x86-64-uefi-gpt-squashfs.vmdk 2>&1 | tee fileio-uefi.log
-        echo "$(cat fileio-uefi.log | grep https | cut -f3 -d" ")" > fio-uefi.log
-        sed -i 's/\./\\\./g' fio-uefi.log
-        echo "FILEIO_UEFI_URL=$(cat fio-uefi.log)" >> $GITHUB_ENV
+        ./transfer fio --no-progress ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined-efi.vmdk 2>&1 | tee fileio-efi.log
+        echo "$(cat fileio-efi.log | grep https | cut -f3 -d" ")" > fio-efi.log
+        sed -i 's/\./\\\./g' fio-efi.log
+        echo "FILEIO_EFI_URL=$(cat fio-efi.log)" >> $GITHUB_ENV
         
     - name: Upload firmware to Litterbox
       id: litterbox
       if: steps.organize.outputs.status == 'success' && env.UPLOAD_LITTERBOX == 'true' && !cancelled()
       run: |
         curl -fsSL git.io/file-transfer | sh
-        ./transfer lit --no-progress ${FIRMWARE}/openwrt-x86-64-combined-squashfs.vmdk 2>&1 | tee litterbox.log
+        ./transfer lit --no-progress ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined.vmdk 2>&1 | tee litterbox.log
         echo "$(cat litterbox.log | grep https | cut -f3 -d" ")" > lit.log
         sed -i 's/\./\\\./g' lit.log
         echo "LITTERBOX_URL=$(cat lit.log)" >> $GITHUB_ENV
         
-        ./transfer lit --no-progress ${FIRMWARE}/openwrt-x86-64-uefi-gpt-squashfs.vmdk 2>&1 | tee litterbox-uefi.log
-        echo "$(cat litterbox-uefi.log | grep https | cut -f3 -d" ")" > lit-uefi.log
-        sed -i 's/\./\\\./g' lit-uefi.log
-        echo "LITTERBOX_UEFI_URL=$(cat lit-uefi.log)" >> $GITHUB_ENV
+        ./transfer lit --no-progress ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined-efi.vmdk 2>&1 | tee litterbox-efi.log
+        echo "$(cat litterbox-efi.log | grep https | cut -f3 -d" ")" > lit-efi.log
+        sed -i 's/\./\\\./g' lit-efi.log
+        echo "LITTERBOX_EFI_URL=$(cat lit-efi.log)" >> $GITHUB_ENV
 
     - name: Generate release tag
       id: tag
@@ -258,4 +258,4 @@ jobs:
     - name: Push to tele
       if: steps.cacheHash.outputs.cache-hit != 'true'
       run: |
-        curl -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -H "Content-Type: application/x-www-form-urlencoded" --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&disable_web_page_preview=true&text=*Wrt Update Checker：*\n\n_Date: ${{ env.COME_DATE }}_\n_Result: success 🎉_\n\n*What\'s New*\n${{ env.DATE_INFO }}\n\>\>\> up to date ${{ env.RECENT_DATE }}\n\n*COMBINED*\n[CowTransfer](${{ env.COW_URL }})  [Fileio](${{ env.FILEIO_URL }})  [LitterBox](${{ env.LITTERBOX_URL }})\n*UEFI*\n[CowTransfer](${{ env.COW_UEFI_URL }})  [Fileio](${{ env.FILEIO_UEFI_URL }})  [LitterBox](${{ env.LITTERBOX_UEFI_URL }})\n\n_Spend Time: ${{ env.SPEND_TIME }}_'
+        curl -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -H "Content-Type: application/x-www-form-urlencoded" --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&disable_web_page_preview=true&text=*Wrt Update Checker：*\n\n_Date: ${{ env.COME_DATE }}_\n_Result: success 🎉_\n\n*What\'s New*\n${{ env.DATE_INFO }}\n\>\>\> up to date ${{ env.RECENT_DATE }}\n\n*COMBINED*\n[CowTransfer](${{ env.COW_URL }})  [Fileio](${{ env.FILEIO_URL }})  [LitterBox](${{ env.LITTERBOX_URL }})\n*EFI*\n[CowTransfer](${{ env.COW_EFI_URL }})  [Fileio](${{ env.FILEIO_EFI_URL }})  [LitterBox](${{ env.LITTERBOX_EFI_URL }})\n\n_Spend Time: ${{ env.SPEND_TIME }}_'
