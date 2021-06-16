@@ -11,4 +11,4 @@
 #
 
 # Add helloworld
-echo "src-git helloworld src-git helloworld https://github.com/fw876/helloworld.git" >> feeds.conf.default
+echo "src-git helloworld https://github.com/fw876/helloworld.git" >> feeds.conf.default
