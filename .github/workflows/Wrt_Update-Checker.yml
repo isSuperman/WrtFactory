@@ -46,12 +46,6 @@ jobs:
       run: |
         echo ${{ steps.getHash.outputs.commitHash }} | tee .commitHash
 
-        
-    - name: Update note to tele
-      if: steps.cacheHash.outputs.cache-hit == 'true'
-      run: |
-        curl -X POST 'https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage' -H 'Content-Type: application/x-www-form-urlencoded' --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&disable_web_page_preview=true&text=*Wrt Update Checker：*\n暂未发现更新\.\.\.💤' 
-        
     - name: Update note to tele
       if: steps.cacheHash.outputs.cache-hit != 'true'
       run: |
