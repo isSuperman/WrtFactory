@@ -74,7 +74,8 @@ jobs:
       run: |
         curl -X POST 'https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage' -H 'Content-Type: application/x-www-form-urlencoded' --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&disable_web_page_preview=true&text=*Wrt Update Checker：*\n固件开始编译\.\.\.\n预计${{ env.DT }} 结束🧭' 
         df -hT $PWD
-        git clone $REPO_URL -b $REPO_BRANCH openwrt
+        [ -e "openwrt" ] && cd openwrt && git pull
+        [ ! -e "openwrt" ] && git clone $REPO_URL -b $REPO_BRANCH openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
         
     - name: Generate commit info
@@ -94,7 +95,7 @@ jobs:
         cd openwrt/package/lean
         rm -rf luci-theme-argon
         git clone -b 18.06 https://github.com/jerrykuku/luci-theme-argon.git
-        git clone https://github.com/jerrykuku/luci-app-argon-config.git
+        [ ! -e "luci-app-argon-config" ] && git clone https://github.com/jerrykuku/luci-app-argon-config.git
 
     - name: Load custom feeds
       run: |
