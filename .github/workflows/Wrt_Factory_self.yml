@@ -96,6 +96,7 @@ jobs:
         rm -rf luci-theme-argon
         git clone -b 18.06 https://github.com/jerrykuku/luci-theme-argon.git
         [ ! -e "luci-app-argon-config" ] && git clone https://github.com/jerrykuku/luci-app-argon-config.git
+        [ -e "luci-app-argon-config" ] && git pull
 
     - name: Load custom feeds
       run: |
