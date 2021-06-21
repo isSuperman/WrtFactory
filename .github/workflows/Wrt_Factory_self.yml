@@ -68,6 +68,8 @@ jobs:
         ./$ETA $dt_day $dt_hour > dta_desc.log
         echo "$(cat dta_desc.log) $dt_time" > dt_str.log
         echo "DT=$(cat dt_str.log)" >> $GITHUB_ENV
+        
+        rm -rf dta_desc.log dt_str.log
 
     - name: Clone source code
       working-directory: /workdir
@@ -88,6 +90,7 @@ jobs:
         echo "DATE_INFO=$(cat day3.log)" >> $GITHUB_ENV
         echo "RECENT_DATE=$(cat recent_date.log)" >> $GITHUB_ENV
         
+        rm -rf day* str_commit_* get_commit_*
         
     - name: Load custom themes and plugins
       id: argon
@@ -172,6 +175,8 @@ jobs:
         chmod +x $SPEND_TIME
         ./$SPEND_TIME ${{ env.START_DATE }} ${{ env.END_DATE }} 2>&1 | tee cau_time.log
         echo "SPEND_TIME=$(cat cau_time.log)" >> $GITHUB_ENV
+        
+        rm -rf cau_time.log
 
     - name: Upload firmware directory
       uses: actions/upload-artifact@main
