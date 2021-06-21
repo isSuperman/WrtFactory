@@ -35,7 +35,7 @@ env:
 
 jobs:
   build:
-    runs-on: self-hosted
+    runs-on: ubuntu-18.04
 
     steps:
 
@@ -46,6 +46,14 @@ jobs:
       env:
         DEBIAN_FRONTEND: noninteractive
       run: |
+        sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
+        sudo -E apt-get -qq update
+        sudo -E apt-get -qq install $(curl -fsSL git.io/depends-ubuntu-1804)
+        sudo -E apt-get -qq autoremove --purge
+        sudo -E apt-get -qq clean
+        sudo timedatectl set-timezone "$TZ"
+        sudo mkdir -p /workdir
+        sudo chown $USER:$GROUPS /workdir
         echo "START_DATE=$(date +%s)" >> $GITHUB_ENV
         
     - name: Prepare to Compile
@@ -66,47 +74,53 @@ jobs:
       run: |
         curl -X POST 'https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage' -H 'Content-Type: application/x-www-form-urlencoded' --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&disable_web_page_preview=true&text=*Wrt Update Checker：*\n固件开始编译\.\.\.\n预计${{ env.DT }} 结束🧭' 
         df -hT $PWD
-        cd openwrt
-        git pull
-        cd package/lean
-        rm -rf luci-theme-argon
-        git pull
+        git clone $REPO_URL -b $REPO_BRANCH openwrt
+        ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
         
     - name: Generate commit info
       id: commitinfo
       run: |
+        cd openwrt
         curl -sL https://git.io/commit_formate_sh > $COMMIT_INFO
         chmod +x $COMMIT_INFO
         ./$COMMIT_INFO immortalwrt lean-lede
         echo "DATE_INFO=$(cat day3.log)" >> $GITHUB_ENV
         echo "RECENT_DATE=$(cat recent_date.log)" >> $GITHUB_ENV
         
+        
+    - name: Load custom themes and plugins
+      id: argon
+      run: |
+        cd openwrt/package/lean
+        rm -rf luci-theme-argon
+        git clone -b 18.06 https://github.com/jerrykuku/luci-theme-argon.git
+        git clone https://github.com/jerrykuku/luci-app-argon-config.git
 
     - name: Load custom feeds
       run: |
         [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
         chmod +x $UPDATE_FEEDS_BEFORE
-        ls
-        pwd
         cd openwrt
         $GITHUB_WORKSPACE/$UPDATE_FEEDS_BEFORE
 
     - name: Update feeds
-      run: ./scripts/feeds update -a
+      run: cd openwrt && ./scripts/feeds update -a
 
     - name: Install feeds
-      run: ./scripts/feeds install -a
+      run: cd openwrt && ./scripts/feeds install -a
 
     - name: Load custom configuration
       run: |
         [ -e files ] && mv files openwrt/files
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
         chmod +x $UPDATE_FEEDS_AFTER
+        cd openwrt
         $GITHUB_WORKSPACE/$UPDATE_FEEDS_AFTER
 
     - name: Download package
       id: package
       run: |
+        cd openwrt
         make defconfig
         make download -j8
         find dl -size -1024c -exec ls -l {} \;
@@ -115,6 +129,7 @@ jobs:
     - name: Compile the firmware
       id: compile
       run: |
+        cd openwrt
         echo -e "$(nproc) thread compile"
         make -j$(nproc) || make -j1 || make -j1 V=s
         echo "::set-output name=status::success"
