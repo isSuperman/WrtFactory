@@ -12,7 +12,7 @@ name: Wrt Factory Self
 
 on:
   repository_dispatch:
-  workflow_dispatch:
+# workflow_dispatch:
 
 env:
   REPO_URL: https://github.com/coolsnowwolf/lede
