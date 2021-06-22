@@ -33,7 +33,8 @@ jobs:
       working-directory: /workdir
       run: |
         df -hT $PWD
-        git clone $REPO_URL -b $REPO_BRANCH openwrt
+        [ -e "openwrt" ] && cd openwrt && git pull
+        [ ! -e "openwrt" ] && git clone $REPO_URL -b $REPO_BRANCH openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
         echo "START_DATE=$(date +%s)"  >> $GITHUB_ENV
         sleep 10s
