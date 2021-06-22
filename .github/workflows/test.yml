@@ -57,8 +57,8 @@ jobs:
         curl -sL https://git.io/commit_formate_sh > $COMMIT_INFO
         chmod +x $COMMIT_INFO
         ./$COMMIT_INFO immortalwrt lean-lede > com_info.log
-          echo "DATE_INFO=$(sed -n '2p' com_info.log)" >> $GITHUB_ENV
-        echo "recent is $(sed -n '1p' com_info.log)"
+        echo "DATE_INFO=$(sed -n '2p' com_info.log)" >> $GITHUB_ENV
+        echo "RECENT_DATE=$(sed -n '1p' com_info.log)" >> $GITHUB_ENV
         
     - name: Cau Spend Time
       id: spend_time
@@ -73,6 +73,6 @@ jobs:
     - name: Cau Spend Time
       id: caculate
       run: |
-        curl -X POST 'https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage' -H 'Content-Type: application/x-www-form-urlencoded' --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&disable_web_page_preview=true&text=*Openwrt Update Checker：*\n\n⚙️ 固件开始编译\.\.\.\.\n🔮 预计${{ env.DT }}完成\n\n*What\'s New*${{ env.DATE_INFO }}\n\n耗时：${{ env.SPEND_TIME }}'
+        curl -X POST 'https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage' -H 'Content-Type: application/x-www-form-urlencoded' --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&disable_web_page_preview=true&text=*Openwrt Update Checker：*\n\n⚙️ 固件开始编译\.\.\.\.\n🔮 预计${{ env.DT }}完成\n\n*What\'s New v${{ env.RECENT_DATE }}*${{ env.DATE_INFO }}\n\n耗时：${{ env.SPEND_TIME }}'
 
         
