@@ -56,8 +56,8 @@ jobs:
         cd openwrt
         curl -sL https://git.io/commit_formate_sh > $COMMIT_INFO
         chmod +x $COMMIT_INFO
-        ./$COMMIT_INFO immortalwrt lean-lede > com_info.log
-        echo "DATE_INFO=$(sed -n '2p' com_info.log)" >> $GITHUB_ENV
+        . /$COMMIT_INFO immortalwrt lean-lede > com_info.log
+          echo "DATE_INFO=$(sed -n '2p' com_info.log)" >> $GITHUB_ENV
         echo "recent is $(sed -n '1p' com_info.log)"
         
     - name: Cau Spend Time
