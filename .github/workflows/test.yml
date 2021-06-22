@@ -58,6 +58,7 @@ jobs:
         chmod +x $COMMIT_INFO
         ./$COMMIT_INFO immortalwrt lean-lede
         echo "DATE_INFO=${com_info}" >> $GITHUB_ENV
+        echo "recent is ${recent_date}"
         
     - name: Cau Spend Time
       id: spend_time
