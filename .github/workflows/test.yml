@@ -57,7 +57,7 @@ jobs:
         curl -sL https://git.io/commit_formate_sh > $COMMIT_INFO
         chmod +x $COMMIT_INFO
         ./$COMMIT_INFO immortalwrt lean-lede
-        echo "DATE_INFO=$(cat day3.log)" >> $GITHUB_ENV
+        echo "DATE_INFO=${com_info}" >> $GITHUB_ENV
         
     - name: Cau Spend Time
       id: spend_time
