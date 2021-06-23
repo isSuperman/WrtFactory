@@ -106,10 +106,7 @@ jobs:
         chmod +x $UPDATE_FEEDS_BEFORE
         cd openwrt
         resu=$(cat $FEEDS_CONF  | grep "helloworld")
-        if [[ $resu == "" ]]
-        then
-            $GITHUB_WORKSPACE/$UPDATE_FEEDS_BEFORE
-        fi
+        [[ $resu == "" ]] && $GITHUB_WORKSPACE/$UPDATE_FEEDS_BEFORE
 
     - name: Update feeds
       run: cd openwrt && ./scripts/feeds update -a
@@ -370,8 +367,12 @@ jobs:
       if: steps.organize.outputs.status == 'success' && env.ONLY_VMDK == 'true' && !cancelled()
       run: |
         curl -sSX POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -H "Content-Type: application/x-www-form-urlencoded" --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&disable_web_page_preview=true&text=*Wrt Update Checker：*\n\n_Date: ${{ env.COME_DATE }}_\n_Result: success 🎉_\n\n*What\'s New v${{ env.RECENT_DATE }}*${{ env.DATE_INFO }}\n\n*Artifacts*\n\- vmdk\ngeneric\-squashfs\-combined\n[CowTransfer](${{ env.COW_URL }})  [Fileio](${{ env.FILEIO_URL }})  [LitterBox](${{ env.LITTERBOX_URL }})\ngeneric\-squashfs\-combined\-efi\n[CowTransfer](${{ env.COW_EFI_URL }})  [Fileio](${{ env.FILEIO_EFI_URL }})  [LitterBox](${{ env.LITTERBOX_EFI_URL }})\n\n_Spend Time: ${{ env.SPEND_TIME }}_'
+        
+        rm -rf *.log release.txt
     
     - name: Push Notification
       if: steps.organize.outputs.status == 'success' && env.ONLY_VMDK == 'false' && !cancelled()
       run: |
         curl -sSX POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -H "Content-Type: application/x-www-form-urlencoded" --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&disable_web_page_preview=true&text=*Wrt Update Checker：*\n\n_Date: ${{ env.COME_DATE }}_\n_Result: success 🎉_\n\n*What\'s New v${{ env.RECENT_DATE }}*${{ env.DATE_INFO }}\n\n*Artifacts*\n\- vmdk\ngeneric\-squashfs\-combined\n[CowTransfer](${{ env.COW_URL }})  [Fileio](${{ env.FILEIO_URL }})  [LitterBox](${{ env.LITTERBOX_URL }})\ngeneric\-squashfs\-combined\-efi\n[CowTransfer](${{ env.COW_EFI_URL }})  [Fileio](${{ env.FILEIO_EFI_URL }})  [LitterBox](${{ env.LITTERBOX_EFI_URL }})\n\n\- img\.gz\ngeneric\-squashfs\-combined\n[CowTransfer](${{ env.COW_IMG_URL }})  [Fileio](${{ env.FILEIO_IMG_URL }})  [LitterBox](${{ env.LITTERBOX_IMG_URL }})\ngeneric\-squashfs\-combined\-efi\n[CowTransfer](${{ env.COW_EFI_IMG_URL }})  [Fileio](${{ env.FILEIO_EFI_IMG_URL }})  [LitterBox](${{ env.LITTERBOX_EFI_IMG_URL }})\n\n\- rootfs\ngeneric\-rootfs\.tar\.gz\n[CowTransfer](${{ env.COW_ROOTFS_URL }})  [Fileio](${{ env.FILEIO_ROOTFS_URL }})  [LitterBox](${{ env.LITTERBOX_ROOTFS_URL }})\ngeneric\-squashfs\-rootfs\.img\.gz\n[CowTransfer](${{ env.COW_ROOTFS_IMG_URL }})  [Fileio](${{ env.FILEIO_ROOTFS_IMG_URL }})  [LitterBox](${{ env.LITTERBOX_ROOTFS_IMG_URL }})\n\n_Spend Time: ${{ env.SPEND_TIME }}_'
+        
+        rm -rf *.log release.txt
