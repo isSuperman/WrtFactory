@@ -11,7 +11,7 @@
 #
 
 # Add custom feeds
-sed -i ‘1,$d’ feeds.conf.default
+rf -f feeds.conf.default && touch feeds.conf.default
 sed -i '$a src-git packages https://github.com/coolsnowwolf/packages' feeds.conf.default
 sed -i '$a src-git luci https://github.com/coolsnowwolf/luci' feeds.conf.default
 sed -i '$a src-git routing https://git.openwrt.org/feed/routing.git' feeds.conf.default
