@@ -35,8 +35,8 @@ env:
 
 jobs:
   build:
-    runs-on: [self-hosted, linux, x64, ql]
-    #runs-on: [self-hosted, linux, x64, vm]
+    #runs-on: [self-hosted, linux, x64, ql]
+    runs-on: [self-hosted, linux, x64, vm]
 
     steps:
 
