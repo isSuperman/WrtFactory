@@ -64,7 +64,7 @@ jobs:
         dt_hour=$(date -d @$dts '+%H')
         dt_time=$(date -d @$dts '+%H:%M')
         echo "time is ${dt_time}"
-        curl -L https://raw.githubusercontent.com/isSuperman/UsefulTools/main/shell/ETA_formate.sh > $ETA
+        curl -L raw.githubusercontent.com/isSuperman/UsefulTools/main/shell/ETA_formate.sh > $ETA
         chmod +x $ETA
         ./$ETA $dt_day $dt_hour > dta_desc.log
         echo "$(cat dta_desc.log) $dt_time" > dt_str.log
@@ -85,7 +85,7 @@ jobs:
       id: commitinfo
       run: |
         cd openwrt
-        curl -sL https://raw.githubusercontent.com/isSuperman/UsefulTools/main/shell/commit_formate.sh > $COMMIT_INFO
+        curl -sL raw.githubusercontent.com/isSuperman/UsefulTools/main/shell/commit_formate.sh > $COMMIT_INFO
         chmod +x $COMMIT_INFO
         ./$COMMIT_INFO immortalwrt lean-lede > com_info.log
         echo "DATE_INFO=$(sed -n '2p' com_info.log)" >> $GITHUB_ENV
@@ -172,7 +172,7 @@ jobs:
       if: steps.compile.outputs.status == 'success'
       run: |
         cd openwrt
-        curl -sL https://raw.githubusercontent.com/isSuperman/UsefulTools/main/shell/spend_time_formate.sh > $SPEND_TIME
+        curl -sL raw.githubusercontent.com/isSuperman/UsefulTools/main/shell/spend_time_formate.sh > $SPEND_TIME
         chmod +x $SPEND_TIME
         ./$SPEND_TIME ${{ env.START_DATE }} ${{ env.END_DATE }} 2>&1 | tee cau_time.log
         echo "SPEND_TIME=$(cat cau_time.log)" >> $GITHUB_ENV
@@ -190,7 +190,7 @@ jobs:
       id: vmdk
       if: steps.organize.outputs.status == 'success' && env.ONLY_VMDK == 'true' && !cancelled()
       run: |
-        curl -fsSL https://raw.githubusercontent.com/Mikubill/transfer/master/install.sh | sh
+        curl -fsSL raw.githubusercontent.com/Mikubill/transfer/master/install.sh | sh
         
         ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined.vmdk 2>&1 | tee cowtransfer.log
         echo "$(cat cowtransfer.log | grep https | cut -f3 -d" ")" > cow.log
@@ -226,7 +226,7 @@ jobs:
       id: cowtransfer
       if: steps.organize.outputs.status == 'success' && env.UPLOAD_COWTRANSFER == 'true' && env.ONLY_VMDK == 'false' && !cancelled()
       run: |
-        curl -fsSL git.io/file-transfer | sh
+        curl -fsSL raw.githubusercontent.com/Mikubill/transfer/master/install.sh | sh
         
         ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined.vmdk 2>&1 | tee cowtransfer.log
         echo "$(cat cowtransfer.log | grep https | cut -f3 -d" ")" > cow.log
@@ -262,7 +262,7 @@ jobs:
       id: fileio
       if: steps.organize.outputs.status == 'success' && env.UPLOAD_FILEIO == 'true' && env.ONLY_VMDK == 'false' && !cancelled()
       run: |
-        curl -fsSL git.io/file-transfer | sh
+        curl -fsSL raw.githubusercontent.com/Mikubill/transfer/master/install.sh | sh
         
         ./transfer fio --no-progress ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined.vmdk 2>&1 | tee fileio.log
         echo "$(cat fileio.log | grep https | cut -f3 -d" ")" > fio.log
@@ -298,7 +298,7 @@ jobs:
       id: litterbox
       if: steps.organize.outputs.status == 'success' && env.UPLOAD_LITTERBOX == 'true' && env.ONLY_VMDK == 'false' && !cancelled()
       run: |
-        curl -fsSL git.io/file-transfer | sh
+        curl -fsSL raw.githubusercontent.com/Mikubill/transfer/master/install.sh | sh
         
         ./transfer lit --no-progress ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined.vmdk 2>&1 | tee litterbox.log
         echo "$(cat litterbox.log | grep https | cut -f3 -d" ")" > lit.log
