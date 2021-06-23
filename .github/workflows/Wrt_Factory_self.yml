@@ -109,10 +109,7 @@ jobs:
         chmod +x $UPDATE_FEEDS_BEFORE
         cd openwrt
         resu=$(cat $FEEDS_CONF  | grep "helloworld")
-        if [[ $resu == "" ]]
-        then
-            $GITHUB_WORKSPACE/$UPDATE_FEEDS_BEFORE
-        fi
+        [ "$resu" -eq "" ] && $GITHUB_WORKSPACE/$UPDATE_FEEDS_BEFORE
 
     - name: Update feeds
       run: cd openwrt && ./scripts/feeds update -a
