@@ -50,7 +50,7 @@ jobs:
       run: |
         sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
         sudo -E apt-get -qq update
-        sudo -E apt-get -qq install $(curl -fL git.io/depends-ubuntu-1804)
+        sudo -E apt-get -qq install $(curl -fsL git.io/depends-ubuntu-1804)
         sudo -E apt-get -qq autoremove --purge
         sudo -E apt-get -qq clean
         sudo timedatectl set-timezone "$TZ"
@@ -65,7 +65,7 @@ jobs:
         dt_hour=$(date -d @$dts '+%H')
         dt_time=$(date -d @$dts '+%H:%M')
         echo "time is ${dt_time}"
-        curl -L git.io/eta_formate_sh > $ETA
+        curl -sL git.io/eta_formate_sh > $ETA
         chmod +x $ETA
         ./$ETA $dt_day $dt_hour > dta_desc.log
         echo "$(cat dta_desc.log) $dt_time" > dt_str.log
