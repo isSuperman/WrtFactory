@@ -108,8 +108,8 @@ jobs:
         [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
         chmod +x $UPDATE_FEEDS_BEFORE
         cd openwrt
-        echo "$(cat $FEEDS_CONF  | grep "helloworld")" >> res.log
-        [ -z "./res.log" ] && $GITHUB_WORKSPACE/$UPDATE_FEEDS_BEFORE
+        resu="$(cat $FEEDS_CONF | grep "helloworld")"
+        [[ $resu != "" ]] && $GITHUB_WORKSPACE/$UPDATE_FEEDS_BEFORE
 
     - name: Update feeds
       run: cd openwrt && ./scripts/feeds update -a
