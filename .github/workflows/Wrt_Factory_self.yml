@@ -91,6 +91,8 @@ jobs:
         echo "DATE_INFO=$(sed -n '2p' com_info.log)" >> $GITHUB_ENV
         echo "RECENT_DATE=$(sed -n '1p' com_info.log)" >> $GITHUB_ENV
         
+        rm -rf com_info.log
+        
     - name: Load custom themes and plugins
       id: argon
       run: |
