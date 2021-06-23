@@ -12,7 +12,7 @@
 
 # Add custom feeds
 rm -rf feeds.conf.default && touch feeds.conf.default
-sed -i '$a src-git packages https://github.com/coolsnowwolf/packages' feeds.conf.default
+sed -i '$a src-git packages https://github.com/immortalwrt/packages' feeds.conf.default
 sed -i '$a src-git luci https://github.com/coolsnowwolf/luci' feeds.conf.default
 sed -i '$a src-git routing https://git.openwrt.org/feed/routing.git' feeds.conf.default
 sed -i '$a src-git telephony https://git.openwrt.org/feed/telephony.git' feeds.conf.default
