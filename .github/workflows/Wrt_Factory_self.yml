@@ -13,6 +13,12 @@ name: Wrt Factory Self
 on:
   #repository_dispatch:
   workflow_dispatch:
+    inputs:
+      ssh:
+        description: 'SSH connection to Actions'
+        required: false
+        default: 'false'
+  
 
 env:
   REPO_URL: https://github.com/coolsnowwolf/lede
@@ -123,6 +129,13 @@ jobs:
         chmod +x $UPDATE_FEEDS_AFTER
         cd openwrt
         $GITHUB_WORKSPACE/$UPDATE_FEEDS_AFTER
+        
+    - name: SSH connection to Actions
+      uses: P3TERX/ssh2actions@v1.0.0
+      if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
+      env:
+        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
 
     - name: Download package
       id: package
