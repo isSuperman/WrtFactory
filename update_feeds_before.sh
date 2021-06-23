@@ -10,5 +10,15 @@
 # Description: Wrt DIY script (Before Update feeds)
 #
 
-# Add helloworld
+# Add custom feeds
+sed -i ‘1,$d’ feeds.conf.default
+sed -i '$a src-git packages https://github.com/coolsnowwolf/packages' feeds.conf.default
+sed -i '$a src-git luci https://github.com/coolsnowwolf/luci' feeds.conf.default
+sed -i '$a src-git routing https://git.openwrt.org/feed/routing.git' feeds.conf.default
+sed -i '$a src-git telephony https://git.openwrt.org/feed/telephony.git' feeds.conf.default
 sed -i '$a src-git helloworld https://github.com/fw876/helloworld.git' feeds.conf.default
+
+#src-git video https://github.com/openwrt/video.git
+#src-git targets https://github.com/openwrt/targets.git
+#src-git oldpackages http://git.openwrt.org/packages.git
+#src-link custom /usr/src/openwrt/custom-feed
