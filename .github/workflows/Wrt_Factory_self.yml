@@ -32,7 +32,6 @@ env:
   UPLOAD_RELEASE: false
   ONLY_VMDK: true
   TZ: Asia/Shanghai
-  SSH: false
 
 jobs:
   build:
@@ -124,13 +123,6 @@ jobs:
         chmod +x $UPDATE_FEEDS_AFTER
         cd openwrt
         $GITHUB_WORKSPACE/$UPDATE_FEEDS_AFTER
-        
-    - name: SSH connection to Actions
-      uses: P3TERX/ssh2actions@v1.0.0
-      if: $SSH == 'true' && !cancelled()
-      env:
-        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
 
     - name: Download package
       id: package
