@@ -19,8 +19,6 @@ env:
   REPO_BRANCH: master
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: .config
-  UPDATE_FEEDS_BEFORE: update_feeds_before.sh
-  UPDATE_FEEDS_AFTER: update_feeds_after.sh
   SPEND_TIME: spend_time_formate.sh
   COMMIT_INFO: commit_formate.sh
   ETA: ETA_formate.sh
@@ -104,10 +102,17 @@ jobs:
     - name: Load custom feeds
       run: |
         [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
-        chmod +x $UPDATE_FEEDS_BEFORE
         cd openwrt
-        resu=$(cat feeds.conf.default | grep "helloworld")
-        [ -z $resu ] && $GITHUB_WORKSPACE/$UPDATE_FEEDS_BEFORE
+        rm -rf feeds.conf.default && touch feeds.conf.default
+        sed -i '$a src-git packages https://github.com/immortalwrt/packages' feeds.conf.default
+        sed -i '$a src-git luci https://github.com/coolsnowwolf/luci' feeds.conf.default
+        sed -i '$a src-git routing https://git.openwrt.org/feed/routing.git' feeds.conf.default
+        sed -i '$a src-git telephony https://git.openwrt.org/feed/telephony.git' feeds.conf.default
+        sed -i '$a src-git helloworld https://github.com/fw876/helloworld.git' feeds.conf.default
+        #src-git video https://github.com/openwrt/video.git
+        #src-git targets https://github.com/openwrt/targets.git
+        #src-git oldpackages http://git.openwrt.org/packages.git
+        #src-link custom /usr/src/openwrt/custom-feed
 
     - name: Update feeds
       run: cd openwrt && ./scripts/feeds update -a
@@ -119,9 +124,11 @@ jobs:
       run: |
         [ -e files ] && mv files openwrt/files
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
-        chmod +x $UPDATE_FEEDS_AFTER
         cd openwrt
-        $GITHUB_WORKSPACE/$UPDATE_FEEDS_AFTER
+        # Modify default IP
+        sed -i 's/192.168.1.1/192.168.5.1/g' package/base-files/files/bin/config_generate
+        # 设置密码为空（安装固件时无需密码登陆，然后自己修改想要的密码）
+        sed -i 's@.*CYXluq4wUazHjmCDBCqXF*@#&@g' package/lean/default-settings/files/zzz-default-settings
 
     - name: Download package
       id: package
