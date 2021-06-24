@@ -1,0 +1,37 @@
+name: Merge upstream
+on:
+  workflow_dispatch:
+  push:
+  schedule:
+     # actually, ~5 minutes is the highest
+     # effective frequency you will get
+    - cron:  '0 1 * * *'
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Merge upstream
+        run: |
+          git config --global user.name 'Auto merge upstream bot'
+          git config --global user.email 'Auto+merge+upstream+bot@gmail.com'
+          # "git checkout master" is unnecessary, already here by default
+          git pull --unshallow  # this option is very important, you would get
+                                # complains about unrelated histories without it.
+                                # (but actions/checkout@v2 can also be instructed
+                                # to fetch all git depth right from the start)
+          git remote add upstream https://github.com/coolsnowwolf/lede.git
+          git fetch upstream
+          # Neither forget the -b opt,
+          # the feature/x ref is ambiguous at this stage
+          git checkout master
+          git merge --no-edit upstream/master
+          git push origin master
+          #git checkout master
+          #git merge --no-edit upstream/master
+          #git push origin master
+          
+          #sync tag
+          git fetch upstream --tags
+          git push --tags
+          # etc
