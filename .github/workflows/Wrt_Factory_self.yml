@@ -106,7 +106,8 @@ jobs:
         [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
         chmod +x $UPDATE_FEEDS_BEFORE
         cd openwrt
-        $GITHUB_WORKSPACE/$UPDATE_FEEDS_BEFORE
+        resu=$(cat feeds.conf.default | grep "helloworld")
+        [ -z $resu ] && $GITHUB_WORKSPACE/$UPDATE_FEEDS_BEFORE
 
     - name: Update feeds
       run: cd openwrt && ./scripts/feeds update -a
@@ -120,8 +121,7 @@ jobs:
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
         chmod +x $UPDATE_FEEDS_AFTER
         cd openwrt
-        resu=$(cat feeds.conf.default | grep "helloworld")
-        [ -z $resu ] && $GITHUB_WORKSPACE/$UPDATE_FEEDS_AFTER
+        $GITHUB_WORKSPACE/$UPDATE_FEEDS_AFTER
 
     - name: Download package
       id: package
