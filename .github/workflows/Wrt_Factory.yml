@@ -103,13 +103,13 @@ jobs:
       run: |
         [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
         cd openwrt
-        hashello=0
+        hashello=true
         while read line
         do
         resu=$(echo $line | grep "helloworld")
-        [[ $resu != "" ]] && hashello=1
+        [ ! -z $resu ] && hashello=false
         done < "./feeds.conf.default"
-        [[ $hashello != 1 ]] && sed -i '$a src-git helloworld https://github.com/fw876/helloworld.git' feeds.conf.default
+        $hashello && sed -i '$a src-git helloworld https://github.com/fw876/helloworld.git' feeds.conf.default
 
     - name: Update feeds
       run: cd openwrt && ./scripts/feeds update -a
