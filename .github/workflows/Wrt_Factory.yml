@@ -109,7 +109,16 @@ jobs:
         #sed -i '$a src-git luci https://github.com/coolsnowwolf/luci' feeds.conf.default
         #sed -i '$a src-git routing https://git.openwrt.org/feed/routing.git' feeds.conf.default
         #sed -i '$a src-git telephony https://git.openwrt.org/feed/telephony.git' feeds.conf.default
-        sed -i '$a src-git helloworld https://github.com/fw876/helloworld.git' feeds.conf.default
+        hashello=0
+        while read line
+        do
+        resu=$(echo $line | grep "helloworld")
+        if [[ $resu != "" ]] 
+        then
+        hashello=1
+        fi
+        done < "./feeds.conf.default"
+        [[ $hashello != 1 ]] && sed -i '$a src-git helloworld https://github.com/fw876/helloworld.git' feeds.conf.default
         #src-git video https://github.com/openwrt/video.git
         #src-git targets https://github.com/openwrt/targets.git
         #src-git oldpackages http://git.openwrt.org/packages.git
