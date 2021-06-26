@@ -351,15 +351,15 @@ jobs:
         while read line
         do
           resu1=$(echo $line | grep "cowtransfer")
-          if [ $resu1 -ne "" ];then
+          if [[ $resu1 != "" ]];then
             echo "[CowTransfer]($line)" >> vmdk_md.log
           fi
           resu2=$(echo $line | grep "file")
-          if [ $resu2 -ne "" ];then
+          if [[ $resu2 != "" ]];then
             echo "[FileIO]($line)" >> vmdk_md.log
           fi
           resu3=$(echo $line | grep "catbox")
-          if [ $resu3 -ne "" ];then
+          if [[ $resu3 != "" ]];then
             echo "[LitterBox]($line)" >> vmdk_md.log
           fi
         done < "./vmdk_url.log"
@@ -380,15 +380,15 @@ jobs:
         while read line
         do
           resu1=$(echo $line | grep "cowtransfer")
-          if [ $resu1 -ne "" ];then
+          if [[ $resu1 != "" ]];then
             echo "[CowTransfer]($line)" >> vmdk_efi_md.log
           fi
           resu2=$(echo $line | grep "file")
-          if [ $resu2 -ne "" ];then
+          if [[ $resu2 != "" ]];then
             echo "[FileIO]($line)" >> vmdk_efi_md.log
           fi
           resu3=$(echo $line | grep "catbox")
-          if [ $resu3 -ne "" ];then
+          if [[ $resu3 != "" ]];then
             echo "[LitterBox]($line)" >> vmdk_efi_md.log
           fi
           done < "./vmdk_efi_url.log"
@@ -412,15 +412,15 @@ jobs:
         while read line
         do
           resu1=$(echo $line | grep "cowtransfer")
-          if [ $resu1 -ne "" ];then
+          if [[ $resu1 != "" ]];then
             echo "[CowTransfer]($line)" >> img_md.log
           fi
           resu2=$(echo $line | grep "file")
-          if [ $resu2 -ne "" ];then
+          if [[ $resu2 != "" ]];then
             echo "[FileIO]($line)" >> img_md.log
           fi
           resu3=$(echo $line | grep "catbox")
-          if [ $resu3 -ne "" ];then
+          if [[ $resu3 != "" ]];then
             echo "[LitterBox]($line)" >> img_md.log
           fi
         done < "./img_url.log"
@@ -441,15 +441,15 @@ jobs:
         while read line
         do
           resu1=$(echo $line | grep "cowtransfer")
-          if [ $resu1 -ne "" ];then
+          if [[ $resu1 != "" ]];then
             echo "[CowTransfer]($line)" >> img_efi_md.log
           fi
           resu2=$(echo $line | grep "file")
-          if [ $resu2 -ne "" ];then
+          if [[ $resu2 != "" ]];then
             echo "[FileIO]($line)" >> img_efi_md.log
           fi
           resu3=$(echo $line | grep "catbox")
-          if [ $resu3 -ne "" ];then
+          if [[ $resu3 != "" ]];then
             echo "[LitterBox]($line)" >> img_efi_md.log
           fi
         done < "./img_efi_url.log"
@@ -473,15 +473,15 @@ jobs:
         while read line
         do
           resu1=$(echo $line | grep "cowtransfer")
-          if [ $resu1 -ne "" ];then
+          if [[ $resu1 != "" ]];then
             echo "[CowTransfer]($line)" >> rootfs_md.log
           fi
           resu2=$(echo $line | grep "file")
-          if [ $resu2 -ne "" ];then
+          if [[ $resu2 != "" ]];then
             echo "[FileIO]($line)" >> rootfs_md.log
           fi
           resu3=$(echo $line | grep "catbox")
-          if [ $resu3 -ne "" ];then
+          if [[ $resu3 != "" ]];then
             echo "[LitterBox]($line)" >> rootfs_md.log
           fi
         done < "./rootfs_url.log"
@@ -502,15 +502,15 @@ jobs:
         while read line
         do
           resu1=$(echo $line | grep "cowtransfer")
-          if [ $resu1 -ne "" ];then
+          if [[ $resu1 != "" ]];then
             echo "[CowTransfer]($line)" >> rootfs_img_md.log
           fi
           resu2=$(echo $line | grep "file")
-          if [ $resu2 -ne "" ];then
+          if [[ $resu2 != "" ]];then
             echo "[FileIO]($line)" >> rootfs_img_md.log
           fi
           resu3=$(echo $line | grep "catbox")
-          if [ $resu3 -ne "" ];then
+          if [[ $resu3 != ""] ];then
             echo "[LitterBox]($line)" >> rootfs_img_md.log
           fi
         done < "./rootfs_img_url.log"
