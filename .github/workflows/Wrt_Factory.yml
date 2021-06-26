@@ -22,15 +22,15 @@ env:
   SPEND_TIME: spend_time_formate.sh
   COMMIT_INFO: commit_formate.sh
   ETA: ETA_formate.sh
+  UPLOAD_RELEASE: false
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UP_COW: true
   UP_FIO: true
   UP_LIT: true
-  UPLOAD_RELEASE: false
   UP_VMDK: true
   UP_IMG: true
-  UP_ROOTFS: true
+  UP_ROOTFS: false
   TZ: Asia/Shanghai
 
 jobs:
