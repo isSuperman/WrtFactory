@@ -531,7 +531,7 @@ jobs:
             echo "$line  " >> rootfs_list.log
           done < "./rootfs_img_md.log"
         fi
-        # vmdk_list img_list rootfs_list
+
         [ -f vmdk_list.log ] && sed -i '1i\- vmdk\\n' vmdk_list.log
         [ -f img_list.log ] && sed -i '1i\- img\\n' img_list.log
         [ -f rootfs_list.log ] && sed -i '1i\- rootfs\\n' rootfs_list.log
