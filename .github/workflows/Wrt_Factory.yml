@@ -533,8 +533,8 @@ jobs:
         fi
 
         [ -f vmdk_list.log ] && sed -i '1i\- vmdk\\n' vmdk_list.log
-        [ -f img_list.log ] && sed -i '1i\- img\\n' img_list.log
-        [ -f rootfs_list.log ] && sed -i '1i\- rootfs\\n' rootfs_list.log
+        [ -f img_list.log ] && sed -i '1i\\n\\n\- img\\n' img_list.log
+        [ -f rootfs_list.log ] && sed -i '1i\\\n\\n- rootfs\\n' rootfs_list.log
         echo "$(cat vmdk_list.log)" >> down_list.log
         echo "$(cat img_list.log)" >> down_list.log
         echo "$(cat rootfs_list.log)" >> down_list.log
