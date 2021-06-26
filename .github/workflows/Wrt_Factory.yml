@@ -70,8 +70,6 @@ jobs:
         ./$ETA $dt_day $dt_hour > dta_desc.log
         echo "$(cat dta_desc.log) $dt_time" > dt_str.log
         echo "DT=$(cat dt_str.log)" >> $GITHUB_ENV
-        
-        rm -rf dta_desc.log dt_str.log
 
     - name: Clone source code
       working-directory: /workdir
@@ -90,8 +88,6 @@ jobs:
         ./$COMMIT_INFO immortalwrt lean-lede > com_info.log
         echo "DATE_INFO=$(sed -n '2p' com_info.log)" >> $GITHUB_ENV
         echo "RECENT_DATE=$(sed -n '1p' com_info.log)" >> $GITHUB_ENV
-        
-        rm -rf com_info.log
         
     - name: Load custom themes and plugins
       id: argon
@@ -178,8 +174,6 @@ jobs:
         ./$SPEND_TIME ${{ env.START_DATE }} ${{ env.END_DATE }} 2>&1 | tee cau_time.log
         echo "SPEND_TIME=$(cat cau_time.log)" >> $GITHUB_ENV
         
-        rm -rf cau_time.log
-
     - name: Upload firmware directory
       uses: actions/upload-artifact@main
       if: steps.organize.outputs.status == 'success' && !cancelled()
@@ -191,7 +185,7 @@ jobs:
       id: vmdk
       if: steps.organize.outputs.status == 'success' && env.UP_VMDK == 'true' && !cancelled()
       run: |
-        curl -fsSL git.io/file-transfer | sh
+        [ ! -f transfer ] && curl -fsSL git.io/file-transfer | sh
         
         if [ ${{ env.UP_COW }} -eq 'true' ];then
         ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined.vmdk 2>&1 | tee cowtransfer.log
@@ -233,7 +227,7 @@ jobs:
       id: img
       if: steps.organize.outputs.status == 'success' && env.UP_IMG == 'true' && !cancelled()
       run: |
-        curl -fsSL git.io/file-transfer | sh
+        [ ! -f transfer ] && curl -fsSL git.io/file-transfer | sh
         
         if [ ${{ env.UP_COW }} -eq 'true' ];then
          ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined.img.gz 2>&1 | tee cowtransfer-img.log
@@ -275,7 +269,7 @@ jobs:
       id: rootfs
       if: steps.organize.outputs.status == 'success' && env.UP_ROOTFS == 'true' && !cancelled()
       run: |
-        curl -fsSL git.io/file-transfer | sh
+        [ ! -f transfer ] && curl -fsSL git.io/file-transfer | sh
         
         if [ ${{ env.UP_COW }} -eq 'true' ];then
         ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE}/openwrt-x86-64-generic-rootfs.tar.gz 2>&1 | tee cowtransfer-rootfs.log
