@@ -187,7 +187,7 @@ jobs:
       run: |
         [ ! -f transfer ] && curl -fsSL git.io/file-transfer | sh
         
-        if ${{ env.UP_COW }};then
+        if [[ ${{ env.UP_COW }} == 'true' ]];then
         ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined.vmdk 2>&1 | tee cowtransfer.log
         echo "$(cat cowtransfer.log | grep https | cut -f3 -d" ")" > cow.log
         sed -i 's/\./\\\./g' cow.log
@@ -199,7 +199,7 @@ jobs:
         echo "COW_EFI_URL=$(cat cow-efi.log)" >> vmdk_efi.log
         fi
         
-        if ${{ env.UP_FIO }};then
+        if [[ ${{ env.UP_FIO }} == 'true' ]];then
         ./transfer fio --no-progress ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined.vmdk 2>&1 | tee fileio.log
         echo "$(cat fileio.log | grep https | cut -f3 -d" ")" > fio.log
         sed -i 's/\./\\\./g' fio.log
@@ -211,7 +211,7 @@ jobs:
         echo "FILEIO_EFI_URL=$(cat fio-efi.log)" >> vmdk_efi.log
         fi
         
-        if ${{ env.UP_LIT }};then
+        if [[ ${{ env.UP_LIT }} == 'true' ]];then
         ./transfer lit --no-progress ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined.vmdk 2>&1 | tee litterbox.log
         echo "$(cat litterbox.log | grep https | cut -f3 -d" ")" > lit.log
         sed -i 's/\./\\\./g' lit.log
@@ -229,7 +229,7 @@ jobs:
       run: |
         [ ! -f transfer ] && curl -fsSL git.io/file-transfer | sh
         
-        if ${{ env.UP_COW }};then
+        if [[ ${{ env.UP_COW }} == 'true' ]];then
          ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined.img.gz 2>&1 | tee cowtransfer-img.log
         echo "$(cat cowtransfer-img.log | grep https | cut -f3 -d" ")" > cow-img.log
         sed -i 's/\./\\\./g' cow-img.log
@@ -241,7 +241,7 @@ jobs:
         echo "COW_EFI_IMG_URL=$(cat cow-efi-img.log)" >> img_efi.log
         fi
         
-        if ${{ env.UP_FIO }};then
+        if [[ ${{ env.UP_FIO }} == 'true' ]];then
         ./transfer fio --no-progress ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined.img.gz 2>&1 | tee fileio-img.log
         echo "$(cat fileio-img.log | grep https | cut -f3 -d" ")" > fio-img.log
         sed -i 's/\./\\\./g' fio-img.log
@@ -253,7 +253,7 @@ jobs:
         echo "FILEIO_EFI_IMG_URL=$(cat fio-efi-img.log)" >> img_efi.log
         fi
         
-        if ${{ env.UP_LIT }};then
+        if [[ ${{ env.UP_LIT }} == 'true' ]];then
         ./transfer lit --no-progress ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined.img.gz 2>&1 | tee litterbox-img.log
         echo "$(cat litterbox-img.log | grep https | cut -f3 -d" ")" > lit-img.log
         sed -i 's/\./\\\./g' lit-img.log
@@ -271,7 +271,7 @@ jobs:
       run: |
         [ ! -f transfer ] && curl -fsSL git.io/file-transfer | sh
         
-        if ${{ env.UP_COW }};then
+        if [[ ${{ env.UP_COW }} == 'true' ]];then
         ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE}/openwrt-x86-64-generic-rootfs.tar.gz 2>&1 | tee cowtransfer-rootfs.log
         echo "$(cat cowtransfer-rootfs.log | grep https | cut -f3 -d" ")" > cow-rootfs.log
         sed -i 's/\./\\\./g' cow-rootfs.log
@@ -283,7 +283,7 @@ jobs:
         echo "COW_ROOTFS_IMG_URL=$(cat cow-img-rootfs.log)" >> rootfs_img.log
         fi
         
-        if ${{ env.UP_FIO }};then
+        if [[ ${{ env.UP_FIO }} == 'true' ]];then
         ./transfer fio --no-progress ${FIRMWARE}/openwrt-x86-64-generic-rootfs.tar.gz 2>&1 | tee fileio-rootfs.log
         echo "$(cat fileio-rootfs.log | grep https | cut -f3 -d" ")" > fio-rootfs.log
         sed -i 's/\./\\\./g' fio-rootfs.log
@@ -295,7 +295,7 @@ jobs:
         echo "FILEIO_ROOTFS_IMG_URL=$(cat fio-rootfs-img.log)" >> rootfs_img.log
         fi
         
-        if ${{ env.UP_LIT }};then
+        if [[ ${{ env.UP_LIT }} == 'true' ]];then
         ./transfer lit --no-progress ${FIRMWARE}/openwrt-x86-64-generic-rootfs.tar.gz 2>&1 | tee litterbox-rootfs.log
         echo "$(cat litterbox-rootfs.log | grep https | cut -f3 -d" ")" > lit-rootfs.log
         sed -i 's/\./\\\./g' lit-rootfs.log
