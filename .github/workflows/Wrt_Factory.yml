@@ -343,165 +343,36 @@ jobs:
     - name: Orgnize down list
       if: steps.organize.outputs.status == 'success' && !cancelled()
       run: |
-        if test -f vmdk.log; then
+        firms="vmdk vmdk_efi img img_efi rootfs rootfs_img"
+        for firm in $firms
+        do
+          if test -f ${firm}.log; then
           while read line; do
-            echo $line | awk -F'[/:]' '{print $4}' >>vmdk_url.log
-          done <"./vmdk.log"
-          while read line; do
-            resu1=$(echo $line | grep "cowtransfer")
-            if test $resu1 != ""; then
-              echo "[CowTransfer]($line)" >>vmdk_md.log
-            fi
-            resu2=$(echo $line | grep "file")
-            if test $resu2 != ""; then
-              echo "[FileIO]($line)" >>vmdk_md.log
-            fi
-            resu3=$(echo $line | grep "catbox")
-            if test $resu3 != ""; then
-              echo "[LitterBox]($line)" >>vmdk_md.log
-            fi
-          done <"./vmdk_url.log"
-          if test -f vmdk_md.log; then
-            echo "generic-squashfs-combined\n" >>vmdk_list.log
-            while read line; do
-              echo "$line  " >>vmdk_list.log
-            done <"./vmdk_md.log"
-          fi
-        fi
-        if test -f vmdk_efi.log; then
-          while read line; do
-            echo $line | awk -F'[/:]' '{print $4}' >>vmdk__efi_url.log
-          done <"./vmdk_efi.log"
+            echo $line | awk -F'[/:]' '{print $4}' >>${firm}_url.log
+          done <"./${firm}.log"
           while read line; do
             resu1=$(echo $line | grep "cowtransfer")
             if test $resu1 != ""; then
-              echo "[CowTransfer]($line)" >>vmdk_efi_md.log
+              echo "[CowTransfer]($line)" >>${firm}_md.log
             fi
             resu2=$(echo $line | grep "file")
             if test $resu2 != ""; then
-              echo "[FileIO]($line)" >>vmdk_efi_md.log
+              echo "[FileIO]($line)" >>${firm}_md.log
             fi
             resu3=$(echo $line | grep "catbox")
             if test $resu3 != ""; then
-              echo "[LitterBox]($line)" >>vmdk_efi_md.log
+              echo "[LitterBox]($line)" >>${firm}_md.log
             fi
-          done <"./vmdk_efi_url.log"
-          if test -f vmdk_efi_md.log; then
-            if test -f vmdk_list.log; then
-              echo "\n" >>vmdk_list.log
-            fi
-            echo "generic-squashfs-combined-efi\n" >>vmdk_list.log
+          done <"./${firm}_url.log"
+          if test -f ${firm}_md.log; then
+            echo "generic-squashfs-combined\n" >>${firm}_list.log
             while read line; do
-              echo "$line  " >>vmdk_list.log
-            done <"./vmdk_efi_md.log"
+              echo "$line  " >> ${firm}_list.log
+            done <"./${firm}_md.log"
           fi
         fi
-        if test -f img.log; then
-          while read line; do
-            echo $line | awk -F'[/:]' '{print $4}' >>img_url.log
-          done <"./img.log"
-          while read line; do
-            resu1=$(echo $line | grep "cowtransfer")
-            if test $resu1 != ""; then
-              echo "[CowTransfer]($line)" >>img_md.log
-            fi
-            resu2=$(echo $line | grep "file")
-            if test $resu2 != ""; then
-              echo "[FileIO]($line)" >>img_md.log
-            fi
-            resu3=$(echo $line | grep "catbox")
-            if test $resu3 != ""; then
-              echo "[LitterBox]($line)" >>img_md.log
-            fi
-          done <"./img_url.log"
-          if test -f img_md.log; then
-            echo "generic-squashfs-combined-img\n" >>img_list.log
-            while read line; do
-              echo "$line  " >>img_list.log
-            done <"./img_md.log"
-          fi
-        fi
-        if test -f img_efi.log; then
-          while read line; do
-            echo $line | awk -F'[/:]' '{print $4}' >>img__efi_url.log
-          done <"./img_efi.log"
-          while read line; do
-            resu1=$(echo $line | grep "cowtransfer")
-            if test $resu1 != ""; then
-              echo "[CowTransfer]($line)" >>img_efi_md.log
-            fi
-            resu2=$(echo $line | grep "file")
-            if test $resu2 != ""; then
-              echo "[FileIO]($line)" >>img_efi_md.log
-            fi
-            resu3=$(echo $line | grep "catbox")
-            if test $resu3 != ""; then
-              echo "[LitterBox]($line)" >>img_efi_md.log
-            fi
-          done <"./img_efi_url.log"
-          if test -f img_efi_md.log; then
-            if test -f img_list.log; then
-              echo "\n" >>img_list.log
-            fi
-            echo "generic-squashfs-combined-img-efi\n" >>img_list.log
-            while read line; do
-              echo "$line  " >>img_list.log
-            done <"./img_efi_md.log"
-          fi
-        fi
-        if test -f rootfs.log; then
-          while read line; do
-            echo $line | awk -F'[/:]' '{print $4}' >>rootfs_url.log
-          done <"./rootfs.log"
-          while read line; do
-            resu1=$(echo $line | grep "cowtransfer")
-            if test $resu1 != ""; then
-              echo "[CowTransfer]($line)" >>rootfs_md.log
-            fi
-            resu2=$(echo $line | grep "file")
-            if test $resu2 != ""; then
-              echo "[FileIO]($line)" >>rootfs_md.log
-            fi
-            resu3=$(echo $line | grep "catbox")
-            if test $resu3 != ""; then
-              echo "[LitterBox]($line)" >>rootfs_md.log
-            fi
-          done <"./rootfs_url.log"
-          if test -f rootfs_md.log; then
-            echo "generic-squashfs-combined-rootfs\n" >>rootfs_list.log
-            while read line; do
-              echo "$line  " >>rootfs_list.log
-            done <"./rootfs_md.log"
-          fi
-        fi
-        if test -f rootfs_img.log; then
-          while read line; do
-            echo $line | awk -F'[/:]' '{print $4}' >>rootfs_img_url.log
-          done <"./rootfs_img.log"
-          while read line; do
-            resu1=$(echo $line | grep "cowtransfer")
-            if test $resu1 != ""; then
-              echo "[CowTransfer]($line)" >>rootfs_img_md.log
-            fi
-            resu2=$(echo $line | grep "file")
-            if test $resu2 != ""; then
-              echo "[FileIO]($line)" >>rootfs_img_md.log
-            fi
-            resu3=$(echo $line | grep "catbox")
-            if test $resu3 != ""; then
-              echo "[LitterBox]($line)" >>rootfs_img_md.log
-            fi
-          done <"./rootfs_img_url.log"
-          if test -f rootfs_img_md.log; then
-            if test -f rootfs_list.log; then
-              echo "\n" >>rootfs_list.log
-            fi
-            echo "generic-squashfs-combined-rootfs-img\n" >>rootfs_list.log
-            while read line; do
-              echo "$line  " >>rootfs_list.log
-            done <"./rootfs_img_md.log"
-          fi
-        fi
+        done
+
         test -f vmdk_list.log && sed -i '1i\- vmdk\\n' vmdk_list.log
         test -f img_list.log && sed -i '1i\\n\\n\- img\\n' img_list.log
         test -f rootfs_list.log && sed -i '1i\\\n\\n- rootfs\\n' rootfs_list.log
