@@ -345,7 +345,7 @@ jobs:
       run: |
         firms="vmdk vmdk_efi img img_efi rootfs rootfs_img"
         for firm in $firms; do
-          	if test -f $firm.log; then
+          	if test -f ${firm}.log; then
           		while read line; do
           			echo $line | awk -F'[/:]' '{print $4}' >>${firm}_url.log
           		done <"./${firm}.log"
@@ -373,11 +373,17 @@ jobs:
           done
 
         test -f vmdk_list.log && sed -i '1i\- vmdk\\n' vmdk_list.log
+        test -f vmdk_efi_list.log && sed -i '1i\- vmdk\\n' vmdk_efi_list.log
         test -f img_list.log && sed -i '1i\\n\\n\- img\\n' img_list.log
+        test -f img_efi_list.log && sed -i '1i\\n\\n\- img\\n' img_efi_list.log
         test -f rootfs_list.log && sed -i '1i\\\n\\n- rootfs\\n' rootfs_list.log
+        test -f rootfs_img_list.log && sed -i '1i\\\n\\n- rootfs\\n' rootfs_img_list.log
         echo "$(cat vmdk_list.log)" >>down_list.log
+        echo "$(cat vmdk_efi_list.log)" >>down_list.log
         echo "$(cat img_list.log)" >>down_list.log
+        echo "$(cat img_efi_list.log)" >>down_list.log
         echo "$(cat rootfs_list.log)" >>down_list.log
+        echo "$(cat rootfs_img_list.log)" >>down_list.log
         sed -i ':a;N;$!ba;s/\n//g' down_list.log
         sed -i 's/\-/\\-/g' down_list.log
         sed -i 's/\./\\./g' down_list.log
