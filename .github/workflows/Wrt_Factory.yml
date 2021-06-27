@@ -179,7 +179,7 @@ jobs:
         name: firmware_${{ env.FILE_DATE }}
         path: ${{ env.FIRMWARE }}
         
-    - name: Upload vmdk firmware
+    - name: Upload vmdk
       id: vmdk
       if: steps.organize.outputs.status == 'success' && env.UP_VMDK == 'true' && !cancelled()
       run: |
@@ -221,7 +221,7 @@ jobs:
         echo "[LitterBox]($(cat lit-efi.log))" >> vmdk_efi_md.log
         fi
         
-    - name: Upload img firmware
+    - name: Upload img
       id: img
       if: steps.organize.outputs.status == 'success' && env.UP_IMG == 'true' && !cancelled()
       run: |
@@ -263,7 +263,7 @@ jobs:
         echo "[LitterBox]($(cat lit-efi-img.log))" >> img_efi_md.log
         fi
         
-    - name: Upload rootfs firmware
+    - name: Upload rootfs
       id: rootfs
       if: steps.organize.outputs.status == 'success' && env.UP_ROOTFS == 'true' && !cancelled()
       run: |
