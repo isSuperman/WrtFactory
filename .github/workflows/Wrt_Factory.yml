@@ -348,25 +348,25 @@ jobs:
           	if test -f $firm.log; then
           		while read line; do
           			echo $line | awk -F'[/:]' '{print $4}' >>${firm}_url.log
-          		done <"./$firm.log"
+          		done <"./${firm}.log"
           		while read line; do
           			resu1=$(echo $line | grep "cowtransfer")
           			if test $resu1 != ""; then
-          				echo "[CowTransfer]($line)" >>${firm}_md.log
+          				echo "[CowTransfer]($line)" >> ${firm}_md.log
           			fi
           			resu2=$(echo $line | grep "file")
           			if test $resu2 != ""; then
-          				echo "[FileIO]($line)" >>${firm}_md.log
+          				echo "[FileIO]($line)" >> ${firm}_md.log
           			fi
           			resu3=$(echo $line | grep "catbox")
           			if test $resu3 != ""; then
-          				echo "[LitterBox]($line)" >>${firm}_md.log
+          				echo "[LitterBox]($line)" >> ${firm}_md.log
           			fi
           		done <"./${firm}_url.log"
           		if test -f ${firm}_md.log; then
           			echo "generic-squashfs-combined\n" >>${firm}_list.log
           			while read line; do
-          				echo "$line  " >>${firm}_list.log
+          				echo "$line  " >> ${firm}_list.log
           			done <"./${firm}_md.log"
           		fi
           	fi
