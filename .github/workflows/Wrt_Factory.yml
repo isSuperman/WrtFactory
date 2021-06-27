@@ -189,36 +189,36 @@ jobs:
         ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined.vmdk 2>&1 | tee cowtransfer.log
         echo "$(cat cowtransfer.log | grep https | cut -f3 -d" ")" > cow.log
         sed -i 's/\./\\\./g' cow.log
-        echo "$(cat cow.log)" >> vmdk.log
+        echo "[Cowtransfer]($(cat cow.log))" >> vmdk_md.log
         
         ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined-efi.vmdk 2>&1 | tee cowtransfer-efi.log
         echo "$(cat cowtransfer-efi.log | grep https | cut -f3 -d" ")" > cow-efi.log
         sed -i 's/\./\\\./g' cow-efi.log
-        echo "$(cat cow-efi.log)" >> vmdk_efi.log
+        echo "[Cowtransfer]($(cat cow-efi.log))" >> vmdk_efi_md.log
         fi
         
         if test ${{ env.UP_FIO }} = 'true';then
         ./transfer fio --no-progress ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined.vmdk 2>&1 | tee fileio.log
         echo "$(cat fileio.log | grep https | cut -f3 -d" ")" > fio.log
         sed -i 's/\./\\\./g' fio.log
-        echo "$(cat fio.log)" >> vmdk.log
+        echo "[Fileio]($(cat fio.log))" >> vmdk_md.log
         
         ./transfer fio --no-progress ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined-efi.vmdk 2>&1 | tee fileio-efi.log
         echo "$(cat fileio-efi.log | grep https | cut -f3 -d" ")" > fio-efi.log
         sed -i 's/\./\\\./g' fio-efi.log
-        echo "$(cat fio-efi.log)" >> vmdk_efi.log
+        echo "[Fileio]($(cat fio-efi.log))" >> vmdk_efi_ md.log
         fi
         
         if test ${{ env.UP_LIT }} = 'true';then
         ./transfer lit --no-progress ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined.vmdk 2>&1 | tee litterbox.log
         echo "$(cat litterbox.log | grep https | cut -f3 -d" ")" > lit.log
         sed -i 's/\./\\\./g' lit.log
-        echo "$(cat lit.log)" >> vmdk.log
+        echo "[LitterBox]($(cat lit.log))" >> vmdk_md.log
         
         ./transfer lit --no-progress ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined-efi.vmdk 2>&1 | tee litterbox-efi.log
         echo "$(cat litterbox-efi.log | grep https | cut -f3 -d" ")" > lit-efi.log
         sed -i 's/\./\\\./g' lit-efi.log
-        echo "$(cat lit-efi.log)" >> vmdk_efi.log
+        echo "[LitterBox]($(cat lit-efi.log))" >> vmdk_efi_md.log
         fi
         
     - name: Upload img firmware
@@ -231,36 +231,36 @@ jobs:
          ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined.img.gz 2>&1 | tee cowtransfer-img.log
         echo "$(cat cowtransfer-img.log | grep https | cut -f3 -d" ")" > cow-img.log
         sed -i 's/\./\\\./g' cow-img.log
-        echo "$(cat cow-img.log)" >> img.log
+        echo "[Cowtransfer]($(cat cow-img.log))" >> img_md.log
         
         ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined-efi.img.gz 2>&1 | tee cowtransfer-efi-img.log
         echo "$(cat cowtransfer-efi-img.log | grep https | cut -f3 -d" ")" > cow-efi-img.log
         sed -i 's/\./\\\./g' cow-efi-img.log
-        echo "$(cat cow-efi-img.log)" >> img_efi.log
+        echo "[Cowtransfer]($(cat cow-efi-img.log))" >> img_efi_md.log
         fi
         
         if test ${{ env.UP_FIO }} = 'true';then
         ./transfer fio --no-progress ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined.img.gz 2>&1 | tee fileio-img.log
         echo "$(cat fileio-img.log | grep https | cut -f3 -d" ")" > fio-img.log
         sed -i 's/\./\\\./g' fio-img.log
-        echo "$(cat fio-img.log)" >> img.log
+        echo "[Fileio]($(cat fio-img.log))" >> img_md.log
         
         ./transfer fio --no-progress ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined-efi.img.gz 2>&1 | tee fileio-efi-img.log
         echo "$(cat fileio-efi-img.log | grep https | cut -f3 -d" ")" > fio-efi-img.log
         sed -i 's/\./\\\./g' fio-efi-img.log
-        echo "$(cat fio-efi-img.log)" >> img_efi.log
+        echo "[Fileio]($(cat fio-efi-img.log))" >> img_efi_md.log
         fi
         
         if test ${{ env.UP_LIT }} = 'true';then
         ./transfer lit --no-progress ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined.img.gz 2>&1 | tee litterbox-img.log
         echo "$(cat litterbox-img.log | grep https | cut -f3 -d" ")" > lit-img.log
         sed -i 's/\./\\\./g' lit-img.log
-        echo "$(cat lit-img.log)" >> img.log
+        echo "[LitterBox]($(cat lit-img.log))" >> img_md.log
         
         ./transfer lit --no-progress ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined-efi.img.gz 2>&1 | tee litterbox-efi-img.log
         echo "$(cat litterbox-efi-img.log | grep https | cut -f3 -d" ")" > lit-efi-img.log
         sed -i 's/\./\\\./g' lit-efi-img.log
-        echo "$(cat lit-efi-img.log)" >> img_efi.log
+        echo "[LitterBox]($(cat lit-efi-img.log))" >> img_efi_md.log
         fi
         
     - name: Upload rootfs firmware
@@ -273,36 +273,36 @@ jobs:
         ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE}/openwrt-x86-64-generic-rootfs.tar.gz 2>&1 | tee cowtransfer-rootfs.log
         echo "$(cat cowtransfer-rootfs.log | grep https | cut -f3 -d" ")" > cow-rootfs.log
         sed -i 's/\./\\\./g' cow-rootfs.log
-        echo "$(cat cow-rootfs.log)" >> rootfs.log
+        echo "[Cowtransfer]($(cat cow-rootfs.log))" >> rootfs_md.log
         
         ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE}/openwrt-x86-64-generic-squashfs-rootfs.img.gz 2>&1 | tee cowtransfer-img-rootfs.log
         echo "$(cat cowtransfer-img-rootfs.log | grep https | cut -f3 -d" ")" > cow-img-rootfs.log
         sed -i 's/\./\\\./g' cow-img-rootfs.log
-        echo "$(cat cow-img-rootfs.log)" >> rootfs_img.log
+        echo "[Cowtransfer]($(cat cow-img-rootfs.log))" >> rootfs_img_md.log
         fi
         
         if test ${{ env.UP_FIO }} = 'true';then
         ./transfer fio --no-progress ${FIRMWARE}/openwrt-x86-64-generic-rootfs.tar.gz 2>&1 | tee fileio-rootfs.log
         echo "$(cat fileio-rootfs.log | grep https | cut -f3 -d" ")" > fio-rootfs.log
         sed -i 's/\./\\\./g' fio-rootfs.log
-        echo "$(cat fio-rootfs.log)" >> rootfs.log
+        echo "[Fileio]($(cat fio-rootfs.log))" >> rootfs_md.log
         
         ./transfer fio --no-progress ${FIRMWARE}/openwrt-x86-64-generic-squashfs-rootfs.img.gz 2>&1 | tee fileio-rootfs-img.log
         echo "$(cat fileio-rootfs-img.log | grep https | cut -f3 -d" ")" > fio-rootfs-img.log
         sed -i 's/\./\\\./g' fio-rootfs-img.log
-        echo "$(cat fio-rootfs-img.log)" >> rootfs_img.log
+        echo "[Fileio]($(cat fio-rootfs-img.log))" >> rootfs_img_md.log
         fi
         
         if test ${{ env.UP_LIT }} = 'true';then
         ./transfer lit --no-progress ${FIRMWARE}/openwrt-x86-64-generic-rootfs.tar.gz 2>&1 | tee litterbox-rootfs.log
         echo "$(cat litterbox-rootfs.log | grep https | cut -f3 -d" ")" > lit-rootfs.log
         sed -i 's/\./\\\./g' lit-rootfs.log
-        echo "$(cat lit-rootfs.log)" >> rootfs.log
+        echo "[LitterBox]($(cat lit-rootfs.log))" >> rootfs_md.log
         
         ./transfer lit --no-progress ${FIRMWARE}/openwrt-x86-64-generic-squashfs-rootfs.img.gz 2>&1 | tee litterbox-rootfs-img.log
         echo "$(cat litterbox-rootfs-img.log | grep https | cut -f3 -d" ")" > lit-rootfs-img.log
         sed -i 's/\./\\\./g' lit-rootfs-img.log
-        echo "$(cat lit-rootfs-img.log)" >> rootfs_img.log
+        echo "[LitterBox]($(cat lit-rootfs-img.log))" >> rootfs_img_md.log
         fi
 
     - name: Generate release tag
@@ -345,51 +345,21 @@ jobs:
       run: |
         firms="vmdk vmdk_efi img img_efi rootfs rootfs_img"
         for firm in $firms; do
-          	if test -f ${firm}.log; then
-          	    echo "${firm}.log 存在"
-          		while read line; do
-          		    echo "${firm}.log 内容"
-          		    echo $line
-          			echo $line | awk -F'[/:]' '{print $4}' >>${firm}_url.log
-          		done <"./${firm}.log"
-          		echo "${firm}_url.log内容"
-          		echo "$(cat ${firm}_url.log)"
-          		while read line; do
-          			resu1=$(echo $line | grep "cowtransfer")
-          			if test $resu1 != ""; then
-          				echo "[CowTransfer]($line)" >> ${firm}_md.log
-          			fi
-          			resu2=$(echo $line | grep "file")
-          			if test $resu2 != ""; then
-          				echo "[FileIO]($line)" >> ${firm}_md.log
-          			fi
-          			resu3=$(echo $line | grep "catbox")
-          			if test $resu3 != ""; then
-          				echo "[LitterBox]($line)" >> ${firm}_md.log
-          			fi
-          		done <"./${firm}_url.log"
-          		if test -f ${firm}_md.log; then
-          		    echo "${firm}_md.log内容"
-          		    echo "$(cat ${firm}_md.log)"
-          			echo "generic-squashfs-combined\n" >>${firm}_list.log
-          			while read line; do
-          				echo "$line  " >> ${firm}_list.log
-          			done <"./${firm}_md.log"
-          		fi
+            if test -f ${firm}_md.log; then
+          	    echo "${firm}_md.log内容"
+          	    echo "$(cat ${firm}_md.log)"
           	fi
-          	echo "${firm}_list.log内容"
-            echo "$(cat ${firm}_list.log)"
-          done
+        done
 
-        test -f vmdk_list.log && sed -i '1i\- vmdk\\n' vmdk_list.log
-        test -f vmdk_efi_list.log && sed -i '1i\- vmdk\\n' vmdk_efi_list.log
-        test -f img_list.log && sed -i '1i\\n\\n\- img\\n' img_list.log
-        test -f img_efi_list.log && sed -i '1i\\n\\n\- img\\n' img_efi_list.log
-        test -f rootfs_list.log && sed -i '1i\\\n\\n- rootfs\\n' rootfs_list.log
-        test -f rootfs_img_list.log && sed -i '1i\\\n\\n- rootfs\\n' rootfs_img_list.log
-        echo "$(cat vmdk_list.log)" >>down_list.log
-        echo "$(cat vmdk_efi_list.log)" >>down_list.log
-        echo "$(cat img_list.log)" >>down_list.log
+        test -f vmdk_md.log && sed -i '1i\- vmdk\\n' vmdk_md.log
+        test -f vmdk_efi_md.log && sed -i '1i\- vmdk\\n' vmdk_efi_md.log
+        test -f img_md.log && sed -i '1i\\n\\n\- img\\n' img_md.log
+        test -f img_efi_md.log && sed -i '1i\\n\\n\- img\\n' img_efi_md.log
+        test -f rootfs_md.log && sed -i '1i\\\n\\n- rootfs\\n' rootfs_md.log
+        test -f rootfs_img_md.log && sed -i '1i\\\n\\n- rootfs\\n' rootfs_img_md.log
+        echo "$(cat vmdk_md.log)" >>down_list.log
+        echo "$(cat vmdk_efi_md.log)" >>down_list.log
+        echo "$(cat img_md.log)" >>down_list.log
         echo "$(cat img_efi_list.log)" >>down_list.log
         echo "$(cat rootfs_list.log)" >>down_list.log
         echo "$(cat rootfs_img_list.log)" >>down_list.log
