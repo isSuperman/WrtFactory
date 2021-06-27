@@ -346,9 +346,8 @@ jobs:
         firms="vmdk vmdk_efi img img_efi rootfs rootfs_img"
         for firm in $firms; do
             if test -f ${firm}_md.log; then
-          	    echo "${firm}_md.log内容"
-          	    echo "$(cat ${firm}_md.log)"
           	    sed -i "1i\\n\\n\- ${firm}\\n" ${firm}_md.log
+          	    echo "${firm}_md.log内容"
           	    echo "$(cat ${firm}_md.log)" >>down_list.log
           	fi
         done
