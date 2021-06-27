@@ -349,7 +349,7 @@ jobs:
             if test -f ${firm}_md.log; then
                 sed -i 's/\n/  /g' ${firm}_md.log
           	    sed -i "s/^/\\n\- ${firm^^}\\n&/g" ${firm}_md.log
-          	    sed -i 's/\\_/\\-/g ${firm}_md.log
+          	    sed -i 's/\\_/\\-/g' ${firm}_md.log
           	    sed -i  "s/$/&$(cat ${firm}_md.log)/g" down_list.log
           	fi
         done
