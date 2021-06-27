@@ -348,21 +348,11 @@ jobs:
             if test -f ${firm}_md.log; then
           	    echo "${firm}_md.log内容"
           	    echo "$(cat ${firm}_md.log)"
+          	    sed -i "1i\\n\\n\- ${firm}\\n" ${firm}_md.log
+          	    echo "$(cat ${firm}_md.log)" >>down_list.log
           	fi
         done
 
-        test -f vmdk_md.log && sed -i '1i\- vmdk\\n' vmdk_md.log
-        test -f vmdk_efi_md.log && sed -i '1i\- vmdk\\n' vmdk_efi_md.log
-        test -f img_md.log && sed -i '1i\\n\\n\- img\\n' img_md.log
-        test -f img_efi_md.log && sed -i '1i\\n\\n\- img\\n' img_efi_md.log
-        test -f rootfs_md.log && sed -i '1i\\\n\\n- rootfs\\n' rootfs_md.log
-        test -f rootfs_img_md.log && sed -i '1i\\\n\\n- rootfs\\n' rootfs_img_md.log
-        echo "$(cat vmdk_md.log)" >>down_list.log
-        echo "$(cat vmdk_efi_md.log)" >>down_list.log
-        echo "$(cat img_md.log)" >>down_list.log
-        echo "$(cat img_efi_list.log)" >>down_list.log
-        echo "$(cat rootfs_list.log)" >>down_list.log
-        echo "$(cat rootfs_img_list.log)" >>down_list.log
         sed -i ':a;N;$!ba;s/\n//g' down_list.log
         sed -i 's/\-/\\-/g' down_list.log
         sed -i 's/\./\\./g' down_list.log
