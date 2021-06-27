@@ -346,9 +346,14 @@ jobs:
         firms="vmdk vmdk_efi img img_efi rootfs rootfs_img"
         for firm in $firms; do
           	if test -f ${firm}.log; then
+          	    echo "${firm}.log 存在"
           		while read line; do
+          		    echo "${firm}.log 内容"
+          		    echo $line
           			echo $line | awk -F'[/:]' '{print $4}' >>${firm}_url.log
           		done <"./${firm}.log"
+          		echo "${firm}_url.log内容"
+          		echo "$(cat ${firm}_url.log)"
           		while read line; do
           			resu1=$(echo $line | grep "cowtransfer")
           			if test $resu1 != ""; then
@@ -364,12 +369,16 @@ jobs:
           			fi
           		done <"./${firm}_url.log"
           		if test -f ${firm}_md.log; then
+          		    echo "${firm}_md.log内容"
+          		    echo "$(cat ${firm}_md.log)"
           			echo "generic-squashfs-combined\n" >>${firm}_list.log
           			while read line; do
           				echo "$line  " >> ${firm}_list.log
           			done <"./${firm}_md.log"
           		fi
           	fi
+          	echo "${firm}_list.log内容"
+            echo "$(cat ${firm}_list.log)"
           done
 
         test -f vmdk_list.log && sed -i '1i\- vmdk\\n' vmdk_list.log
