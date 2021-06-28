@@ -340,7 +340,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
-    - name: Orgnize down list1f
+    - name: Orgnize down list
       if: steps.organize.outputs.status == 'success' && !cancelled()
       run: |
         firms="vmdk vmdk_efi img img_efi rootfs rootfs_img"
