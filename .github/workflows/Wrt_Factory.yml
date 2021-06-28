@@ -344,7 +344,6 @@ jobs:
       if: steps.organize.outputs.status == 'success' && !cancelled()
       run: |
 	firms="vmdk vmdk_efi img img_efi rootfs rootfs_img"
-	rm -rf down_list.log && touch down_list.log
 	for firm in $firms; do
 		if test -f ${firm}_md.log; then
 			sed -i ':a;N;$!ba;s/\n/  /g' ${firm}_md.log
