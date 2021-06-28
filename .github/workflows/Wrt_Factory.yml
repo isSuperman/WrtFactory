@@ -340,22 +340,21 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
-    - name: Orgnize down list
+    - name: Orgnize down list1f
       if: steps.organize.outputs.status == 'success' && !cancelled()
       run: |
-      	firms="vmdk vmdk_efi img img_efi rootfs rootfs_img"
-      	for firm in $firms; do
-			if test -f ${firm}_md.log; then
-				sed -i ':a;N;$!ba;s/\n/  /g' ${firm}_md.log
-				sed -i "s/^/\- ${firm^^}\\n&/g" ${firm}_md.log
-				sed -i 's/_/-/g' ${firm}_md.log
-				echo "$(cat ${firm}_md.log)" >> down_list.log
-			fi
-	done
-
-	sed -i 's/\-/\\-/g' down_list.log
-	sed -i 's/\./\\./g' down_list.log
-	sed -i 's/\_/\\_/g' down_list.log
+        firms="vmdk vmdk_efi img img_efi rootfs rootfs_img"
+        for firm in $firms; do
+            if test -f ${firm}_md.log; then
+          	    sed -i ':a;N;$!ba;s/\n/  /g' ${firm}_md.log
+          	    sed -i "s/^/\- ${firm^^}\\n&/g" ${firm}_md.log
+          	    sed -i 's/_/-/g' ${firm}_md.log
+          	    echo "$(cat ${firm}_md.log)" >> down_list.log
+          	fi
+        done
+        sed -i 's/\-/\\-/g' down_list.log
+        sed -i 's/\./\\./g' down_list.log
+        sed -i 's/\_/\\_/g' down_list.log
         echo "DOWN_LIST=$(cat down_list.log)" >>$GITHUB_ENV
       
     - name: Push Notification
