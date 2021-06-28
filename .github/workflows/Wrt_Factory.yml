@@ -350,14 +350,14 @@ jobs:
           	    sed -i "s/^/\- ${firm^^}\n/g" ${firm}_md.log
           	    sed -i 's/_/-/g' ${firm}_md.log
           	    lin=0
-                for line in $(cat ${firm}_md.log); do
+                while read line || [ -n "$line" ]; do
                   if test $lin = 0;then
                     lin=1
                     echo "${line}" >> down_list.log
                   else
                     echo "\n${line}" >> down_list.log
                   fi
-                done
+                done < "./${firm}_md.log"
           	fi
         done
         sed -i 's/\-/\\-/g' down_list.log
