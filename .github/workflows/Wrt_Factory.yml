@@ -343,8 +343,8 @@ jobs:
     - name: Orgnize down list
       if: steps.organize.outputs.status == 'success' && !cancelled()
       run: |
-	firms="vmdk vmdk_efi img img_efi rootfs rootfs_img"
-	for firm in $firms; do
+	for firm in vmdk vmdk_efi img img_efi rootfs rootfs_img
+	do
 		if test -f ${firm}_md.log; then
 			sed -i ':a;N;$!ba;s/\n/  /g' ${firm}_md.log
 			sed -i "s/^/\- ${firm^^}\\n&/g" ${firm}_md.log
