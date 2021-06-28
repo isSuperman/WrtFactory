@@ -206,7 +206,7 @@ jobs:
         ./transfer fio --no-progress ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined-efi.vmdk 2>&1 | tee fileio-efi.log
         echo "$(cat fileio-efi.log | grep https | cut -f3 -d" ")" > fio-efi.log
         sed -i 's/\./\\\./g' fio-efi.log
-        echo "[Fileio]($(cat fio-efi.log))" >> vmdk_efi_ md.log
+        echo "[Fileio]($(cat fio-efi.log))" >> vmdk_efi_md.log
         fi
         
         if test ${{ env.UP_LIT }} = 'true';then
