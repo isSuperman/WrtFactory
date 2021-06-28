@@ -36,8 +36,8 @@ env:
 jobs:
   build:
     #runs-on: [self-hosted, linux, x64, ql]
-    runs-on: [self-hosted, linux, x64, vm]
-    #runs-on: ubuntu-18.04
+    #runs-on: [self-hosted, linux, x64, vm]
+    runs-on: ubuntu-18.04
 
     steps:
 
