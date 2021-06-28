@@ -347,7 +347,7 @@ jobs:
         for firm in $firms; do
             if test -f ${firm}_md.log; then
           	    sed -i ':a;N;$!ba;s/\n/  /g' ${firm}_md.log
-          	    sed -i "s/^/🔗 ${firm}\n/g" ${firm}_md.log
+          	    sed -i "s/^/🗂 ${firm}\n/g" ${firm}_md.log
           	    sed -i 's/_/-/g' ${firm}_md.log
                 while read line || [ -n "$line" ]; do
                     echo "\n${line}" >> down_list.log
