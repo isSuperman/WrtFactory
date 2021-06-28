@@ -352,6 +352,7 @@ jobs:
           	    echo "$(cat ${firm}_md.log)" >> down_list.log
           	fi
         done
+        sed -i ':a;N;$!ba;s/\n//g' down_list.log
         sed -i 's/\-/\\-/g' down_list.log
         sed -i 's/\./\\./g' down_list.log
         sed -i 's/\_/\\_/g' down_list.log
