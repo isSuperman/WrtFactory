@@ -364,7 +364,7 @@ jobs:
         sed -i 's/\-/\\-/g' down_list.log
         sed -i 's/\./\\./g' down_list.log
         sed -i 's/\_/\\_/g' down_list.log
-        sed -i ':a;N;$!ba;s/\n/  /g' down_list.log
+        sed -i ':a;N;$!ba;s/\n//g' down_list.log
         echo "DOWN_LIST=$(cat down_list.log)" >>$GITHUB_ENV
       
     - name: Push Notification
