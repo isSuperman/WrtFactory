@@ -73,6 +73,6 @@ jobs:
     - name: Cau Spend Time
       id: caculate
       run: |
-        curl -X POST 'https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage' -H 'Content-Type: application/x-www-form-urlencoded' --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&disable_web_page_preview=true&text=*Openwrt Update Checker：*\n\n⚙️ 固件开始编译\.\.\.\.\n🔮 预计${{ env.DT }}完成\n\n*What\'s New v${{ env.RECENT_DATE }}*${{ env.DATE_INFO }}\n\n耗时：${{ env.SPEND_TIME }}'
+        curl -X POST 'https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage' -H 'Content-Type: application/x-www-form-urlencoded' --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&disable_web_page_preview=true&text=*Openwrt Update Checker：*\n\n⚙️ 固件开始编译\.\.\.\.\n🔮 预计${{ env.DT }}完成\n\n*What\'s New v${{ env.RECENT_DATE }}*${{ env.DATE_INFO }}\n\n🔗 耗时：${{ env.SPEND_TIME }}'
 
         
