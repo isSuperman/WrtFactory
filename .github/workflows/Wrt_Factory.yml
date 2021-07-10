@@ -100,9 +100,10 @@ jobs:
 
     - name: Load custom feeds
       run: |
+        rm -rf openwrt/feeds.conf.default
         [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
         cd openwrt
-        [ `grep -c "helloworld" feeds.conf.default` -eq "0" ] && sed -i '$a src-git helloworld https://github.com/fw876/helloworld.git' feeds.conf.default
+        sed -i '$a src-git helloworld https://github.com/fw876/helloworld.git' feeds.conf.default
 
     - name: Update and install feeds
       run: |
