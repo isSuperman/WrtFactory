@@ -101,7 +101,7 @@ jobs:
     - name: Load custom feeds
       run: |
         cd openwrt
-        sed -i '$a src-git helloworld https://github.com/fw876/helloworld.git' feeds.conf.default
+        [ `grep -c "helloworld" feeds.conf.default` -eq "0" ] && sed -i '$a src-git helloworld https://github.com/fw876/helloworld.git' feeds.conf.default
 
     - name: Update and install feeds
       run: |
@@ -114,15 +114,6 @@ jobs:
         [ -e files ] && mv files openwrt/files
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
         cd openwrt
-        hell=0
-        while read line
-        do
-          res=$(echo $line | grep 'helloworld')
-          if test $res != "";then
-            hell=1
-          fi
-        done < './feeds.conf.default'
-        [ $hell -eq 0 ] && sed -i '$a src-git helloworld https://github.com/fw876/helloworld.git' feeds.conf.default
         sed -i 's@.*CYXluq4wUazHjmCDBCqXF*@#&@g' package/lean/default-settings/files/zzz-default-settings
         sed -i "s/OpenWrt /$(TZ=UTC-8 date "+%m.%d") @ OpenWrt /g" package/lean/default-settings/files/zzz-default-settings
 
