@@ -37,8 +37,8 @@ jobs:
   build:
     #runs-on: [self-hosted, linux, x64, ql]
     #runs-on: [self-hosted, linux, x64, vm]
-    #runs-on: [self-hosted, linux, x64, cp]
-    runs-on: ubuntu-20.04
+    runs-on: [self-hosted, linux, x64, cp]
+    #runs-on: ubuntu-20.04
 
     steps:
 
