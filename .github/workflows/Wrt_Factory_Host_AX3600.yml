@@ -27,8 +27,8 @@ env:
   UP_COW: true
   UP_FIO: true
   UP_LIT: true
-  UP_VMDK: true
-  UP_IMG: true
+  UP_VMDK: false
+  UP_IMG: false
   UP_ROOTFS: false
   UP_ONLY_EFI: true
 
