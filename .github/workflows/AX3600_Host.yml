@@ -8,10 +8,9 @@
 # Description: Build Wrt Firmware using GitHub Actions
 #
 
-name: Wrt Factory Github AX3600
+name: Host AX3600
 
 on:
-  repository_dispatch:
   workflow_dispatch:
   
 env:
@@ -31,7 +30,7 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: [self-hosted, linux, x64, cp]
 
     steps:
 
@@ -69,7 +68,8 @@ jobs:
       working-directory: /workdir
       run: |
         df -hT $PWD
-        git clone $REPO_URL -b $REPO_BRANCH openwrt
+        [ -e openwrt ] && cd openwrt && git pull
+        [ ! -e openwrt ] && git clone $REPO_URL -b $REPO_BRANCH openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
         
     - name: Generate commit info
@@ -89,7 +89,7 @@ jobs:
         cd openwrt/package/lean
         rm -rf luci-theme-argon
         git clone -b 18.06 https://github.com/jerrykuku/luci-theme-argon.git
-        git clone https://github.com/jerrykuku/luci-app-argon-config.git
+        [ -e luci-app-argon-config ] && git pull || git clone https://github.com/jerrykuku/luci-app-argon-config.git
 
     - name: Update and install feeds
       run: |
@@ -102,7 +102,7 @@ jobs:
         [ -e files ] && mv files openwrt/files
         mv config/$CONFIG_FILE openwrt/.config
         cd openwrt
-        sed -i '$a src-git helloworld https://github.com/fw876/helloworld.git' feeds.conf.default
+        [ `grep -c "helloworld" feeds.conf.default` -eq "0" ] && sed -i '$a src-git helloworld https://github.com/fw876/helloworld.git' feeds.conf.default
         sed -i 's@.*CYXluq4wUazHjmCDBCqXF*@#&@g' package/lean/default-settings/files/zzz-default-settings
 
     - name: Download package
@@ -177,7 +177,7 @@ jobs:
               ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE} 2>&1 | tee cowtransfer.log
               echo "$(cat cowtransfer.log | grep https | cut -f3 -d" ")" > cow.log
               sed -i 's/\./\\\./g' cow.log
-              echo "[Cowtransfer]($(cat cow.log))" >> cow_md.log
+              echo "[Cowtransfer]($(cat cow.log))" >> down_md.log
             fi
         fi
         
@@ -186,7 +186,7 @@ jobs:
               ./transfer fio --no-progress ${FIRMWARE} 2>&1 | tee fileio.log
               echo "$(cat fileio.log | grep https | cut -f3 -d" ")" > fio.log
               sed -i 's/\./\\\./g' fio.log
-              echo "[Fileio]($(cat fio.log))" >> fio_md.log
+              echo "[Fileio]($(cat fio.log))" >> down_md.log
             fi
         fi
         
@@ -195,7 +195,7 @@ jobs:
               ./transfer lit --no-progress ${FIRMWARE} 2>&1 | tee litterbox.log
               echo "$(cat litterbox.log | grep https | cut -f3 -d" ")" > lit.log
               sed -i 's/\./\\\./g' lit.log
-              echo "[LitterBox]($(cat lit.log))" >> lit_md.log
+              echo "[LitterBox]($(cat lit.log))" >> down_md.log
             fi
         fi
         
@@ -256,8 +256,9 @@ jobs:
           echo "/nthere is no firmware generated" >> down_list.log
           echo "DOWN_LIST=$(cat down_list.log)" >>$GITHUB_ENV
         fi      
-      
+        
     - name: Push Notification
       if: steps.organize.outputs.status == 'success' && !cancelled()
       run: |
-        curl -sSX POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -H "Content-Type: application/x-www-form-urlencoded" --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&disable_web_page_preview=true&text=*Wrt Update Checker：*\n\n_Date: ${{ env.COME_DATE }}_\n_Result: success 🎉_\n\n*What\'s New v${{ env.RECENT_DATE }}*${{ env.DATE_INFO }}\n\n*Artifacts*${{ env.DOWN_LIST }}\n\n_From Github Spend Time: ${{ env.SPEND_TIME }}_'        
+        curl -sSX POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -H "Content-Type: application/x-www-form-urlencoded" --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&disable_web_page_preview=true&text=*Wrt Update Checker：*\n\n_Date: ${{ env.COME_DATE }}_\n_Result: success 🎉_\n\n*What\'s New v${{ env.RECENT_DATE }}*${{ env.DATE_INFO }}\n\n*Artifacts*${{ env.DOWN_LIST }}\n\n_From Host Spend Time: ${{ env.SPEND_TIME }}_'        
+        rm -rf *.log release.txt $SPEND_TIME $COMMIT_INFO $ETA
