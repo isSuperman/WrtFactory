@@ -8,7 +8,7 @@
 # Description: Build Wrt Firmware using GitHub Actions
 #
 
-name: Host X86
+name: x86 Github
 
 on:
   workflow_dispatch:
