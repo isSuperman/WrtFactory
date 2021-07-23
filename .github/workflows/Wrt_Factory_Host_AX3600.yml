@@ -27,10 +27,6 @@ env:
   UP_COW: true
   UP_FIO: true
   UP_LIT: true
-  UP_VMDK: false
-  UP_IMG: false
-  UP_ROOTFS: false
-  UP_ONLY_EFI: true
 
 jobs:
   build:
@@ -170,180 +166,39 @@ jobs:
         name: firmware_${{ env.FILE_DATE }}
         path: ${{ env.FIRMWARE }}
         
-    - name: Upload vmdk
-      id: vmdk
-      if: steps.organize.outputs.status == 'success' && env.UP_VMDK == 'true' && !cancelled()
+    - name: Upload 
+      id: upload
+      if: steps.organize.outputs.status == 'success' && !cancelled()
       run: |
         [ ! -f transfer ] && curl -fsSL git.io/file-transfer | sh
         
         if test ${{ env.UP_COW }} = 'true';then
-          if test ${{ env.UP_ONLY_EFI }} != 'true';then
-            if test -f ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined.vmdk;then
-              ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined.vmdk 2>&1 | tee cowtransfer.log
+            if test -f ${FIRMWARE};then
+              ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE} 2>&1 | tee cowtransfer.log
               echo "$(cat cowtransfer.log | grep https | cut -f3 -d" ")" > cow.log
               sed -i 's/\./\\\./g' cow.log
-              echo "[Cowtransfer]($(cat cow.log))" >> vmdk_md.log
+              echo "[Cowtransfer]($(cat cow.log))" >> cow_md.log
             fi
-          fi
-          
-          if test -f ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined-efi.vmdk;then
-            ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined-efi.vmdk 2>&1 | tee cowtransfer-efi.log
-            echo "$(cat cowtransfer-efi.log | grep https | cut -f3 -d" ")" > cow-efi.log
-            sed -i 's/\./\\\./g' cow-efi.log
-            echo "[Cowtransfer]($(cat cow-efi.log))" >> vmdk_efi_md.log
-          fi
         fi
         
         if test ${{ env.UP_FIO }} = 'true';then
-          if test ${{ env.UP_ONLY_EFI }} != 'true';then
-            if test -f ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined.vmdk;then
-              ./transfer fio --no-progress ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined.vmdk 2>&1 | tee fileio.log
+            if test -f ${FIRMWARE};then
+              ./transfer fio --no-progress ${FIRMWARE} 2>&1 | tee fileio.log
               echo "$(cat fileio.log | grep https | cut -f3 -d" ")" > fio.log
               sed -i 's/\./\\\./g' fio.log
-              echo "[Fileio]($(cat fio.log))" >> vmdk_md.log
+              echo "[Fileio]($(cat fio.log))" >> fio_md.log
             fi
-          fi
-          
-          if test -f ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined-efi.vmdk;then
-            ./transfer fio --no-progress ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined-efi.vmdk 2>&1 | tee fileio-efi.log
-            echo "$(cat fileio-efi.log | grep https | cut -f3 -d" ")" > fio-efi.log
-            sed -i 's/\./\\\./g' fio-efi.log
-            echo "[Fileio]($(cat fio-efi.log))" >> vmdk_efi_md.log
-          fi
         fi
         
         if test ${{ env.UP_LIT }} = 'true';then
-          if test ${{ env.UP_ONLY_EFI }} != 'true';then
-            if test -f ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined.vmdk;then
-              ./transfer lit --no-progress ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined.vmdk 2>&1 | tee litterbox.log
+            if test -f ${FIRMWARE};then
+              ./transfer lit --no-progress ${FIRMWARE} 2>&1 | tee litterbox.log
               echo "$(cat litterbox.log | grep https | cut -f3 -d" ")" > lit.log
               sed -i 's/\./\\\./g' lit.log
-              echo "[LitterBox]($(cat lit.log))" >> vmdk_md.log
+              echo "[LitterBox]($(cat lit.log))" >> lit_md.log
             fi
-          fi
-          
-          if test -f ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined-efi.vmdk;then
-            ./transfer lit --no-progress ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined-efi.vmdk 2>&1 | tee litterbox-efi.log
-            echo "$(cat litterbox-efi.log | grep https | cut -f3 -d" ")" > lit-efi.log
-            sed -i 's/\./\\\./g' lit-efi.log
-            echo "[LitterBox]($(cat lit-efi.log))" >> vmdk_efi_md.log
-          fi
         fi
         
-    - name: Upload img
-      id: img
-      if: steps.organize.outputs.status == 'success' && env.UP_IMG == 'true' && !cancelled()
-      run: |
-        [ ! -f transfer ] && curl -fsSL git.io/file-transfer | sh
-        
-        if test ${{ env.UP_COW }} = 'true';then
-          if test ${{ env.UP_ONLY_EFI }} != 'true';then
-            if test -f ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined.img.gz;then
-              ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined.img.gz 2>&1 | tee cowtransfer-img.log
-              echo "$(cat cowtransfer-img.log | grep https | cut -f3 -d" ")" > cow-img.log
-              sed -i 's/\./\\\./g' cow-img.log
-              echo "[Cowtransfer]($(cat cow-img.log))" >> img_md.log
-            fi
-          fi
-          
-          if test -f ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined-efi.img.gz;then
-            ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined-efi.img.gz 2>&1 | tee cowtransfer-efi-img.log
-            echo "$(cat cowtransfer-efi-img.log | grep https | cut -f3 -d" ")" > cow-efi-img.log
-            sed -i 's/\./\\\./g' cow-efi-img.log
-            echo "[Cowtransfer]($(cat cow-efi-img.log))" >> img_efi_md.log
-          fi
-        fi
-        
-        if test ${{ env.UP_FIO }} = 'true';then
-          if test ${{ env.UP_ONLY_EFI }} != 'true';then
-            if test -f ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined.img.gz;then
-              ./transfer fio --no-progress ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined.img.gz 2>&1 | tee fileio-img.log
-              echo "$(cat fileio-img.log | grep https | cut -f3 -d" ")" > fio-img.log
-              sed -i 's/\./\\\./g' fio-img.log
-              echo "[Fileio]($(cat fio-img.log))" >> img_md.log
-            fi
-          fi
-          
-          if test -f ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined-efi.img.gz;then
-            ./transfer fio --no-progress ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined-efi.img.gz 2>&1 | tee fileio-efi-img.log
-            echo "$(cat fileio-efi-img.log | grep https | cut -f3 -d" ")" > fio-efi-img.log
-            sed -i 's/\./\\\./g' fio-efi-img.log
-            echo "[Fileio]($(cat fio-efi-img.log))" >> img_efi_md.log
-          fi
-        fi
-        
-        if test ${{ env.UP_LIT }} = 'true';then
-          if test ${{ env.UP_ONLY_EFI }} != 'true';then
-            if test -f ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined.img.gz;then
-              ./transfer lit --no-progress ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined.img.gz 2>&1 | tee litterbox-img.log
-              echo "$(cat litterbox-img.log | grep https | cut -f3 -d" ")" > lit-img.log
-              sed -i 's/\./\\\./g' lit-img.log
-              echo "[LitterBox]($(cat lit-img.log))" >> img_md.log
-            fi
-          fi
-        
-          if test -f ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined-efi.img.gz;then
-            ./transfer lit --no-progress ${FIRMWARE}/openwrt-x86-64-generic-squashfs-combined-efi.img.gz 2>&1 | tee litterbox-efi-img.log
-            echo "$(cat litterbox-efi-img.log | grep https | cut -f3 -d" ")" > lit-efi-img.log
-            sed -i 's/\./\\\./g' lit-efi-img.log
-            echo "[LitterBox]($(cat lit-efi-img.log))" >> img_efi_md.log
-          fi
-        fi
-        
-    - name: Upload rootfs
-      id: rootfs
-      if: steps.organize.outputs.status == 'success' && env.UP_ROOTFS == 'true' && !cancelled()
-      run: |
-        [ ! -f transfer ] && curl -fsSL git.io/file-transfer | sh
-        
-        if test ${{ env.UP_COW }} = 'true';then
-          if test -f ${FIRMWARE}/openwrt-x86-64-generic-rootfs.tar.gz;then
-            ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE}/openwrt-x86-64-generic-rootfs.tar.gz 2>&1 | tee cowtransfer-rootfs.log
-            echo "$(cat cowtransfer-rootfs.log | grep https | cut -f3 -d" ")" > cow-rootfs.log
-            sed -i 's/\./\\\./g' cow-rootfs.log
-            echo "[Cowtransfer]($(cat cow-rootfs.log))" >> rootfs_md.log
-          fi
-          
-          if test -f ${FIRMWARE}/openwrt-x86-64-generic-squashfs-rootfs.img.gz;then
-            ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE}/openwrt-x86-64-generic-squashfs-rootfs.img.gz 2>&1 | tee cowtransfer-img-rootfs.log
-            echo "$(cat cowtransfer-img-rootfs.log | grep https | cut -f3 -d" ")" > cow-img-rootfs.log
-            sed -i 's/\./\\\./g' cow-img-rootfs.log
-            echo "[Cowtransfer]($(cat cow-img-rootfs.log))" >> rootfs_img_md.log
-          fi
-        fi
-        
-        if test ${{ env.UP_FIO }} = 'true';then
-          if test -f ${FIRMWARE}/openwrt-x86-64-generic-rootfs.tar.gz;then
-            ./transfer fio --no-progress ${FIRMWARE}/openwrt-x86-64-generic-rootfs.tar.gz 2>&1 | tee fileio-rootfs.log
-            echo "$(cat fileio-rootfs.log | grep https | cut -f3 -d" ")" > fio-rootfs.log
-            sed -i 's/\./\\\./g' fio-rootfs.log
-            echo "[Fileio]($(cat fio-rootfs.log))" >> rootfs_md.log
-          fi
-          
-          if test -f ${FIRMWARE}/openwrt-x86-64-generic-squashfs-rootfs.img.gz;then
-            ./transfer fio --no-progress ${FIRMWARE}/openwrt-x86-64-generic-squashfs-rootfs.img.gz 2>&1 | tee fileio-rootfs-img.log
-            echo "$(cat fileio-rootfs-img.log | grep https | cut -f3 -d" ")" > fio-rootfs-img.log
-            sed -i 's/\./\\\./g' fio-rootfs-img.log
-            echo "[Fileio]($(cat fio-rootfs-img.log))" >> rootfs_img_md.log
-          fi
-        fi
-        
-        if test ${{ env.UP_LIT }} = 'true';then
-          if test -f ${FIRMWARE}/openwrt-x86-64-generic-rootfs.tar.gz;then
-            ./transfer lit --no-progress ${FIRMWARE}/openwrt-x86-64-generic-rootfs.tar.gz 2>&1 | tee litterbox-rootfs.log
-            echo "$(cat litterbox-rootfs.log | grep https | cut -f3 -d" ")" > lit-rootfs.log
-            sed -i 's/\./\\\./g' lit-rootfs.log
-            echo "[LitterBox]($(cat lit-rootfs.log))" >> rootfs_md.log
-          fi
-          
-          if test -f ${FIRMWARE}/openwrt-x86-64-generic-squashfs-rootfs.img.gz;then
-            ./transfer lit --no-progress ${FIRMWARE}/openwrt-x86-64-generic-squashfs-rootfs.img.gz 2>&1 | tee litterbox-rootfs-img.log
-            echo "$(cat litterbox-rootfs-img.log | grep https | cut -f3 -d" ")" > lit-rootfs-img.log
-            sed -i 's/\./\\\./g' lit-rootfs-img.log
-            echo "[LitterBox]($(cat lit-rootfs-img.log))" >> rootfs_img_md.log
-          fi
-        fi
-
     - name: Generate release tag
       id: tag
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
@@ -382,7 +237,7 @@ jobs:
     - name: Orgnize down list
       if: steps.organize.outputs.status == 'success' && !cancelled()
       run: |
-        firms="vmdk vmdk_efi img img_efi rootfs rootfs_img"
+        firms="cow fio lit"
         for firm in $firms; do
             if test -f ${firm}_md.log; then
           	    sed -i ':a;N;$!ba;s/\n/  /g' ${firm}_md.log
@@ -400,10 +255,9 @@ jobs:
           sed -i ':a;N;$!ba;s/\n//g' down_list.log
           echo "DOWN_LIST=$(cat down_list.log)" >>$GITHUB_ENV
         else
-          echo "there is no firmware generated" >> down_list.log
+          echo "/nthere is no firmware generated" >> down_list.log
           echo "DOWN_LIST=$(cat down_list.log)" >>$GITHUB_ENV
-        fi
-      
+        fi      
     - name: Push Notification
       if: steps.organize.outputs.status == 'success' && !cancelled()
       run: |
