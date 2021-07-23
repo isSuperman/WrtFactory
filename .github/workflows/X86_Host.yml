@@ -400,7 +400,7 @@ jobs:
           sed -i ':a;N;$!ba;s/\n//g' down_list.log
           echo "DOWN_LIST=$(cat down_list.log)" >>$GITHUB_ENV
         else
-          echo "there is no firmware generated" >> down_list.log
+          echo "\nthere is no firmware generated" >> down_list.log
           echo "DOWN_LIST=$(cat down_list.log)" >>$GITHUB_ENV
         fi
       
