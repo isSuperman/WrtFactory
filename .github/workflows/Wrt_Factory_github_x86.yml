@@ -8,7 +8,7 @@
 # Description: Build Wrt Firmware using GitHub Actions
 #
 
-name: Wrt Factory Github
+name: Wrt Factory Github x86
 
 on:
   repository_dispatch:
@@ -18,7 +18,7 @@ env:
   REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
   FEEDS_CONF: feeds.conf.default
-  CONFIG_FILE: .config
+  CONFIG_FILE: X86
   SPEND_TIME: spend_time_formate.sh
   COMMIT_INFO: commit_formate.sh
   ETA: ETA_formate.sh
@@ -104,7 +104,7 @@ jobs:
     - name: Load custom configuration
       run: |
         [ -e files ] && mv files openwrt/files
-        [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
+        mv config/$CONFIG_FILE openwrt/.config
         cd openwrt
         sed -i '$a src-git helloworld https://github.com/fw876/helloworld.git' feeds.conf.default
         sed -i 's@.*CYXluq4wUazHjmCDBCqXF*@#&@g' package/lean/default-settings/files/zzz-default-settings
