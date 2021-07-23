@@ -8,7 +8,7 @@
 # Description: Build Wrt Firmware using GitHub Actions
 #
 
-name: x86 Github
+name: X86 Github
 
 on:
   repository_dispatch:
