@@ -237,17 +237,15 @@ jobs:
     - name: Orgnize down list
       if: steps.organize.outputs.status == 'success' && !cancelled()
       run: |
-        firms="cow fio lit"
-        for firm in $firms; do
-            if test -f ${firm}_md.log; then
-          	    sed -i ':a;N;$!ba;s/\n/  /g' ${firm}_md.log
-          	    sed -i "s/^/🗂 ${firm}\n/g" ${firm}_md.log
-          	    sed -i 's/_/-/g' ${firm}_md.log
+            if test -f down_md.log; then
+          	    sed -i ':a;N;$!ba;s/\n/  /g' down_md.log
+          	    sed -i "s/^/🗂 ${firm}\n/g" down_md.log
+          	    sed -i 's/_/-/g' down_md.log
                 while read line || [ -n "$line" ]; do
                     echo "\n${line}" >> down_list.log
-                done < "./${firm}_md.log"
+                done < "./down_md.log"
           	fi
-        done
+
         if test -f down_list.log;then
           sed -i 's/\-/\\-/g' down_list.log
           sed -i 's/\./\\./g' down_list.log
@@ -257,7 +255,7 @@ jobs:
         else
           echo "/nthere is no firmware generated" >> down_list.log
           echo "DOWN_LIST=$(cat down_list.log)" >>$GITHUB_ENV
-        fi
+        fi      
       
     - name: Push Notification
       if: steps.organize.outputs.status == 'success' && !cancelled()
