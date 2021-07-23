@@ -177,7 +177,7 @@ jobs:
               ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE} 2>&1 | tee cowtransfer.log
               echo "$(cat cowtransfer.log | grep https | cut -f3 -d" ")" > cow.log
               sed -i 's/\./\\\./g' cow.log
-              echo "[Cowtransfer]($(cat cow.log))" >> cow_md.log
+              echo "[Cowtransfer]($(cat cow.log))" >> down_md.log
             fi
         fi
         
@@ -186,7 +186,7 @@ jobs:
               ./transfer fio --no-progress ${FIRMWARE} 2>&1 | tee fileio.log
               echo "$(cat fileio.log | grep https | cut -f3 -d" ")" > fio.log
               sed -i 's/\./\\\./g' fio.log
-              echo "[Fileio]($(cat fio.log))" >> fio_md.log
+              echo "[Fileio]($(cat fio.log))" >> down_md.log
             fi
         fi
         
@@ -195,7 +195,7 @@ jobs:
               ./transfer lit --no-progress ${FIRMWARE} 2>&1 | tee litterbox.log
               echo "$(cat litterbox.log | grep https | cut -f3 -d" ")" > lit.log
               sed -i 's/\./\\\./g' lit.log
-              echo "[LitterBox]($(cat lit.log))" >> lit_md.log
+              echo "[LitterBox]($(cat lit.log))" >> down_md.log
             fi
         fi
         
