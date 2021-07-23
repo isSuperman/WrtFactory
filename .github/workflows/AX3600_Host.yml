@@ -8,7 +8,7 @@
 # Description: Build Wrt Firmware using GitHub Actions
 #
 
-name: Host AX3600
+name: AX3600 Host
 
 on:
   workflow_dispatch:
@@ -237,14 +237,14 @@ jobs:
     - name: Orgnize down list
       if: steps.organize.outputs.status == 'success' && !cancelled()
       run: |
-            if test -f down_md.log; then
-          	    sed -i ':a;N;$!ba;s/\n/  /g' down_md.log
-          	    sed -i "s/^/🗂 ${firm}\n/g" down_md.log
-          	    sed -i 's/_/-/g' down_md.log
-                while read line || [ -n "$line" ]; do
-                    echo "\n${line}" >> down_list.log
-                done < "./down_md.log"
-          	fi
+        if test -f down_md.log; then
+          sed -i ':a;N;$!ba;s/\n/  /g' down_md.log
+          sed -i "s/^/🗂 ${firm}\n/g" down_md.log
+          sed -i 's/_/-/g' down_md.log
+          while read line || [ -n "$line" ]; do
+              echo "\n${line}" >> down_list.log
+          done < "./down_md.log"
+        fi
 
         if test -f down_list.log;then
           sed -i 's/\-/\\-/g' down_list.log
@@ -255,7 +255,7 @@ jobs:
         else
           echo "/nthere is no firmware generated" >> down_list.log
           echo "DOWN_LIST=$(cat down_list.log)" >>$GITHUB_ENV
-        fi      
+         fi      
         
     - name: Push Notification
       if: steps.organize.outputs.status == 'success' && !cancelled()
