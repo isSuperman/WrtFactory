@@ -197,6 +197,7 @@ jobs:
           echo "[LitterBox]($(cat lit.log))" >> down_md.log
         fi
         rm -rf firmware-xiaomi-ax3600.zip
+        mv down_md.log $GITHUB_WORKSPACE
         
     - name: Generate release tag
       id: tag
