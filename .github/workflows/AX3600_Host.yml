@@ -171,10 +171,10 @@ jobs:
       id: upload
       if: steps.organize.outputs.status == 'success' && !cancelled()
       run: |
-        cd ${FIRMWARE}
+        cd ${{ env.FIRMWARE }}
         curl -fsSL git.io/file-transfer | sh
         
-        zip firmware-xiaomi-ax3600.zip *
+        zip firmware-xiaomi-ax3600.zip openwrt*
         
         if test ${{ env.UP_COW }} = 'true';then
           ./transfer cow --block 2621440 -s -p 64 --no-progress firmware-xiaomi-ax3600.zip 2>&1 | tee cowtransfer.log
@@ -262,3 +262,5 @@ jobs:
         rm -rf *.log release.txt $SPEND_TIME $COMMIT_INFO $ETA
         cd openwrt
         rm -rf bin
+        cd ${{ env.FIRMWARE }}
+        rm -rf *.log
