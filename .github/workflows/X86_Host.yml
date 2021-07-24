@@ -51,8 +51,8 @@ jobs:
         sudo -E apt-get -qq autoremove --purge
         sudo -E apt-get -qq clean
         sudo timedatectl set-timezone "Asia/Shanghai"
-        sudo mkdir -p /workdir
-        sudo chown $USER:$GROUPS /workdir
+        sudo mkdir -p /workdir-x86
+        sudo chown $USER:$GROUPS /workdir-x86
         echo "START_DATE=$(date +%s)" >> $GITHUB_ENV
         
     - name: Prepare to Compile
@@ -69,7 +69,7 @@ jobs:
         echo "DT=$(cat dt_str.log)" >> $GITHUB_ENV
 
     - name: Clone source code
-      working-directory: /workdir
+      working-directory: /workdir-x86
       run: |
         df -hT $PWD
         [ -e openwrt ] && cd openwrt && git pull
