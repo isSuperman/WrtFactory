@@ -197,6 +197,7 @@ jobs:
         fi
         rm -rf firmware-xiaomi-ax3600.zip transfer
         mv down_md.log $GITHUB_WORKSPACE
+        rm -rd *.log
         
     - name: Generate release tag
       id: tag
