@@ -173,7 +173,7 @@ jobs:
       run: |
         curl -fsSL git.io/file-transfer | sh
         
-        zip -r firmware-xiaomi-ax3600.zip ${FIRMWARE}
+        zip -j firmware-xiaomi-ax3600.zip ${FIRMWARE}
         
         if test ${{ env.UP_COW }} = 'true';then
           ./transfer cow --block 2621440 -s -p 64 --no-progress firmware-xiaomi-ax3600.zip 2>&1 | tee cowtransfer.log
