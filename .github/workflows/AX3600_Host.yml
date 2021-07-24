@@ -233,7 +233,6 @@ jobs:
       run: |
         if test -f down_md.log; then
           sed -i ':a;N;$!ba;s/\n/  /g' down_md.log
-          sed -i "s/^/🗂 ${firm}\n/g" down_md.log
           sed -i 's/_/-/g' down_md.log
           while read line || [ -n "$line" ]; do
               echo "\n${line}" >> down_list.log
