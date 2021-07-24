@@ -47,6 +47,7 @@ jobs:
         sudo -E apt-get -qq install build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch unzip zlib1g-dev lib32gcc1 libc6-dev-i386 subversion flex uglifyjs gcc-multilib g++-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler antlr3 gperf wget swig rsync
         sudo -E apt-get -qq autoremove --purge
         sudo -E apt-get -qq clean
+        sudo apt install zip
         sudo timedatectl set-timezone "Asia/Shanghai"
         sudo mkdir -p /workdir
         sudo chown $USER:$GROUPS /workdir
@@ -172,26 +173,31 @@ jobs:
       run: |
         curl -fsSL git.io/file-transfer | sh
         
+        zip -r firmware-xiaomi-ax3600.zip
+        
         if test ${{ env.UP_COW }} = 'true';then
-          ./transfer cow --block 2621440 -s -p 64 --no-progress ${{ env.FIRMWARE }} 2>&1 | tee cowtransfer.log
+          ./transfer cow --block 2621440 -s -p 64 --no-progress firmware-xiaomi-ax3600.zip 2>&1 | tee cowtransfer.log
           echo "$(cat cowtransfer.log | grep https | cut -f3 -d" ")" > cow.log
           sed -i 's/\./\\\./g' cow.log
           echo "[Cowtransfer]($(cat cow.log))" >> down_md.log
         fi
         
         if test ${{ env.UP_FIO }} = 'true';then
-          ./transfer fio --no-progress ${{ env.FIRMWARE }} 2>&1 | tee fileio.log
+          ./transfer fio --no-progress firmware-xiaomi-ax3600.zip 2>&1 | tee fileio.log
           echo "$(cat fileio.log | grep https | cut -f3 -d" ")" > fio.log
           sed -i 's/\./\\\./g' fio.log
           echo "[Fileio]($(cat fio.log))" >> down_md.log
         fi
         
         if test ${{ env.UP_LIT }} = 'true';then
-          ./transfer lit --no-progress ${{ env.FIRMWARE }} 2>&1 | tee litterbox.log
+          ./transfer lit --no-progress firmware-xiaomi-ax3600.zip 2>&1 | tee litterbox.log
           echo "$(cat litterbox.log | grep https | cut -f3 -d" ")" > lit.log
           sed -i 's/\./\\\./g' lit.log
           echo "[LitterBox]($(cat lit.log))" >> down_md.log
         fi
+        rm -rf firmware-xiaomi-ax3600.zip
+        cd openwrt
+        rm -rf bin
         
     - name: Generate release tag
       id: tag
