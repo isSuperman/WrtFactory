@@ -197,9 +197,6 @@ jobs:
           echo "[LitterBox]($(cat lit.log))" >> down_md.log
         fi
         rm -rf firmware-xiaomi-ax3600.zip
-        cd -
-        cd openwrt
-        rm -rf bin
         
     - name: Generate release tag
       id: tag
