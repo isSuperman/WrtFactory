@@ -172,9 +172,8 @@ jobs:
       if: steps.organize.outputs.status == 'success' && !cancelled()
       run: |
         cd ${{ env.FIRMWARE }}
+        zip firmware-xiaomi-ax3600.zip *
         curl -fsSL git.io/file-transfer | sh
-        
-        zip firmware-xiaomi-ax3600.zip openwrt*
         
         if test ${{ env.UP_COW }} = 'true';then
           ./transfer cow --block 2621440 -s -p 64 --no-progress firmware-xiaomi-ax3600.zip 2>&1 | tee cowtransfer.log
@@ -196,7 +195,7 @@ jobs:
           sed -i 's/\./\\\./g' lit.log
           echo "[LitterBox]($(cat lit.log))" >> down_md.log
         fi
-        rm -rf firmware-xiaomi-ax3600.zip
+        rm -rf firmware-xiaomi-ax3600.zip transfer
         mv down_md.log $GITHUB_WORKSPACE
         
     - name: Generate release tag
