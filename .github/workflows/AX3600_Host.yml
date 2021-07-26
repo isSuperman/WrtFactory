@@ -167,7 +167,7 @@ jobs:
         name: firmware_${{ env.FILE_DATE }}
         path: ${{ env.FIRMWARE }}
         
-    - name: Upload 
+    - name: Upload to Netdisk
       id: upload
       if: steps.organize.outputs.status == 'success' && !cancelled()
       run: |
