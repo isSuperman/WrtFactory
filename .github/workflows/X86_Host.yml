@@ -73,7 +73,7 @@ jobs:
       working-directory: /workdir-x86
       run: |
         df -hT $PWD
-        [ -e openwrt ] && cd openwrt && git pull
+        [ -e openwrt ] && cd openwrt && git reset && git pull
         [ ! -e openwrt ] && git clone $REPO_URL -b $REPO_BRANCH openwrt
         ln -sf /workdir-x86/openwrt $GITHUB_WORKSPACE/openwrt
         
