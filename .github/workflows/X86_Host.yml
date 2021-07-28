@@ -81,6 +81,7 @@ jobs:
       id: commitinfo
       run: |
         cd openwrt
+        rm -rf .config
         rm -rf bin/targets/*
         curl -sL git.io/commit_formate_sh > $COMMIT_INFO
         chmod +x $COMMIT_INFO
