@@ -92,19 +92,19 @@ jobs:
         git clone -b 18.06 https://github.com/jerrykuku/luci-theme-argon.git
         git clone https://github.com/jerrykuku/luci-app-argon-config.git
 
-    - name: Update and install feeds
-      run: |
-        cd openwrt
-        ./scripts/feeds update -a
-        ./scripts/feeds install -a
-
     - name: Load custom configuration
       run: |
         [ -e files ] && mv files openwrt/files
         mv config/$CONFIG_FILE openwrt/.config
         cd openwrt
-        [ `grep -c "helloworld" feeds.conf.default` -eq "0" ] && sed -i '$a src-git helloworld https://github.com/fw876/helloworld.git' feeds.conf.default
+        sed -i '$a src-git helloworld https://github.com/fw876/helloworld.git' feeds.conf.default
         sed -i 's@.*CYXluq4wUazHjmCDBCqXF*@#&@g' package/lean/default-settings/files/zzz-default-settings
+
+    - name: Update and install feeds
+      run: |
+        cd openwrt
+        ./scripts/feeds update -a
+        ./scripts/feeds install -a
 
     - name: Download package
       id: package
