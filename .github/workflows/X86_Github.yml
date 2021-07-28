@@ -86,14 +86,6 @@ jobs:
         ./$COMMIT_INFO immortalwrt lean-lede > com_info.log
         echo "DATE_INFO=$(sed -n '2p' com_info.log)" >> $GITHUB_ENV
         echo "RECENT_DATE=$(sed -n '1p' com_info.log)" >> $GITHUB_ENV
-        
-    - name: Load custom themes and plugins
-      id: argon
-      run: |
-        cd openwrt/package/lean
-        rm -rf luci-theme-argon
-        git clone -b 18.06 https://github.com/jerrykuku/luci-theme-argon.git
-        git clone https://github.com/jerrykuku/luci-app-argon-config.git
 
     - name: Load custom configuration
       run: |
