@@ -177,7 +177,7 @@ jobs:
         curl -fsSL git.io/file-transfer | sh
         
         if test ${{ env.UP_COW }} = 'true';then
-          ./transfer cow --block 2621440 -s -p 64 --no-progress firmware-xiaomi-ax3600.zip 2>&1 | tee cowtransfer.log
+          ./transfer cow --no-progress firmware-xiaomi-ax3600.zip 2>&1 | tee cowtransfer.log
           echo "$(cat cowtransfer.log | grep https | cut -f3 -d" ")" > cow.log
           sed -i 's/\./\\\./g' cow.log
           echo "[Cowtransfer]($(cat cow.log))" >> down_md.log
