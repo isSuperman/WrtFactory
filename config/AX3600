@@ -4425,7 +4425,7 @@ CONFIG_PACKAGE_luci-app-frpc=y
 # CONFIG_PACKAGE_luci-app-netdata is not set
 # CONFIG_PACKAGE_luci-app-nfs is not set
 # CONFIG_PACKAGE_luci-app-nft-qos is not set
-CONFIG_PACKAGE_luci-app-nlbwmon=y
+# CONFIG_PACKAGE_luci-app-nlbwmon is not set
 # CONFIG_PACKAGE_luci-app-noddos is not set
 # CONFIG_PACKAGE_luci-app-nps is not set
 # CONFIG_PACKAGE_luci-app-ntpc is not set
@@ -4510,7 +4510,7 @@ CONFIG_PACKAGE_luci-app-webadmin=y
 # CONFIG_PACKAGE_luci-app-wifischedule is not set
 # CONFIG_PACKAGE_luci-app-wireguard is not set
 CONFIG_PACKAGE_luci-app-wol=y
-CONFIG_PACKAGE_luci-app-wrtbwmon=y
+# CONFIG_PACKAGE_luci-app-wrtbwmon is not set
 # CONFIG_PACKAGE_luci-app-xlnetacc is not set
 # CONFIG_PACKAGE_luci-app-zerotier is not set
 # end of 3. Applications
@@ -4647,9 +4647,6 @@ CONFIG_PACKAGE_luci-i18n-filetransfer-zh-cn=y
 CONFIG_PACKAGE_luci-i18n-firewall-zh-cn=y
 # CONFIG_PACKAGE_luci-i18n-firewall-zh-tw is not set
 CONFIG_PACKAGE_luci-i18n-frpc-zh-cn=y
-# CONFIG_PACKAGE_luci-i18n-nlbwmon-ja is not set
-# CONFIG_PACKAGE_luci-i18n-nlbwmon-ru is not set
-CONFIG_PACKAGE_luci-i18n-nlbwmon-zh-cn=y
 CONFIG_PACKAGE_luci-i18n-ramfree-zh-cn=y
 CONFIG_PACKAGE_luci-i18n-ssr-plus-zh-cn=y
 # CONFIG_PACKAGE_luci-i18n-ssr-plus-zh_Hans is not set
@@ -4706,7 +4703,6 @@ CONFIG_PACKAGE_luci-i18n-webadmin-zh-cn=y
 # CONFIG_PACKAGE_luci-i18n-wol-vi is not set
 CONFIG_PACKAGE_luci-i18n-wol-zh-cn=y
 # CONFIG_PACKAGE_luci-i18n-wol-zh-tw is not set
-CONFIG_PACKAGE_luci-i18n-wrtbwmon-zh-cn=y
 # end of LuCI
 
 #
