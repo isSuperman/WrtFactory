@@ -195,7 +195,7 @@ jobs:
         touch release.txt
         echo "What's New"
         string="$(sed -n '2p' com_info.log)"  
-        array=(${string//\n/ })  
+        array=(${string//\\n/ })  
         for var in ${array[@]}
         do
           echo $var >> release.txt
