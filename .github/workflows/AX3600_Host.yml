@@ -193,7 +193,13 @@ jobs:
         cd openwrt
         echo "::set-output name=release_tag::$(date +"%Y.%m.%d-%H%M")"
         touch release.txt
-        echo "$(sed -n '2p' com_info.log)"  >> release.txt
+        echo "What's New"
+        string="$(sed -n '2p' com_info.log)"  
+        array=(${string//,/ })  
+        for var in ${array[@]}
+        do
+          echo $var >> release.txt
+        done
         echo "::set-output name=status::success"
 
     - name: Upload firmware to release
