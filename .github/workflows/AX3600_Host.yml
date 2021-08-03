@@ -192,14 +192,12 @@ jobs:
       run: |
         cd openwrt
         echo "::set-output name=release_tag::$(date +"%Y.%m.%d-%H%M")"
-        touch release.txt
-        echo "What's New"
-        string="$(sed -n '2p' com_info.log)"  
-        array=(${string//\\n/ })  
-        for var in ${array[@]}
-        do
-          echo $var >> release.txt
-        done
+        touch release.log
+        echo "What's New" >> release.log
+        echo "$(sed -n '2p' com_info.log)" > info.log
+        tr '\n' '¥' < info.log
+        sed -i "s/¥/\n/g" info.log
+        echo "$(cat info.log)" >> release.log
         echo "::set-output name=status::success"
 
     - name: Upload firmware to release
@@ -209,7 +207,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: ${{ steps.tag.outputs.release_tag }}
-        body_path: openwrt/release.txt
+        body_path: openwrt/release.log
         files: ${{ env.FIRMWARE }}/*
 
     - name: Delete workflow runs
@@ -255,5 +253,5 @@ jobs:
         curl -sSX POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -H "Content-Type: application/x-www-form-urlencoded" --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&disable_web_page_preview=true&text=*Wrt Update Checker：*\n\n_Device Type: AX3600_\n_Date: ${{ env.COME_DATE }}_\n_Result: success 🎉_\n\n*What\'s New v${{ env.RECENT_DATE }}*${{ env.DATE_INFO }}\n\n*Artifacts*${{ env.DOWN_LIST }}\n\n_Host Spend Time: ${{ env.SPEND_TIME }}_'        
         rm -rf *.log release.txt $SPEND_TIME $COMMIT_INFO $ETA
         cd openwrt
-        rm -rf bin release.txt
+        rm -rf bin *.log
         rm -rf ${{ env.FIRMWARE }}
