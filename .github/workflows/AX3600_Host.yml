@@ -21,7 +21,7 @@ env:
   SPEND_TIME: spend_time_formate.sh
   COMMIT_INFO: commit_formate.sh
   ETA: ETA_formate.sh
-  UPLOAD_RELEASE: false
+  UPLOAD_RELEASE: true
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UP_COW: true
@@ -198,10 +198,10 @@ jobs:
       id: tag
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
       run: |
+        cd openwrt
         echo "::set-output name=release_tag::$(date +"%Y.%m.%d-%H%M")"
         touch release.txt
-        [ $UPLOAD_COWTRANSFER = true ] && echo "🔗 [Cowtransfer](${{ steps.cowtransfer.outputs.url }})" >> release.txt
-        [ $UPLOAD_WETRANSFER = true ] && echo "🔗 [WeTransfer](${{ steps.wetransfer.outputs.url }})" >> release.txt
+        echo "$(sed -n '2p' com_info.log)"  >> release.txt
         echo "::set-output name=status::success"
 
     - name: Upload firmware to release
@@ -211,7 +211,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: ${{ steps.tag.outputs.release_tag }}
-        body_path: release.txt
+        body_path: openwrt/release.txt
         files: ${{ env.FIRMWARE }}/*
 
     - name: Delete workflow runs
@@ -257,5 +257,5 @@ jobs:
         curl -sSX POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -H "Content-Type: application/x-www-form-urlencoded" --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&disable_web_page_preview=true&text=*Wrt Update Checker：*\n\n_Device Type: AX3600_\n_Date: ${{ env.COME_DATE }}_\n_Result: success 🎉_\n\n*What\'s New v${{ env.RECENT_DATE }}*${{ env.DATE_INFO }}\n\n*Artifacts*${{ env.DOWN_LIST }}\n\n_Host Spend Time: ${{ env.SPEND_TIME }}_'        
         rm -rf *.log release.txt $SPEND_TIME $COMMIT_INFO $ETA
         cd openwrt
-        rm -rf bin
+        rm -rf bin release.txt
         rm -rf ${{ env.FIRMWARE }}
