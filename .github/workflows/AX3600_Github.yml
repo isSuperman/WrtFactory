@@ -22,8 +22,7 @@ env:
   SPEND_TIME: spend_time_formate.sh
   COMMIT_INFO: commit_formate.sh
   ETA: ETA_formate.sh
-  UPLOAD_RELEASE: false
-  UPLOAD_BIN_DIR: false
+  UPLOAD_RELEASE: true
   UPLOAD_FIRMWARE: true
   UP_COW: true
   UP_FIO: true
@@ -127,13 +126,6 @@ jobs:
       if: (!cancelled())
       run: df -hT
 
-    - name: Upload bin directory
-      uses: actions/upload-artifact@main
-      if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
-      with:
-        name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
-        path: openwrt/bin
-
     - name: Organize files
       id: organize
       if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
@@ -195,12 +187,17 @@ jobs:
       id: tag
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
       run: |
+        cd openwrt
         echo "::set-output name=release_tag::$(date +"%Y.%m.%d-%H%M")"
-        touch release.txt
-        [ $UPLOAD_COWTRANSFER = true ] && echo "🔗 [Cowtransfer](${{ steps.cowtransfer.outputs.url }})" >> release.txt
-        [ $UPLOAD_WETRANSFER = true ] && echo "🔗 [WeTransfer](${{ steps.wetransfer.outputs.url }})" >> release.txt
+        touch release.log
+        echo "### What's New" >> release.log
+        echo "$(sed -n '2p' com_info.log)" > info.log
+        sed -i 's/\\n/\n/g' info.log
+        sed -i 's/\\//g' info.log
+        sed -i 's/from /from https:\/\/github.com\//g' info.log
+        sed -i 's/\- /#### /g' info.log
+        cat info.log >> release.log
         echo "::set-output name=status::success"
-
     - name: Upload firmware to release
       uses: softprops/action-gh-release@v1
       if: steps.tag.outputs.status == 'success' && !cancelled()
@@ -208,7 +205,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: ${{ steps.tag.outputs.release_tag }}
-        body_path: release.txt
+        body_path: openwrt/release.log
         files: ${{ env.FIRMWARE }}/*
 
     - name: Delete workflow runs
