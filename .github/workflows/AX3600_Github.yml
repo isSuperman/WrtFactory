@@ -198,6 +198,9 @@ jobs:
         sed -i 's/\- /#### /g' info.log
         cat info.log >> release.log
         echo "::set-output name=status::success"
+        cd ..
+        cd ${{ env.FIRMWARE }}
+        rm -rf *.log
     - name: Upload firmware to release
       uses: softprops/action-gh-release@v1
       if: steps.tag.outputs.status == 'success' && !cancelled()
