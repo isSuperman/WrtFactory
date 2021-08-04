@@ -195,9 +195,10 @@ jobs:
         touch release.log
         echo "What's New" >> release.log
         echo "$(sed -n '2p' com_info.log)" > info.log
-        tr '\n' '¥' < info.log
-        sed -i "s/¥/\n/g" info.log
-        echo "$(cat info.log)" >> release.log
+        sed -i 's/\\n/\n/g' info.log
+        sed -i "s/\\//g" info.log
+        sed -i 's/from /from https:\/\/github.com\//g' info.log
+        cat info.log >> release.log
         echo "::set-output name=status::success"
 
     - name: Upload firmware to release
