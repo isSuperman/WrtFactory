@@ -158,6 +158,7 @@ jobs:
       id: upload
       if: steps.organize.outputs.status == 'success' && !cancelled()
       run: |
+        [ `grep -c "cowtransfer" /etc/hosts` -eq "0" ] && sudo echo "49.7.22.216 cowtransfer.com" | sudo tee -a /etc/hosts
         cd ${{ env.FIRMWARE }}
         zip firmware-xiaomi-ax3600.zip *
         curl -fsSL git.io/file-transfer | sh
