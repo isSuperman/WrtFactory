@@ -198,7 +198,7 @@ jobs:
         sed -i 's/\\n/\n/g' info.log
         sed -i 's/\\//g' info.log
         sed -i 's/from /from https:\/\/github.com\//g' info.log
-        sed -i 's/\-/####/g' info.log
+        sed -i 's/\- /#### /g' info.log
         cat info.log >> release.log
         echo "::set-output name=status::success"
 
