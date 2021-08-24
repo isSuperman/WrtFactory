@@ -102,7 +102,7 @@ jobs:
       id: package
       run: |
         cd openwrt
-        rm -rf ./tmp ./package/feeds/luci/luci-app-nlbwmon ./package/lean/luci-app-wrtbwmon
+        rm -rf ./tmp
         make defconfig
         make download -j8
         find dl -size -1024c -exec ls -l {} \;
