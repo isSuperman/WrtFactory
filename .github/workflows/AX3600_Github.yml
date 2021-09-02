@@ -79,7 +79,6 @@ jobs:
       uses: klever1988/cachewrtbuild@test
       with:
           ccache: 'true'
-          toolchain: 'false'
           prefix: ${{ github.workspace }}
 
         
