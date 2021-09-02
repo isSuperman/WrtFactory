@@ -95,6 +95,10 @@ jobs:
 
     - name: Load custom configuration
       run: |
+        echo "current dir is ...."
+        pwd
+        echo "files is ......"
+        ls
         [ -e files ] && mv files openwrt/files
         mv config/$CONFIG_FILE openwrt/.config
         cd openwrt
