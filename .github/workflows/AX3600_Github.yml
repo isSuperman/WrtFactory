@@ -35,7 +35,7 @@ jobs:
     steps:
 
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@main
       with:
           ref: main
           fetch-depth: 0
@@ -79,7 +79,7 @@ jobs:
       uses: klever1988/cachewrtbuild@test
       with:
           ccache: 'true'
-          prefix: ${{ github.workspace }}
+          prefix: $GITHUB_WORKSPACE
         
     - name: Generate commit info
       id: commitinfo
