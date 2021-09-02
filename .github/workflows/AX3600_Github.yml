@@ -37,8 +37,6 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
       with:
-          repository: 'coolsnowwolf/lede'
-          ref: master
           fetch-depth: 0
           
     - name: cache
