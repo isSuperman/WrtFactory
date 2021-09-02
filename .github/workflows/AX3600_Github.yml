@@ -37,10 +37,15 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
       with:
+          repository: 'coolsnowwolf/lede'
+          ref: master
           fetch-depth: 0
           
     - name: cache
-      uses: klever1988/cachewrtbuild@main
+      uses: klever1988/hello-world-javascript-action@main
+      with:
+          ccache: 'true'
+          toolchain: 'false'
 
     - name: Initialization environment
       env:
