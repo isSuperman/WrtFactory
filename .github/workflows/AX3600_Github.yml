@@ -93,13 +93,6 @@ jobs:
 
     - name: Load custom configuration
       run: |
-        echo "current dir is ...."
-        pwd
-        echo "files is ......"
-        ls
-        cd config
-        echo "config folder is ...."
-        ls
         [ -e files ] && mv files openwrt/files
         mv $PWD/config/$CONFIG_FILE openwrt/.config
         cd openwrt
