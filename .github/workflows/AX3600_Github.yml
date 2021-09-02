@@ -40,10 +40,10 @@ jobs:
           fetch-depth: 0
           
     - name: cache
-      uses: klever1988/cachewrtbuild@main
+      uses: klever1988/cachewrtbuild@test
       with:
           ccache: 'true'
-          toolchain: 'false'
+          prefix: ${{ github.workspace }}/openwrt
 
     - name: Initialization environment
       env:
@@ -94,7 +94,7 @@ jobs:
     - name: Load custom configuration
       run: |
         [ -e files ] && mv files openwrt/files
-        mv $PWD/config/$CONFIG_FILE openwrt/.config
+        mv config/$CONFIG_FILE openwrt/.config
         cd openwrt
         sed -i '$a src-git helloworld https://github.com/fw876/helloworld.git' feeds.conf.default
         sed -i 's@.*CYXluq4wUazHjmCDBCqXF*@#&@g' package/lean/default-settings/files/zzz-default-settings
