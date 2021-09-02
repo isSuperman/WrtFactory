@@ -99,6 +99,9 @@ jobs:
         pwd
         echo "files is ......"
         ls
+        cd config
+        echo "config folder is ...."
+        ls
         [ -e files ] && mv files openwrt/files
         mv config/$CONFIG_FILE openwrt/.config
         cd openwrt
