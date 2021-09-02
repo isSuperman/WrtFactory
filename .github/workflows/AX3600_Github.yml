@@ -79,7 +79,7 @@ jobs:
       uses: klever1988/cachewrtbuild@test
       with:
           ccache: 'true'
-          prefix: ${{ github.workspace }}
+          prefix: ${{ github.workspace }}/openwrt
 
         
     - name: Generate commit info
