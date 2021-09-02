@@ -43,7 +43,7 @@ jobs:
       uses: klever1988/cachewrtbuild@test
       with:
           ccache: 'true'
-          prefix: ${{ github.workspace }}/openwrt
+          prefix: ${{ github.workspace }}
 
     - name: Initialization environment
       env:
