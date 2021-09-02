@@ -101,7 +101,7 @@ jobs:
         echo "config folder is ...."
         ls
         [ -e files ] && mv files openwrt/files
-        mv config/$CONFIG_FILE openwrt/.config
+        mv $PWD/config/$CONFIG_FILE openwrt/.config
         cd openwrt
         sed -i '$a src-git helloworld https://github.com/fw876/helloworld.git' feeds.conf.default
         sed -i 's@.*CYXluq4wUazHjmCDBCqXF*@#&@g' package/lean/default-settings/files/zzz-default-settings
