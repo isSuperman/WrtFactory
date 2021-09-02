@@ -74,12 +74,13 @@ jobs:
         df -hT $PWD
         git clone $REPO_URL -b $REPO_BRANCH openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
-        
+                    
     - name: cache
       uses: klever1988/cachewrtbuild@test
       with:
           ccache: 'true'
-          prefix: $GITHUB_WORKSPACE
+          prefix: ${{ github.workspace }}
+
         
     - name: Generate commit info
       id: commitinfo
