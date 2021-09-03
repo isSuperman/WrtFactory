@@ -75,7 +75,7 @@ jobs:
         git clone $REPO_URL -b $REPO_BRANCH openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
                     
-    - name: cache
+    - name: Set Cache and Restore
       uses: isSuperman/cachewrtbuild@test
       with:
           ccache: 'true'
