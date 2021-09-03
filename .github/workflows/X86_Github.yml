@@ -11,7 +11,7 @@
 name: X86 Github
 
 on:
-  repository_dispatch:
+  #repository_dispatch:
   workflow_dispatch:
   
 env:
@@ -25,11 +25,12 @@ env:
   UPLOAD_RELEASE: false
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
+  UPLOAD_NETDISK: false
   UP_COW: true
   UP_FIO: true
   UP_LIT: true
-  UP_VMDK: true
-  UP_IMG: true
+  UP_VMDK: false
+  UP_IMG: false
   UP_ROOTFS: false
   UP_ONLY_EFI: true
 
@@ -378,7 +379,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
     - name: Orgnize down list
-      if: steps.organize.outputs.status == 'success' && !cancelled()
+      if: steps.organize.outputs.status == 'success' && env.UPLOAD_NETDISK== 'true' && !cancelled()
       run: |
         firms="vmdk vmdk_efi img img_efi rootfs rootfs_img"
         for firm in $firms; do
