@@ -11,7 +11,7 @@
 name: X86 Github
 
 on:
-  # repository_dispatch:
+  repository_dispatch:
   workflow_dispatch:
   
 env:
