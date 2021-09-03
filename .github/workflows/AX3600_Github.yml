@@ -36,9 +36,6 @@ jobs:
 
     - name: Checkout
       uses: actions/checkout@main
-      with:
-          ref: main
-          fetch-depth: 0
 
     - name: Initialization environment
       env:
