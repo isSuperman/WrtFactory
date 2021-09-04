@@ -51,6 +51,6 @@ jobs:
       run: |
         cd config
         curl\
-          -F chat_id=${{ secrets.TELEGRAM_CHAT_ID }}\
-          -F media=[{"caption":"固件列表","parse_mode":"MarkdownV2","type":"document","media":"${{ env.MANIFEST }}"},{"type":"document","media":"${{ env.ITB }}"},{"type":"document","media":"${{ env.UBI }}"},{"type":"document","media":"${{ env.BIN }}"}]\
+          -F "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}"\
+          -F "media=[{"caption":"固件列表","parse_mode":"MarkdownV2","type":"document","media":"${{ env.MANIFEST }}"},{"type":"document","media":"${{ env.ITB }}"},{"type":"document","media":"${{ env.UBI }}"},{"type":"document","media":"${{ env.BIN }}"}]"\
           https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMediaGroup
