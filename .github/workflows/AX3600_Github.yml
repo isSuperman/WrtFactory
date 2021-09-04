@@ -262,5 +262,5 @@ jobs:
       if: steps.organize.outputs.status == 'success' && !cancelled()
       run: |
         cd ${{ env.FIRMWARE }}
-        curl -g "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&caption=Device Type: AX3600%0ADate: ${{ env.COME_DATE }}%0AResult: success 🎉%0A%0AWhat's New v${{ env.RECENT_DATE }}%0A${{ env.DATE_INFO }}%0A%0ASpend Time: ${{ env.SPEND_TIME }}%0ABy:[OpenWrt固件工厂](https://t.me/WrtFShare)&parse_mode=MarkdownV2" -F document=@"openwrt-ipq807x-generic-xiaomi_ax3600-squashfs-nand-sysupgrade.bin"
+        curl -g "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&caption=Device Type: AX3600%0ADate: ${{ env.COME_DATE }}%0AResult: success 🎉%0A%0A*What's New v${{ env.RECENT_DATE }}*%0A${{ env.DATE_INFO }}%0A%0ASpend Time: ${{ env.SPEND_TIME }}%0ABy:[OpenWrt固件工厂](https://t.me/WrtFShare)&parse_mode=MarkdownV2" -F document=@"openwrt-ipq807x-generic-xiaomi_ax3600-squashfs-nand-sysupgrade.bin"
         rm -rf *.zip transfer
