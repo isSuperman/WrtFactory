@@ -43,4 +43,4 @@ jobs:
       run: |
         cd config
         curl https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMediaGroup\
-          --data-binary $'chat_id=${{ secrets.TELEGRAM_CHAT_ID }}media=[{"caption":"[Pixiv50](https://pixiv50.com/)","parse_mode":"MarkdownV2","type":"photo","media":"https://pixiv50.com/static/images/wcldpgn/6203904_82693450_p0.jpg"},{"type":"photo","media":"https://www.pixiv50.com/static/images/iamcnqu/3371956_83774670_p0.jpg"}]'
+          --data-binary $'chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&media=[{"caption":"[Pixiv50](https://pixiv50.com/)","parse_mode":"MarkdownV2","type":"photo","media":"https://pixiv50.com/static/images/wcldpgn/6203904_82693450_p0.jpg"},{"type":"photo","media":"https://www.pixiv50.com/static/images/iamcnqu/3371956_83774670_p0.jpg"}]'
