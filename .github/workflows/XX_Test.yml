@@ -43,4 +43,4 @@ jobs:
       run: |
         cd config
         curl https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMediaGroup\
-          --data-binary $'chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&media=[{"caption":"固件列表","parse_mode":"MarkdownV2","type":"document","media":"./AX3600"},{"type":"photo","media":"./X86"}]'
+          --data-binary $'chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&media=[{"caption":"固件列表","parse_mode":"MarkdownV2","type":"document","media":"@AX3600"},{"type":"photo","media":"@X86"}]'
