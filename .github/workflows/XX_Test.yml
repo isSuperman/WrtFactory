@@ -46,8 +46,4 @@ jobs:
         echo "UBI=$(grep -Po 'https://github.com/isSuperman/WrtFactory/releases/download.*ubi(?=")' releases.log)" >> $GITHUB_ENV
         echo "BIN=$(grep -Po 'https://github.com/isSuperman/WrtFactory/releases/download.*bin(?=")' releases.log)" >> $GITHUB_ENV
         rm -rf releases.log
-
-    - name: Push Notification
-      run: |
-        cd config
-        curl https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMediaGroup?chat_id=${{ secrets.TELEGRAM_CHAT_ID }}\&media=[\{"caption":"固件列表","parse_mode":"MarkdownV2","type":"document","media":"${{ env.MANIFEST }}"\},\{"type":"document","media":"${{ env.ITB }}"\},\{"type":"document","media":"${{ env.UBI }}"\},\{"type":"document","media":"${{ env.BIN }}"\}]
+        curl https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMediaGroup?chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&media=[{"caption":"固件列表","parse_mode":"MarkdownV2","type":"document","media":"${{ env.MANIFEST }}"},{"type":"document","media":"${{ env.ITB }}"},{"type":"document","media":"${{ env.UBI }}"},{"type":"document","media":"${{ env.BIN }}"}]
