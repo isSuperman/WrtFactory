@@ -44,6 +44,5 @@ jobs:
         cd config
         curl\
          -F chat_id="${{ secrets.TELEGRAM_CHAT_ID }}"\
-         -F document=@"AX3600"\
-         -F document=@"X86"\
-         https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument
+         -F media=[{'media'="AX3600"},{'media'='X86'}]\
+         https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/mediaGroup
