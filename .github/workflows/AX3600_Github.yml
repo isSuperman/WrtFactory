@@ -274,7 +274,6 @@ jobs:
       if: steps.organize.outputs.status == 'success' && !cancelled()
       run: |
         cd ${{ env.FIRMWARE }}
-        zip manifest.zip *.manifest
         if ${{ env.UPLOAD_NETDISK }} == 'true';then
             curl -sSX POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -H "Content-Type: application/x-www-form-urlencoded" --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&disable_web_page_preview=true&text=\n_Device Type: AX3600_\n_Date: ${{ env.COME_DATE }}_\n_Result: success 🎉_\n\n*What\'s New v${{ env.RECENT_DATE }}*${{ env.DATE_INFO }}\n\n*Artifacts*${{ env.DOWN_LIST }}\n\n_Spend Time: ${{ env.SPEND_TIME }}_'        
         else
