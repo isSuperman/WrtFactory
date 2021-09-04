@@ -40,10 +40,19 @@ jobs:
 
     - name: GetUrl
       run: |
+        sudo apt install zip
         curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/isSuperman/WrtFactory/releases > releases.log
-        echo "MANIFEST=$(grep -Po 'https://github.com/isSuperman/WrtFactory/releases/download.*manifest(?=")' releases.log)" >> $GITHUB_ENV
-        echo "ITB=$(grep -Po 'https://github.com/isSuperman/WrtFactory/releases/download.*itb(?=")' releases.log)" >> $GITHUB_ENV
-        echo "UBI=$(grep -Po 'https://github.com/isSuperman/WrtFactory/releases/download.*ubi(?=")' releases.log)" >> $GITHUB_ENV
-        echo "BIN=$(grep -Po 'https://github.com/isSuperman/WrtFactory/releases/download.*bin(?=")' releases.log)" >> $GITHUB_ENV
+        manifest=`grep -Po 'https://github.com/isSuperman/WrtFactory/releases/download.*manifest(?=")' releases.log`
+        itb_url=`grep -Po 'https://github.com/isSuperman/WrtFactory/releases/download.*itb(?=")' releases.log`
+        ubi_url=`grep -Po 'https://github.com/isSuperman/WrtFactory/releases/download.*ubi(?=")' releases.log`
+        bin_url=`grep -Po 'https://github.com/isSuperman/WrtFactory/releases/download.*bin(?=")' releases.log`
         rm -rf releases.log
+        curl -O $manifest_url
+        zip manifest.zip *.manifest
+        zip itb.zip *.itb
+        zip ubi.zip *.ubi
+        zip bin.zip *.bin
+        curl -O $itb_url
+        curl -O $ubi_url
+        curl -O $bin_url
         curl https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMediaGroup?chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&media=[{"caption":"固件列表","parse_mode":"MarkdownV2","type":"document","media":"${{ env.MANIFEST }}"},{"type":"document","media":"${{ env.ITB }}"},{"type":"document","media":"${{ env.UBI }}"},{"type":"document","media":"${{ env.BIN }}"}]

@@ -166,6 +166,10 @@ jobs:
       run: |
         cd ${{ env.FIRMWARE }}
         zip firmware-xiaomi-ax3600.zip *
+        zip manifest.zip *.manifest
+        zip itb.zip *.itb
+        zip ubi.zip *.ubi
+        zip bin.zip *.bin
         curl -fsSL git.io/file-transfer | sh
         if test ${{ env.UP_COW }} = 'true';then
           ./transfer cow --block 2621440 -s -p 64 --no-progress firmware-xiaomi-ax3600.zip 2>&1 | tee cowtransfer.log
@@ -215,7 +219,7 @@ jobs:
       with:
         tag_name: ${{ steps.tag.outputs.release_tag }}
         body_path: openwrt/release.log
-        files: ${{ env.FIRMWARE }}/*
+        files: ${{ env.FIRMWARE }}/*.zip
 
     - name: Delete workflow runs
       uses: GitRML/delete-workflow-runs@main
@@ -258,6 +262,10 @@ jobs:
       if: steps.organize.outputs.status == 'success' && !cancelled()
       run: |
         cd ${{ env.FIRMWARE }}
+        zip manifest.zip *.manifest
+        zip itb.zip *.itb
+        zip ubi.zip *.ubi
+        zip bin.zip *.bin
         if ${{ env.UPLOAD_NETDISK }} == 'true';then
             curl -sSX POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -H "Content-Type: application/x-www-form-urlencoded" --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&disable_web_page_preview=true&text=\n_Device Type: AX3600_\n_Date: ${{ env.COME_DATE }}_\n_Result: success 🎉_\n\n*What\'s New v${{ env.RECENT_DATE }}*${{ env.DATE_INFO }}\n\n*Artifacts*${{ env.DOWN_LIST }}\n\n_Spend Time: ${{ env.SPEND_TIME }}_'        
         else
