@@ -41,4 +41,4 @@ jobs:
     - name: GetUrl
       run: |
         echo "123123" > 1.log
-        curl -g "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&caption=_italic 测试内容%0A%0A_测试换行_&parse_mode=MarkdownV2" -F document=@"1.log"
+        curl -g "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&caption=_italic \*测试内容%0A%0A_测试换行_&parse_mode=MarkdownV2" -F document=@"1.log"
