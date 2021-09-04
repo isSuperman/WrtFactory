@@ -42,5 +42,13 @@ jobs:
     - name: Push Notification
       run: |
         cd config
+        curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/isSuperman/WrtFactory/releases > releases.log
+        manifest=`grep -Po 'https://github.com/isSuperman/WrtFactory/releases/download.*manifest(?=")' releases.log`
+        itb=`grep -Po 'https://github.com/isSuperman/WrtFactory/releases/download.*itb(?=")' releases.log`
+        ubi=`grep -Po 'https://github.com/isSuperman/WrtFactory/releases/download.*ubi(?=")' releases.log`
+        bin=`grep -Po 'https://github.com/isSuperman/WrtFactory/releases/download.*bin(?=")' releases.log`
+        rm -rf releases.log
+
+        array='[{"caption":"固件列表","parse_mode":"MarkdownV2","type":"document","media":$manifest},{"type":"document","media":$itb},{"type":"document","media":$ubi},{"type":"document","media":$bin}]'
         curl https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMediaGroup\
-          --data-binary $'chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&media=[{"caption":"固件列表","parse_mode":"MarkdownV2","type":"document","media":"@AX3600"},{"type":"photo","media":"@X86"}]'
+          --data-binary $'chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&media=$array'
