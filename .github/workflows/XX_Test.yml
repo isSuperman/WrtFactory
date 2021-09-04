@@ -40,7 +40,6 @@ jobs:
 
     - name: GetUrl
       run: |
-        sudo apt install zip
         curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/isSuperman/WrtFactory/releases > releases.log
         manifest=`grep -Po 'https://github.com/isSuperman/WrtFactory/releases/download.*manifest(?=")' releases.log`
         itb_url=`grep -Po 'https://github.com/isSuperman/WrtFactory/releases/download.*itb(?=")' releases.log`
