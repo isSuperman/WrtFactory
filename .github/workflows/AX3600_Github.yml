@@ -159,6 +159,22 @@ jobs:
       with:
         name: firmware_${{ env.FILE_DATE }}
         path: ${{ env.FIRMWARE }}
+
+    - name: Zip and Del file except zip
+      run: |
+        cd ${{ env.FIRMWARE }}
+        zip openwrt-ipq807x-generic-xiaomi_ax3600_manifest.zip openwrt-ipq807x-generic-xiaomi_ax3600.manifest
+        zip openwrt-ipq807x-generic-xiaomi_ax3600-initramfs-fit-uImage_itb.zip openwrt-ipq807x-generic-xiaomi_ax3600-initramfs-fit-uImage.itb
+        zip openwrt-ipq807x-generic-xiaomi_ax3600-squashfs-nand-factory_ubi.zip openwrt-ipq807x-generic-xiaomi_ax3600-squashfs-nand-factory.ubi
+        zip openwrt-ipq807x-generic-xiaomi_ax3600-squashfs-nand-sysupgrade_bin.zip openwrt-ipq807x-generic-xiaomi_ax3600-squashfs-nand-sysupgrade.bin
+        for i in `ls`;do if [ "$i" != *.zip ];then rm -rf $i;fi;done;
+
+        curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/isSuperman/WrtFactory/releases > releases.log
+        echo "MANIFEST_URL=https://github.com/isSuperman/WrtFactory/releases/download.*manifest(?=")' releases.log" >> $GITHUB_ENV
+        echo "ITB_URL=https://github.com/isSuperman/WrtFactory/releases/download.*itb(?=")' releases.log" >> $GITHUB_ENV
+        echo "UBI_URL=https://github.com/isSuperman/WrtFactory/releases/download.*ubi(?=")' releases.log" >> $GITHUB_ENV
+        echo "BIN_URL=https://github.com/isSuperman/WrtFactory/releases/download.*bin(?=")' releases.log" >> $GITHUB_ENV
+        rm -rf releases.log
         
     - name: Upload to Netdisk
       id: upload
@@ -166,10 +182,6 @@ jobs:
       run: |
         cd ${{ env.FIRMWARE }}
         zip firmware-xiaomi-ax3600.zip *
-        zip manifest.zip *.manifest
-        zip itb.zip *.itb
-        zip ubi.zip *.ubi
-        zip bin.zip *.bin
         curl -fsSL git.io/file-transfer | sh
         if test ${{ env.UP_COW }} = 'true';then
           ./transfer cow --block 2621440 -s -p 64 --no-progress firmware-xiaomi-ax3600.zip 2>&1 | tee cowtransfer.log
@@ -219,7 +231,7 @@ jobs:
       with:
         tag_name: ${{ steps.tag.outputs.release_tag }}
         body_path: openwrt/release.log
-        files: ${{ env.FIRMWARE }}/*.zip
+        files: ${{ env.FIRMWARE }}/*
 
     - name: Delete workflow runs
       uses: GitRML/delete-workflow-runs@main
@@ -263,13 +275,10 @@ jobs:
       run: |
         cd ${{ env.FIRMWARE }}
         zip manifest.zip *.manifest
-        zip itb.zip *.itb
-        zip ubi.zip *.ubi
-        zip bin.zip *.bin
         if ${{ env.UPLOAD_NETDISK }} == 'true';then
             curl -sSX POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -H "Content-Type: application/x-www-form-urlencoded" --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&disable_web_page_preview=true&text=\n_Device Type: AX3600_\n_Date: ${{ env.COME_DATE }}_\n_Result: success 🎉_\n\n*What\'s New v${{ env.RECENT_DATE }}*${{ env.DATE_INFO }}\n\n*Artifacts*${{ env.DOWN_LIST }}\n\n_Spend Time: ${{ env.SPEND_TIME }}_'        
         else
             curl -sSX POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -H "Content-Type: application/x-www-form-urlencoded" --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&disable_web_page_preview=true&text=\n_Device Type: AX3600_\n_Date: ${{ env.COME_DATE }}_\n_Result: success 🎉_\n\n*What\'s New v${{ env.RECENT_DATE }}*${{ env.DATE_INFO }}\n\n_Spend Time: ${{ env.SPEND_TIME }}_'
         fi
-        curl -F document=@"firmware-xiaomi-ax3600.zip" https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.TELEGRAM_CHAT_ID }}
-        rm -rf firmware-xiaomi-ax3600.zip transfer
+        curl -g https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMediaGroup?chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&media=[{"caption":"固件列表","parse_mode":"MarkdownV2","type":"document","media":"${{ env.MANIFEST_URL }}"},{"type":"document","media":"${{ env.ITB_URL }}"},{"type":"document","media":"${{ env.UBI_URL }}"},{"type":"document","media":"${{ env.BIN_URL }}"}]
+        rm -rf *.zip transfer
