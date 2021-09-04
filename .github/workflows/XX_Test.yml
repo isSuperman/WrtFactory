@@ -43,7 +43,6 @@ jobs:
       run: |
         cd config
         curl -sSX POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument" 
-          -H "Content-Type: application/x-www-form-urlencoded" 
           --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&disable_web_page_preview=true&caption=_Device Type: AX3600'
           -F document=@"AX3600"
           -F document=@"X86"
