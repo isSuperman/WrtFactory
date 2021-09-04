@@ -38,14 +38,12 @@ jobs:
     - name: Checkout
       uses: actions/checkout@main
 
-        
-    - name: Generate commit info
-      id: commitinfo
-      run: |
-        ls
-
       
     - name: Push Notification
       run: |
-        curl -sSX POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -H "Content-Type: application/x-www-form-urlencoded" --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&disable_web_page_preview=true&text=\n_Device Type: AX3600_'
-        # curl -F document=@"firmware-xiaomi-ax3600.zip" https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.TELEGRAM_CHAT_ID }}
+        cd config
+        curl -sSX POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" 
+          -H "Content-Type: application/x-www-form-urlencoded" 
+          --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&disable_web_page_preview=true&text=\n_Device Type: AX3600_'
+          -F document=@"AX3600"
+          -F document=@"X86"
