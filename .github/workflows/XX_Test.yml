@@ -1,0 +1,57 @@
+#
+# Copyright (c) 2021 isSuperman
+#
+# This is free software, licensed under the MIT License.
+# See /LICENSE for more information.
+#
+# https://github.com/isSuperman/WrtFactory
+# Description: Build Wrt Firmware using GitHub Actions
+#
+
+name: Test
+
+on:
+  # repository_dispatch:
+  workflow_dispatch:
+  
+env:
+  REPO_URL: https://github.com/coolsnowwolf/lede
+  REPO_BRANCH: master
+  FEEDS_CONF: feeds.conf.default
+  CONFIG_FILE: AX3600
+  SPEND_TIME: spend_time_formate.sh
+  COMMIT_INFO: commit_formate.sh
+  ETA: ETA_formate.sh
+  UPLOAD_RELEASE: true
+  UPLOAD_FIRMWARE: true
+  UPLOAD_NETDISK: false
+  UP_COW: true
+  UP_FIO: true
+  UP_LIT: true
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@main
+
+    - name: Initialization environment
+      env:
+        DEBIAN_FRONTEND: noninteractive
+      run: |
+        sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
+
+        
+    - name: Generate commit info
+      id: commitinfo
+      run: |
+        ls
+
+      
+    - name: Push Notification
+      run: |
+        curl -sSX POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -H "Content-Type: application/x-www-form-urlencoded" --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&disable_web_page_preview=true&text=\n_Device Type: AX3600_'
+        # curl -F document=@"firmware-xiaomi-ax3600.zip" https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.TELEGRAM_CHAT_ID }}
