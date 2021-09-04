@@ -170,10 +170,10 @@ jobs:
         for i in `ls`;do if [ "$i" != *.zip ];then rm -rf $i;fi;done;
 
         curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/isSuperman/WrtFactory/releases > releases.log
-        echo "MANIFEST_URL=https://github.com/isSuperman/WrtFactory/releases/download.*manifest(?=")' releases.log" >> $GITHUB_ENV
-        echo "ITB_URL=https://github.com/isSuperman/WrtFactory/releases/download.*itb(?=")' releases.log" >> $GITHUB_ENV
-        echo "UBI_URL=https://github.com/isSuperman/WrtFactory/releases/download.*ubi(?=")' releases.log" >> $GITHUB_ENV
-        echo "BIN_URL=https://github.com/isSuperman/WrtFactory/releases/download.*bin(?=")' releases.log" >> $GITHUB_ENV
+        echo "MANIFEST_URL=$(grep -Po 'https://github.com/isSuperman/WrtFactory/releases/download.*manifest(?=")' releases.log)" >> $GITHUB_ENV
+        echo "ITB_URL=$(grep -Po 'https://github.com/isSuperman/WrtFactory/releases/download.*itb(?=")' releases.log)" >> $GITHUB_ENV
+        echo "UBI_URL=$(grep -Po 'https://github.com/isSuperman/WrtFactory/releases/download.*ubi(?=")' releases.log)" >> $GITHUB_ENV
+        echo "BIN_URL=$(grep -Po 'https://github.com/isSuperman/WrtFactory/releases/download.*bin(?=")' releases.log)" >> $GITHUB_ENV
         rm -rf releases.log
         
     - name: Upload to Netdisk
