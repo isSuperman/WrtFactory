@@ -41,5 +41,5 @@ jobs:
     - name: GetUrl
       run: |
         touch 1.zip 2.zip
-        curl -H "Content-Type:application/json" -X POST --data '[{"caption":"固件列表","parse_mode":"MarkdownV2","type":"document","media":"./1.zip"},{"type":"document","media":"./2.zip"}]' https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMediaGroup?chat_id=${{ secrets.TELEGRAM_CHAT_ID }}
+        curl -H "Content-Type:application/json" -X POST --data '"media":[{"caption":"固件列表","parse_mode":"MarkdownV2","type":"document","media":"./1.zip"},{"type":"document","media":"./2.zip"}]' https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMediaGroup?chat_id=${{ secrets.TELEGRAM_CHAT_ID }}
         # curl -g https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMediaGroup?chat_id=${{ secrets.TELEGRAM_CHAT_ID }}\&media=\[{\"caption\":\"固件列表\",\"parse_mode\":\"MarkdownV2\",\"type\":\"document\",\"media\":\"./1.zip\"},{\"type\":\"document\",\"media\":\"./2.zip\"}\]
