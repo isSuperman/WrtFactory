@@ -88,7 +88,10 @@ jobs:
         curl -sL git.io/commit_formate_sh > $COMMIT_INFO
         chmod +x $COMMIT_INFO
         ./$COMMIT_INFO > com_info.log
-        echo "DATE_INFO=$(sed -n '2p' com_info.log)" >> $GITHUB_ENV
+        sed -n '2p' com_info.log > tele.log
+        sed -i 's/\\n/%0A/g' tele.log
+        sed -i 's/\n/%0A/g' tele.log
+        echo "DATE_INFO=$(cat tele.log)" >> $GITHUB_ENV
         echo "RECENT_DATE=$(sed -n '1p' com_info.log)" >> $GITHUB_ENV
 
     - name: Load custom configuration
@@ -258,5 +261,5 @@ jobs:
       if: steps.organize.outputs.status == 'success' && !cancelled()
       run: |
         cd ${{ env.FIRMWARE }}
-        curl -g "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&caption=_Device Type: AX3600_%0A_Date: ${{ env.COME_DATE }}_%0A_Result: success 🎉_%0A%0A*What\'s New v${{ env.RECENT_DATE }}*${{ env.DATE_INFO }}%0A%0A_Spend Time: ${{ env.SPEND_TIME }}_%0ABy:[OpenWrt固件工厂](https://t.me/WrtFShare)&parse_mode=MarkdownV2" -F document=@"openwrt-ipq807x-generic-xiaomi_ax3600-squashfs-nand-sysupgrade.bin"
+        curl -g "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&caption=*Device Type: AX3600*%0A*Date: ${{ env.COME_DATE }}*%0A*Result: success 🎉*%0A%0A*What\'s New v${{ env.RECENT_DATE }}*${{ env.DATE_INFO }}%0A%0A*Spend Time: ${{ env.SPEND_TIME }}*%0ABy:[OpenWrt固件工厂](https://t.me/WrtFShare)&parse_mode=MarkdownV2" -F document=@"openwrt-ipq807x-generic-xiaomi_ax3600-squashfs-nand-sysupgrade.bin"
         rm -rf *.zip transfer
