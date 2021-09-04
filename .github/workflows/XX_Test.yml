@@ -43,4 +43,4 @@ jobs:
         echo "123123" > 1.log
         mv 1.log 1.zip
         # curl -g https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMediaGroup?chat_id=${{ secrets.TELEGRAM_CHAT_ID }}\&media=\[{"caption":"固件列表","parse_mode":"MarkdownV2","type":"document","media":"./1.zip"},{"type":"document","media":"./2.zip"}\]
-        curl https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument --data-binary $'chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&document=@"1.zip"&caption=\n\n_测试内容_&parse_mode=MarkdownV2'
+        curl -sSX POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument -H "Content-Type: application/x-www-form-urlencoded" --data-binary $'chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&document=@"1.zip"&caption=\n\n_测试内容_&parse_mode=MarkdownV2'
