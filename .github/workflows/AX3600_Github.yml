@@ -168,13 +168,6 @@ jobs:
         zip openwrt-ipq807x-generic-xiaomi_ax3600-squashfs-nand-factory_ubi.zip openwrt-ipq807x-generic-xiaomi_ax3600-squashfs-nand-factory.ubi
         zip openwrt-ipq807x-generic-xiaomi_ax3600-squashfs-nand-sysupgrade_bin.zip openwrt-ipq807x-generic-xiaomi_ax3600-squashfs-nand-sysupgrade.bin
         for i in `ls`;do if [ "$i" != *.zip ];then rm -rf $i;fi;done;
-
-        curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/isSuperman/WrtFactory/releases > releases.log
-        echo "MANIFEST_URL=$(grep -Po 'https://github.com/isSuperman/WrtFactory/releases/download.*manifest(?=")' releases.log)" >> $GITHUB_ENV
-        echo "ITB_URL=$(grep -Po 'https://github.com/isSuperman/WrtFactory/releases/download.*itb(?=")' releases.log)" >> $GITHUB_ENV
-        echo "UBI_URL=$(grep -Po 'https://github.com/isSuperman/WrtFactory/releases/download.*ubi(?=")' releases.log)" >> $GITHUB_ENV
-        echo "BIN_URL=$(grep -Po 'https://github.com/isSuperman/WrtFactory/releases/download.*bin(?=")' releases.log)" >> $GITHUB_ENV
-        rm -rf releases.log
         
     - name: Upload to Netdisk
       id: upload
@@ -247,6 +240,16 @@ jobs:
         delete_tags: true
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Set zip url
+      run: |
+        cd ${{ env.FIRMWARE }}
+        curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/isSuperman/WrtFactory/releases > releases.log
+        echo "MANIFEST_URL=$(grep -Po 'https://github.com/isSuperman/WrtFactory/releases/download.*manifest(?=")' releases.log)" >> $GITHUB_ENV
+        echo "ITB_URL=$(grep -Po 'https://github.com/isSuperman/WrtFactory/releases/download.*itb(?=")' releases.log)" >> $GITHUB_ENV
+        echo "UBI_URL=$(grep -Po 'https://github.com/isSuperman/WrtFactory/releases/download.*ubi(?=")' releases.log)" >> $GITHUB_ENV
+        echo "BIN_URL=$(grep -Po 'https://github.com/isSuperman/WrtFactory/releases/download.*bin(?=")' releases.log)" >> $GITHUB_ENV
+        rm -rf releases.log
       
     - name: Orgnize down list
       if: steps.organize.outputs.status == 'success' && env.UPLOAD_NETDISK == 'true' && !cancelled()
