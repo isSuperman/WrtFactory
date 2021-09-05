@@ -295,7 +295,7 @@ jobs:
                         if test $is_send_manifest = 'true';then
                           # 发送ubi文件
                           curl -g "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.CHANNEL_CHAT_ID }}&caption=xiaomi\-ax3600.ubi%0ABy:[OpenWrt 固件工厂](https://t.me/WrtFShare)&parse_mode=MarkdownV2&disable_notification=true" -F document=@"${{ env.FIRMWARE }}/openwrt-ipq807x-generic-xiaomi_ax3600-squashfs-nand-factory.ubi" | send_ubi.log
-                          is_send_ubi=`grep -Po 'ok":.*(?=,)' send_manifest.log`
+                          is_send_ubi=`grep -Po 'ok":.*(?=,)' send_ubi.log`
                           if test $is_send_ubi = 'true';then
                             # 发送bin文件
                             curl -g "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.CHANNEL_CHAT_ID }}&caption=xiaomi\-ax3600.bin%0ABy:[OpenWrt 固件工厂](https://t.me/WrtFShare)&parse_mode=MarkdownV2&disable_notification=true" -F document=@"${{ env.FIRMWARE }}/openwrt-ipq807x-generic-xiaomi_ax3600-squashfs-nand-sysupgrade.bin" | send_bin.log
