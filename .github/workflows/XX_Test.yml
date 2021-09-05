@@ -41,5 +41,5 @@ jobs:
     - name: GetUrl
       run: |
         echo "123123" > 1.log
-        curl -g "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&caption=_italic \*测试-内容_%0A%0A_测试换行_&parse_mode=MarkdownV2" -F document=@"1.log"
+        curl -g "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&caption=测试\-内容%0A%0A测试换&parse_mode=MarkdownV2" -F document=@"1.log"
         # curl -sSX POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -H "Content-Type: application/x-www-form-urlencoded" --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&disable_web_page_preview=true&text=test'        
