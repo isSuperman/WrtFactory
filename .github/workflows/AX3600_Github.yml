@@ -267,12 +267,12 @@ jobs:
         else
             curl -sSX POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -H "Content-Type: application/x-www-form-urlencoded" --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.MY_CHAT_ID }}&disable_web_page_preview=true&text=今日固件已发布！\n_Device Type: AX3600_\n_Date: ${{ env.COME_DATE }}_\n_Result: success 🎉_\n\n*What\'s New v${{ env.RECENT_DATE }}*${{ env.DATE_INFO }}\n\n_Spend Time: ${{ env.SPEND_TIME }}_\nBy:[OpenWrt固件工厂](https://t.me/WrtFShare)' > res.log
             message_id=`grep -Po 'message_id":.*(?=,)' res.log`
-            curl -g "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/unpinChatMessage?chat_id=${{ secrets.CHANNEL_CHAT_ID }}
-            curl -g "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/pinChatMessage?chat_id=${{ secrets.CHANNEL_CHAT_ID }}&message_id=$message_id
-            curl -g "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/curl -g "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/forwardMessage?chat_id=${{ secrets.CHANNEL_CHAT_ID }}&from_chat_id=${{ secrets.CHAT_CHAT_ID }}&message_id=$message_id > ress.log
+            curl -g "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/unpinChatMessage?chat_id=${{ secrets.CHANNEL_CHAT_ID }}"
+            curl https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/pinChatMessage?chat_id=${{ secrets.CHANNEL_CHAT_ID }}&message_id=$message_id
+            curl https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/forwardMessage?chat_id=${{ secrets.CHAT_CHAT_ID }}&from_chat_id=${{ secrets.CHANNEL_CHAT_ID }}&message_id=$message_id > ress.log
             message_idd=`grep -Po 'message_id":.*(?=,)' ress.log`
-            curl -g "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/unpinChatMessage?chat_id=${{ secrets.CHAT_CHAT_ID }}
-            curl -g "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/pinChatMessage?chat_id=${{ secrets.CHAT_CHAT_ID }}&message_id=$message_idd
+            curl https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/unpinChatMessage?chat_id=${{ secrets.CHAT_CHAT_ID }}
+            curl https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/pinChatMessage?chat_id=${{ secrets.CHAT_CHAT_ID }}&message_id=$message_idd
         fi
         curl -g "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.CHANNEL_CHAT_ID }}&caption=🗂 openwrt-ipq807x-generic-xiaomi_ax3600.manifest%0ABy:[OpenWrt固件工厂](https://t.me/WrtFShare)&parse_mode=MarkdownV2&disable_notification=true" -F document=@"openwrt-ipq807x-generic-xiaomi_ax3600.manifest"
         curl -g "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.CHANNEL_CHAT_ID }}&caption=🗂 openwrt-ipq807x-generic-xiaomi_ax3600-squashfs-nand-factory.ubi%0ABy:[OpenWrt固件工厂](https://t.me/WrtFShare)&parse_mode=MarkdownV2&disable_notification=true" -F document=@"openwrt-ipq807x-generic-xiaomi_ax3600-squashfs-nand-factory.ubi"
