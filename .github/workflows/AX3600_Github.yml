@@ -88,11 +88,8 @@ jobs:
         curl -sL git.io/commit_formate_sh > $COMMIT_INFO
         chmod +x $COMMIT_INFO
         ./$COMMIT_INFO > com_info.log
-        sed -n '2p' com_info.log > tele.log
-        sed -i 's/\\n/%0A/g' tele.log
-        sed -i 's/\n/%0A/g' tele.log
-        sed -i 's/\\//g' tele.log
-        echo "DATE_INFO=$(cat tele.log)" >> $GITHUB_ENV
+        sed -n '2p' com_info.log > comm.log
+        echo "DATE_INFO=$(cat comm.log)" >> $GITHUB_ENV
         echo "RECENT_DATE=$(sed -n '1p' com_info.log)" >> $GITHUB_ENV
 
     - name: Load custom configuration
