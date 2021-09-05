@@ -263,44 +263,54 @@ jobs:
             curl -sSX POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -H "Content-Type: application/x-www-form-urlencoded" --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&disable_web_page_preview=true&text=\n_Device Type: AX3600_\n_Date: ${{ env.COME_DATE }}_\n_Result: success 🎉_\n\n*What\'s New v${{ env.RECENT_DATE }}*${{ env.DATE_INFO }}\n\n*Artifacts*${{ env.DOWN_LIST }}\n\n_Spend Time: ${{ env.SPEND_TIME }}_'        
         else
             curl -sSX POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -H "Content-Type: application/x-www-form-urlencoded" --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.CHANNEL_CHAT_ID }}&disable_web_page_preview=true&text=今日固件已发布！\n_Device Type: AX3600_\n_Date: ${{ env.COME_DATE }}_\n_Result: success 🎉_\n\n*What\'s New v${{ env.RECENT_DATE }}*${{ env.DATE_INFO }}\n\n_Spend Time: ${{ env.SPEND_TIME }}_\nBy:[OpenWrt 固件工厂](https://t.me/WrtFShare)' | tee res.log
-            res=`grep -Po 'ok":.*(?=,)' res.log`
-            if [[ "$res" == "true" ]];then
+            grep -Po '"ok":.*(?=,)' res.log > is_res.log
+            is_res=$(cat is_res.log)
+            if [ $is_res -eq "true" ];then
               #获取消息id
-              message_id=`grep -Po 'message_id":.*(?=,"from)' res.log`
+              grep -Po 'message_id":.*(?=,"from)' res.log > message_id.log
+              message_id=$(cat message_id.log)
               #unpin历史消息
               curl "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/unpinAllChatMessages?chat_id=${{ secrets.CHANNEL_CHAT_ID }}" | tee channel_unpin.log
               is_channel_unpin=`grep -Po 'ok":.*(?=,)' channel_unpin.log`
-              if [[ "$is_channel_unpin" == "true" ]];then
+              if [ $is_channel_unpin -eq "true" ];then
                 #pin最新消息
                 curl "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/pinChatMessage?chat_id=${{ secrets.CHANNEL_CHAT_ID }}&message_id=$message_id" | channel_pin.log
-                is_channel_pin=`grep -Po 'ok":.*(?=,)' channel_pin.log`
-                if [[ "$is_channel_pin" == "true" ]];then
+                grep -Po 'ok":.*(?=,)' channel_pin.log > is_channel_pin.log
+                is_channel_pin=$(cat is_channel_pin.log)
+                if [ $is_channel_pin -eq "true" ];then
                   #转发消息到群
                   curl "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/forwardMessage?chat_id=${{ secrets.CHAT_CHAT_ID }}&from_chat_id=${{ secrets.CHANNEL_CHAT_ID }}&message_id=$message_id" | tee ress.log
-                  is_forward=`grep -Po 'ok":.*(?=,)' ress.log`
-                  if [[ "$is_forward" == "true" ]];then
+                  grep -Po 'ok":.*(?=,)' ress.log > is_forward.log
+                  is_forward=$(cat is_forward.log)
+                  if [ $is_forward -eq "true" ];then
                     # 获取群消息id
-                    message_idd=`grep -Po 'message_id":.*(?=,"from)' ress.log`
+                    grep -Po 'message_id":.*(?=,"from)' ress.log > message_idd.log
+                    message_idd=$(cat message_idd.log)
                     # 群里unpin历史消息
                     curl "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/unpinAllChatMessages?chat_id=${{ secrets.CHAT_CHAT_ID }}" | chat_unpin.log
-                    is_chat_unpin=`grep -Po 'ok":.*(?=,)' chat_unpin.log`
-                    if [[ "$is_chat_unpin" == "true" ]];then
+                    grep -Po 'ok":.*(?=,)' chat_unpin.log > is_chat_unpin.log
+                    is_chat_unpin=$(cat is_chat_unpin.log)
+                    if [ $is_chat_unpin -eq "true" ];then
                       #群里pin最新消息
                       curl "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/pinChatMessage?chat_id=${{ secrets.CHAT_CHAT_ID }}&message_id=$message_idd" | chat_pin.log
-                      is_chat_pin=`grep -Po 'ok":.*(?=,)' chat_pin.log`
-                      if [[ "$is_chat_pin" == "true" ]];then
+                      grep -Po 'ok":.*(?=,)' chat_pin.log > is_chat_pin.log
+                      is_chat_pin=$(cat is_chat_pin)
+                      if [ $is_chat_pin -eq "true" ];then
                         #发送manitest文件
                         curl -g  "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.CHANNEL_CHAT_ID }}&caption=xiaomi\-ax3600.manifest%0ABy:[OpenWrt 固件工厂](https://t.me/WrtFShare)&parse_mode=MarkdownV2&disable_notification=true" -F document=@"openwrt-ipq807x-generic-xiaomi_ax3600.manifest" | send_manifest.log
-                        is_send_manifest=`grep -Po 'ok":.*(?=,)' send_manifest.log`
-                        if [[ "$is_send_manifest" == "true" ]];then
+                        grep -Po 'ok":.*(?=,)' send_manifest.log > is_send_manifest.log
+                        is_send_manifest=$(cat is_send_manifest.log)
+                        if [ $is_send_manifest -eq "true" ];then
                           # 发送ubi文件
                           curl -g "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.CHANNEL_CHAT_ID }}&caption=xiaomi\-ax3600.ubi%0ABy:[OpenWrt 固件工厂](https://t.me/WrtFShare)&parse_mode=MarkdownV2&disable_notification=true" -F document=@"${{ env.FIRMWARE }}/openwrt-ipq807x-generic-xiaomi_ax3600-squashfs-nand-factory.ubi" | send_ubi.log
-                          is_send_ubi=`grep -Po 'ok":.*(?=,)' send_ubi.log`
-                          if [[ "$is_send_ubi" == "true" ]];then
+                          grep -Po 'ok":.*(?=,)' send_ubi.log > is_send_ubi.log
+                          is_send_ubi=$(cat is_send_ubi.log)
+                          if [ $is_send_ubi -eq "true" ];then
                             # 发送bin文件
                             curl -g "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.CHANNEL_CHAT_ID }}&caption=xiaomi\-ax3600.bin%0ABy:[OpenWrt 固件工厂](https://t.me/WrtFShare)&parse_mode=MarkdownV2&disable_notification=true" -F document=@"${{ env.FIRMWARE }}/openwrt-ipq807x-generic-xiaomi_ax3600-squashfs-nand-sysupgrade.bin" | send_bin.log
-                            is_send_bin=`grep -Po 'ok":.*(?=,)' send_bin.log`
-                            if [[ "$is_send_bin" == "true" ]];then
+                            grep -Po 'ok":.*(?=,)' send_bin.log > is_send_bin.log
+                            is_send_bin=$(cat is_send_bin.log)
+                            if [ $is_send_bin -eq "true" ];then
                               echo "全部文件发送完毕！"
                             else
                               echo "------------send bin失败！------------"
