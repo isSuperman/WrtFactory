@@ -271,7 +271,7 @@ jobs:
               cat res.json | jq '.message_id' > message_id.log
               message_id=$(cat message_id.log)
               #unpin历史消息
-              curl "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/unpinAllChatMessages?chat_id=${{ secrets.CHANNEL_CHAT_ID }}" | tee channel_unpin.json
+              curl "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/unpinChatMessage?chat_id=${{ secrets.CHANNEL_CHAT_ID }}" | tee channel_unpin.json
               cat channel_unpin.json | jq '.ok' > channel_unpin.log
               is_channel_unpin=$(cat channel_unpin.log)
               if [ "$is_channel_unpin" = "true" ];then
@@ -289,7 +289,7 @@ jobs:
                     cat ress.json | jq '.message_id' > message_idd.log
                     message_idd=$(cat message_idd.log)
                     # 群里unpin历史消息
-                    curl "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/unpinAllChatMessages?chat_id=${{ secrets.CHAT_CHAT_ID }}" | chat_unpin.json
+                    curl "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/unpinChatMessage?chat_id=${{ secrets.CHAT_CHAT_ID }}" | chat_unpin.json
                     cat chat_unpin.json | jq '.ok' > is_chat_unpin.log
                     is_chat_unpin=$(cat is_chat_unpin.log)
                     if [ "$is_chat_unpin" = "true" ];then
