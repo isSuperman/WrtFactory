@@ -48,7 +48,7 @@ jobs:
     - name: Update note to tele
       if: steps.cacheHash.outputs.cache-hit != 'true'
       run: |
-        curl -sSX POST 'https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage' -H 'Content-Type: application/x-www-form-urlencoded' --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&disable_web_page_preview=true&text=*Update Checker：*\n发现更新，开始编译\.\.\.📈' 
+        curl -sSX POST 'https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage' -H 'Content-Type: application/x-www-form-urlencoded' --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.CHANNEL_CHAT_ID }}&disable_web_page_preview=true&text=*Update Checker：*\n发现更新，开始编译\.\.\.📈' 
 
     - name: Trigger build
       if: steps.cacheHash.outputs.cache-hit != 'true'
