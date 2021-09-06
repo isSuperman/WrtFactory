@@ -290,7 +290,10 @@ jobs:
                   echo "pin newest msg success in channel"
                   #发送manitest文件
                   echo "start send manifest"
-                  curl -sSg  "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.CHANNEL_CHAT_ID }}&caption=xiaomi\-ax3600.manifest%0ABy:[OpenWrt 固件工厂](https://t.me/WrtFShare)&parse_mode=MarkdownV2&disable_notification=true" -F document=@"openwrt-ipq807x-generic-xiaomi_ax3600.manifest" > send_manifest.json
+                  curl -g  "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.CHANNEL_CHAT_ID }}&caption=xiaomi\-ax3600.manifest%0ABy:[OpenWrt 固件工厂](https://t.me/WrtFShare)&parse_mode=MarkdownV2&disable_notification=true" -F document=@"openwrt-ipq807x-generic-xiaomi_ax3600.manifest" > send_manifest.json
+                  echo "send_manifest.json is.................................."
+                  cat send_manifest.json
+                  echo "send_manifest.json end...................................."
                   cat send_manifest.json | jq '.result' > is_send_manifest.log
                   is_send_manifest=$(cat is_send_manifest.log)
                   if [ "$is_send_manifest" = "true" ];then
