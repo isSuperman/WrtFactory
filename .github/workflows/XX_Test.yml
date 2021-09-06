@@ -41,5 +41,5 @@ jobs:
     - name: GetUrl
       run: |
         echo "123123" > openwrt-ipq807x-generic-xiaomi_ax3600.manifest
-        curl -g "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.MY_CHAT_ID }}&hashtag=\#AX3600&caption=测试\-内容%0A\#测试换%0ABy:[OpenWrt 固件工厂](https://t.me/WrtFShare)&parse_mode=MarkdownV2&disable_notification=true" -F document=@"openwrt-ipq807x-generic-xiaomi_ax3600.manifest"
+        curl -g "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.MY_CHAT_ID }}&caption_entities=[{"type":"hashtag"}]&caption=测试\-内容%0A#测试换%0ABy:[OpenWrt 固件工厂](https://t.me/WrtFShare)&parse_mode=MarkdownV2&disable_notification=true" -F document=@"openwrt-ipq807x-generic-xiaomi_ax3600.manifest"
         # curl -sSX POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -H "Content-Type: application/x-www-form-urlencoded" --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.MY_CHAT_ID }}&disable_web_page_preview=true&text=test'        
