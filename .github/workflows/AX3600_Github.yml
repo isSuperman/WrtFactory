@@ -305,27 +305,27 @@ jobs:
                       if [ "$is_channel_pin" = "true" ];then
                         echo "pin newest msg success in channel"
                       else
-                        echo "\n------------频道pin失败！------------\n"
+                        echo "\n------------channel pin failed！------------\n"
                         cat channel_pin.json
                       fi
                     else
-                      echo "\n------------频道unpin失败！------------\n"
+                      echo "\n------------channel unpin failed！------------\n"
                       cat channel_unpin.json
                     fi
                   else
-                    echo "\n------------固件消息发送失败！------------\n"
+                    echo "\n-----------message send failed！------------\n"
                     cat res.json
                   fi
                 else
-                  echo -e "\n------------send bin失败！------------\n"
+                  echo -e "\n------------send bin failed！------------\n"
                   cat send_bin.json
                 fi
               else
-                echo "\n------------send ubi失败！------------\n"
+                echo "\n------------send ubi failed！------------\n"
                 cat send_ubi.json
               fi
             else
-              echo "\n------------send manifest失败！------------\n"
+              echo "\n------------send manifest failed！------------\n"
               cat send_manifest.json
             fi
             rm -rf transfer *.log
