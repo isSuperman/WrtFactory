@@ -412,19 +412,19 @@ jobs:
           curl -sSX POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -H "Content-Type: application/x-www-form-urlencoded" --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.CHANNEL_CHAT_ID }}&disable_web_page_preview=true&text=\n_Device Type: X86_\n_Date: ${{ env.COME_DATE }}_\n_Result: success 🎉_\n\n*What\'s New v${{ env.RECENT_DATE }}*${{ env.DATE_INFO }}\n\n*Artifacts*${{ env.DOWN_LIST }}\n\n_Spend Time: ${{ env.SPEND_TIME }}_'
         else
           echo "start send manifest"
-            curl -sSg  "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.CHANNEL_CHAT_ID }}&caption=x86\-64\-generic\.manifest%0A\#X86%0A%0ABy:${{ secrets.TELEGRAM_MD_LINK }}&parse_mode=MarkdownV2&disable_notification=true" -F document=@"openwrt-x86-64-generic.manifest" > send_manifest.json
+            curl -sSg  "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.CHANNEL_CHAT_ID }}&caption=x86\-64\-generic\.manifest%0A\%23X86%0A%0ABy:${{ secrets.TELEGRAM_MD_LINK }}&parse_mode=MarkdownV2&disable_notification=true" -F document=@"openwrt-x86-64-generic.manifest" > send_manifest.json
             cat send_manifest.json | jq '.ok' > is_send_manifest.log
             is_send_manifest=$(cat is_send_manifest.log)
             if [ "$is_send_manifest" = "true" ];then
               echo "send manifest success"
               echo "start send vmdk"
-              curl -sSg "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.CHANNEL_CHAT_ID }}&caption=x86\-64\-generic\-combined\.vmdk%0A\#X86%0A%0ABy:${{ secrets.TELEGRAM_MD_LINK }}&parse_mode=MarkdownV2&disable_notification=true" -F document=@"openwrt-x86-64-generic-squashfs-combined.vmdk" > send_vmdk.json
+              curl -sSg "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.CHANNEL_CHAT_ID }}&caption=x86\-64\-generic\-combined\.vmdk%0A\%23X86%0A%0ABy:${{ secrets.TELEGRAM_MD_LINK }}&parse_mode=MarkdownV2&disable_notification=true" -F document=@"openwrt-x86-64-generic-squashfs-combined.vmdk" > send_vmdk.json
               cat send_vmdk.json | jq '.ok' > is_send_vmdk.log
               is_send_vmdk=$(cat is_send_vmdk.log)
               if [ "$is_send_vmdk" = "true" ];then
                 echo "send vmdk success"
                 echo "start send img"
-                curl -sSg "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.CHANNEL_CHAT_ID }}&caption=x86\-64\-combined\.img\.gz%0A\#X86%0A%0ABy:${{ secrets.TELEGRAM_MD_LINK }}&parse_mode=MarkdownV2&disable_notification=true" -F document=@"openwrt-x86-64-generic-squashfs-combined.img.gz" > send_img.json
+                curl -sSg "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.CHANNEL_CHAT_ID }}&caption=x86\-64\-combined\.img\.gz%0A\%23X86%0A%0ABy:${{ secrets.TELEGRAM_MD_LINK }}&parse_mode=MarkdownV2&disable_notification=true" -F document=@"openwrt-x86-64-generic-squashfs-combined.img.gz" > send_img.json
                 cat send_img.json | jq '.ok' > is_send_img.log
                 is_send_img=$(cat is_send_img.log)
                 if [ "$is_send_img" = "true" ];then
