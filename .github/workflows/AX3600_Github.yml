@@ -290,7 +290,7 @@ jobs:
                   echo "pin newest msg success in channel"
                   #发送manitest文件
                   echo "start send manifest"
-                  curl -g  "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.CHANNEL_CHAT_ID }}&caption=xiaomi\-ax3600.manifest%0ABy:[OpenWrt 固件工厂](https://t.me/WrtFShare)&parse_mode=MarkdownV2&disable_notification=true" -F document=@"openwrt-ipq807x-generic-xiaomi_ax3600.manifest" > send_manifest.json
+                  curl -g  "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.CHANNEL_CHAT_ID }}&caption=openwrt\-ipq807x\-generic\-xiaomi\_ax3600\.manifest%0ABy:[OpenWrt 固件工厂](https://t.me/WrtFShare)&parse_mode=MarkdownV2&disable_notification=true" -F document=@"openwrt-ipq807x-generic-xiaomi_ax3600.manifest" > send_manifest.json
                   echo "send_manifest.json is.................................."
                   cat send_manifest.json
                   echo "send_manifest.json end...................................."
@@ -300,14 +300,14 @@ jobs:
                     echo "send manifest success"
                     # 发送ubi文件
                     echo "star send ubi"
-                    curl -sSg "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.CHANNEL_CHAT_ID }}&caption=xiaomi\-ax3600.ubi%0ABy:[OpenWrt 固件工厂](https://t.me/WrtFShare)&parse_mode=MarkdownV2&disable_notification=true" -F document=@"${{ env.FIRMWARE }}/openwrt-ipq807x-generic-xiaomi_ax3600-squashfs-nand-factory.ubi" > send_ubi.json
+                    curl -sSg "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.CHANNEL_CHAT_ID }}&caption=openwrt\-ipq807x\-generic\-xiaomi\_ax3600\-squashfs\-nand\-factory\.ubi%0ABy:[OpenWrt 固件工厂](https://t.me/WrtFShare)&parse_mode=MarkdownV2&disable_notification=true" -F document=@"openwrt-ipq807x-generic-xiaomi_ax3600-squashfs-nand-factory.ubi" > send_ubi.json
                     cat send_ubi.json | jq '.result' > is_send_ubi.log
                     is_send_ubi=$(cat is_send_ubi.log)
                     if [ "$is_send_ub" = "true" ];then
                       echo "send ubi success"
                       # 发送bin文件
                       echo "start send bin"
-                      curl -sSg "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.CHANNEL_CHAT_ID }}&caption=xiaomi\-ax3600.bin%0ABy:[OpenWrt 固件工厂](https://t.me/WrtFShare)&parse_mode=MarkdownV2&disable_notification=true" -F document=@"${{ env.FIRMWARE }}/openwrt-ipq807x-generic-xiaomi_ax3600-squashfs-nand-sysupgrade.bin" > send_bin.json
+                      curl -sSg "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.CHANNEL_CHAT_ID }}&caption=openwrt\-ipq807x\-generic\-xiaomi\_ax3600\-squashfs\-nand\-sysupgrade\.bin%0ABy:[OpenWrt 固件工厂](https://t.me/WrtFShare)&parse_mode=MarkdownV2&disable_notification=true" -F document=@"openwrt-ipq807x-generic-xiaomi_ax3600-squashfs-nand-sysupgrade.bin" > send_bin.json
                       cat send_bin.json | jq '.result' > is_send_bin.log
                       is_send_bin=$(cat is_send_bin.log)
                       if [ "$is_send_bin" = "true" ];then
