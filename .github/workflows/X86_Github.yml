@@ -407,4 +407,4 @@ jobs:
       if: steps.organize.outputs.status == 'success' && !cancelled()
       run: |
         cd ${FIRMWARE}
-        curl -g "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&caption=_Device Type: X86_%0A_Date: ${{ env.COME_DATE }}_%0A_Result: success 🎉_%0A%0A*What\'s New v${{ env.RECENT_DATE }}*${{ env.DATE_INFO }}%0A%0A_Spend Time: ${{ env.SPEND_TIME }}_%0ABy:[OpenWrt固件工厂](https://t.me/WrtFShare)&parse_mode=MarkdownV2" -F document=@"openwrt-x86-64-generic-squashfs-combined.img.gz"
+        curl -g "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.CHANNEL_CHAT_ID }}&caption=_Device Type: X86_%0A_Date: ${{ env.COME_DATE }}_%0A_Result: success 🎉_%0A%0A*What\'s New v${{ env.RECENT_DATE }}*${{ env.DATE_INFO }}%0A%0A_Spend Time: ${{ env.SPEND_TIME }}_%0ABy:[OpenWrt固件工厂](https://t.me/WrtFShare)&parse_mode=MarkdownV2" -F document=@"openwrt-x86-64-generic-squashfs-combined.img.gz"
