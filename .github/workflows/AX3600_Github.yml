@@ -292,7 +292,7 @@ jobs:
                     message_id=$(cat message_id.log)
                     echo "message_id is $message_id"
                     echo "start unpin channel and chat history msg"
-                    curl -sS "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/unpinAllChatMessages?chat_id=${{ secrets.CHAT_CHAT_ID }}"
+                    curl -sS "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/unpinAllChatMessages?chat_id=${{ secrets.CHAT_CHAT_ID }}" > chat_unpin.json
                     curl -sS "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/unpinAllChatMessages?chat_id=${{ secrets.CHANNEL_CHAT_ID }}" > channel_unpin.json
                     cat channel_unpin.json | jq '.result' > channel_unpin.log
                     is_channel_unpin=$(cat channel_unpin.log)
