@@ -290,20 +290,17 @@ jobs:
                   echo "pin newest msg success in channel"
                   #发送manitest文件
                   echo "start send manifest"
-                  curl -g  "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.CHANNEL_CHAT_ID }}&caption=openwrt\-ipq807x\-generic\-xiaomi\_ax3600\.manifest%0A%0ABy:[OpenWrt 固件工厂](https://t.me/WrtFShare)&parse_mode=MarkdownV2&disable_notification=true" -F document=@"openwrt-ipq807x-generic-xiaomi_ax3600.manifest" > send_manifest.json
-                  echo "send_manifest.json is.................................."
-                  cat send_manifest.json
-                  echo "send_manifest.json end...................................."
+                  curl -sSg  "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.CHANNEL_CHAT_ID }}&caption=openwrt\-ipq807x\-generic\-xiaomi\_ax3600\.manifest%0A%0ABy:[OpenWrt 固件工厂](https://t.me/WrtFShare)&parse_mode=MarkdownV2&disable_notification=true" -F document=@"openwrt-ipq807x-generic-xiaomi_ax3600.manifest" > send_manifest.json
                   cat send_manifest.json | jq '.ok' > is_send_manifest.log
                   is_send_manifest=$(cat is_send_manifest.log)
                   if [ "$is_send_manifest" = "true" ];then
                     echo "send manifest success"
                     # 发送ubi文件
-                    echo "star send ubi"
+                    echo "start send ubi"
                     curl -sSg "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.CHANNEL_CHAT_ID }}&caption=openwrt\-ipq807x\-generic\-xiaomi\_ax3600\-squashfs\-nand\-factory\.ubi%0A%0ABy:[OpenWrt 固件工厂](https://t.me/WrtFShare)&parse_mode=MarkdownV2&disable_notification=true" -F document=@"openwrt-ipq807x-generic-xiaomi_ax3600-squashfs-nand-factory.ubi" > send_ubi.json
                     cat send_ubi.json | jq '.ok' > is_send_ubi.log
                     is_send_ubi=$(cat is_send_ubi.log)
-                    if [ "$is_send_ub" = "true" ];then
+                    if [ "$is_send_ubi" = "true" ];then
                       echo "send ubi success"
                       # 发送bin文件
                       echo "start send bin"
@@ -314,22 +311,28 @@ jobs:
                         echo "send bin success"
                         echo "全部文件发送完毕！"
                       else
-                        echo "------------send bin失败！------------"
+                        echo -e "\n------------send bin失败！------------\n"
+                        cat send_bin.json
                       fi
                     else
-                      echo "------------send ubi失败！------------"
+                      echo "\n------------send ubi失败！------------\n"
+                      cat send_ubi.json
                     fi
                   else
-                    echo "------------send manifest失败！------------"
+                    echo "\n------------send manifest失败！------------\n"
+                    cat send_manifest.json
                   fi
                 else
-                  echo "------------频道pin失败！------------"
+                  echo "\n------------频道pin失败！------------\n"
+                  cat channel_pin.json
                 fi
               else
-                echo "------------频道unpin失败！------------"
+                echo "\n------------频道unpin失败！------------\n"
+                cat channel_unpin.json
               fi
             else
-              echo "------------固件消息发送失败！------------"
+              echo "\n------------固件消息发送失败！------------\n"
+              cat res.json
             fi
             rm -rf transfer *.log
         fi
