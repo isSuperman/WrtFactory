@@ -310,7 +310,7 @@ jobs:
                       echo "start pin newest msg in chat"
                       curl "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/pinChatMessage?chat_id=${{ secrets.CHAT_CHAT_ID }}&message_id=$message_idd" | tee chat_pin.json
                       cat chat_pin.json | jq '.result' > is_chat_pin.log
-                      is_chat_pin=$(cat is_chat_pin)
+                      is_chat_pin=$(cat is_chat_pin.log)
                       if [ "$is_chat_pin" = "true" ];then
                         echo "pin msg success in chat"
                         #发送manitest文件
