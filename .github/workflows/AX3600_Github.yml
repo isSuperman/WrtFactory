@@ -265,7 +265,7 @@ jobs:
             curl -sSX POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -H "Content-Type: application/x-www-form-urlencoded" --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&disable_web_page_preview=true&text=\n_Device Type: AX3600_\n_Date: ${{ env.COME_DATE }}_\n_Result: success 🎉_\n\n*What\'s New v${{ env.RECENT_DATE }}*${{ env.DATE_INFO }}\n\n*Artifacts*${{ env.DOWN_LIST }}\n\n_Spend Time: ${{ env.SPEND_TIME }}_'        
         else
             echo "start send msg........"
-            curl -sSX POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -H "Content-Type: application/x-www-form-urlencoded" --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.CHANNEL_CHAT_ID }}&disable_web_page_preview=true&text=今日固件已发布！\n_Device Type: AX3600_\n_Date: ${{ env.COME_DATE }}_\n_Result: success 🎉_\n\n*What\'s New v${{ env.RECENT_DATE }}*${{ env.DATE_INFO }}\n\n_Spend Time: ${{ env.SPEND_TIME }}_\nBy:[OpenWrt 固件工厂](https://t.me/WrtFShare)' | tee res.json
+            curl -sSX POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -H "Content-Type: application/x-www-form-urlencoded" --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.CHANNEL_CHAT_ID }}&disable_web_page_preview=true&text=今日固件已发布！\n_Device Type: AX3600_\n_Date: ${{ env.COME_DATE }}_\n_Result: success 🎉_\n\n*What\'s New v${{ env.RECENT_DATE }}*${{ env.DATE_INFO }}\n\n_Spend Time: ${{ env.SPEND_TIME }}_\nBy:[OpenWrt 固件工厂](https://t.me/WrtFShare)' > res.json
             cat res.json | jq '.ok' > is_res.log
             is_res=$(cat is_res.log)
             if [ "$is_res" = "true" ];then
@@ -276,21 +276,21 @@ jobs:
               echo "message_id is $message_id"
               #unpin历史消息
               echo "start unpin channel history msg"
-              curl -sS "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/unpinAllChatMessages?chat_id=${{ secrets.CHANNEL_CHAT_ID }}" | tee channel_unpin.json
+              curl -sS "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/unpinAllChatMessages?chat_id=${{ secrets.CHANNEL_CHAT_ID }}" > channel_unpin.json
               cat channel_unpin.json | jq '.result' > channel_unpin.log
               is_channel_unpin=$(cat channel_unpin.log)
               if [ "$is_channel_unpin" = "true" ];then
                 echo "unpin channel history msg success"
                 #pin最新消息
                 echo "start pin newest msg"
-                curl -sS "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/pinChatMessage?chat_id=${{ secrets.CHANNEL_CHAT_ID }}&message_id=$message_id" | tee channel_pin.json
+                curl -sS "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/pinChatMessage?chat_id=${{ secrets.CHANNEL_CHAT_ID }}&message_id=$message_id" > channel_pin.json
                 cat channel_pin.json | jq '.result' > is_channel_pin.log
                 is_channel_pin=$(cat is_channel_pin.log)
                 if [ "$is_channel_pin" = "true" ];then
                   echo "pin newest msg success"
                   #转发消息到群
                   echo "start forwardMessage"
-                  curl -sS "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/forwardMessage?chat_id=${{ secrets.CHAT_CHAT_ID }}&from_chat_id=${{ secrets.CHANNEL_CHAT_ID }}&message_id=$message_id" | tee ress.json
+                  curl -sS "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/forwardMessage?chat_id=${{ secrets.CHAT_CHAT_ID }}&from_chat_id=${{ secrets.CHANNEL_CHAT_ID }}&message_id=$message_id" > ress.json
                   cat ress.json | jq '.ok' > is_forward.log
                   is_forward=$(cat is_forward.log)
                   if [ "$is_forward" = "true" ];then
@@ -301,35 +301,35 @@ jobs:
                     echo "message_idd is $message_idd"
                     # 群里unpin历史消息
                     echo "start unpin chat history msg"
-                    curl -sS "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/unpinAllChatMessages?chat_id=${{ secrets.CHAT_CHAT_ID }}" | tee chat_unpin.json
+                    curl -sS "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/unpinAllChatMessages?chat_id=${{ secrets.CHAT_CHAT_ID }}" > chat_unpin.json
                     cat chat_unpin.json | jq '.result' > is_chat_unpin.log
                     is_chat_unpin=$(cat is_chat_unpin.log)
                     if [ "$is_chat_unpin" = "true" ];then
                       echo "unpin chat history msg success"
                       #群里pin最新消息
                       echo "start pin newest msg in chat"
-                      curl -sS "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/pinChatMessage?chat_id=${{ secrets.CHAT_CHAT_ID }}&message_id=$message_idd" | tee chat_pin.json
+                      curl -sS "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/pinChatMessage?chat_id=${{ secrets.CHAT_CHAT_ID }}&message_id=$message_idd" > chat_pin.json
                       cat chat_pin.json | jq '.result' > is_chat_pin.log
                       is_chat_pin=$(cat is_chat_pin.log)
                       if [ "$is_chat_pin" = "true" ];then
                         echo "pin msg success in chat"
                         #发送manitest文件
                         echo "start send manifest"
-                        curl -sSg  "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.CHANNEL_CHAT_ID }}&caption=xiaomi\-ax3600.manifest%0ABy:[OpenWrt 固件工厂](https://t.me/WrtFShare)&parse_mode=MarkdownV2&disable_notification=true" -F document=@"openwrt-ipq807x-generic-xiaomi_ax3600.manifest" | tee send_manifest.json
+                        curl -sSg  "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.CHANNEL_CHAT_ID }}&caption=xiaomi\-ax3600.manifest%0ABy:[OpenWrt 固件工厂](https://t.me/WrtFShare)&parse_mode=MarkdownV2&disable_notification=true" -F document=@"openwrt-ipq807x-generic-xiaomi_ax3600.manifest" > send_manifest.json
                         cat send_manifest.json | jq '.result' > is_send_manifest.log
                         is_send_manifest=$(cat is_send_manifest.log)
                         if [ "$is_send_manifest" = "true" ];then
                           echo "send manifest success"
                           # 发送ubi文件
                           echo "star send ubi"
-                          curl -sSg "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.CHANNEL_CHAT_ID }}&caption=xiaomi\-ax3600.ubi%0ABy:[OpenWrt 固件工厂](https://t.me/WrtFShare)&parse_mode=MarkdownV2&disable_notification=true" -F document=@"${{ env.FIRMWARE }}/openwrt-ipq807x-generic-xiaomi_ax3600-squashfs-nand-factory.ubi" | tee send_ubi.json
+                          curl -sSg "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.CHANNEL_CHAT_ID }}&caption=xiaomi\-ax3600.ubi%0ABy:[OpenWrt 固件工厂](https://t.me/WrtFShare)&parse_mode=MarkdownV2&disable_notification=true" -F document=@"${{ env.FIRMWARE }}/openwrt-ipq807x-generic-xiaomi_ax3600-squashfs-nand-factory.ubi" > send_ubi.json
                           cat send_ubi.json | jq '.result' > is_send_ubi.log
                           is_send_ubi=$(cat is_send_ubi.log)
                           if [ "$is_send_ub" = "true" ];then
                             echo "send ubi success"
                             # 发送bin文件
                             echo "start send bin"
-                            curl -sSg "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.CHANNEL_CHAT_ID }}&caption=xiaomi\-ax3600.bin%0ABy:[OpenWrt 固件工厂](https://t.me/WrtFShare)&parse_mode=MarkdownV2&disable_notification=true" -F document=@"${{ env.FIRMWARE }}/openwrt-ipq807x-generic-xiaomi_ax3600-squashfs-nand-sysupgrade.bin" | tee send_bin.json
+                            curl -sSg "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.CHANNEL_CHAT_ID }}&caption=xiaomi\-ax3600.bin%0ABy:[OpenWrt 固件工厂](https://t.me/WrtFShare)&parse_mode=MarkdownV2&disable_notification=true" -F document=@"${{ env.FIRMWARE }}/openwrt-ipq807x-generic-xiaomi_ax3600-squashfs-nand-sysupgrade.bin" > send_bin.json
                             cat send_bin.json | jq '.result' > is_send_bin.log
                             is_send_bin=$(cat is_send_bin.log)
                             if [ "$is_send_bin" = "true" ];then
