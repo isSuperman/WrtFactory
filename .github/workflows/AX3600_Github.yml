@@ -265,25 +265,25 @@ jobs:
             curl -sSX POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -H "Content-Type: application/x-www-form-urlencoded" --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.CHANNEL_CHAT_ID }}&disable_web_page_preview=true&text=\n_Device Type: AX3600_\n_Date: ${{ env.COME_DATE }}_\n_Result: success 🎉_\n\n*What\'s New v${{ env.RECENT_DATE }}*${{ env.DATE_INFO }}\n\n*Artifacts*${{ env.DOWN_LIST }}\n\n_Spend Time: ${{ env.SPEND_TIME }}_'        
         else
             echo "start send manifest"
-            curl -sSg  "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.CHANNEL_CHAT_ID }}&caption=xiaomi\-ax3600\.manifest%0A%0ABy:${{ secrets.TELEGRAM_MD_LINK }}&parse_mode=MarkdownV2&disable_notification=true" -F document=@"openwrt-ipq807x-generic-xiaomi_ax3600.manifest" > send_manifest.json
+            curl -sSg  "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.CHANNEL_CHAT_ID }}&caption=xiaomi\-ax3600\.manifest%0A\#AX3600%0A%0ABy:${{ secrets.TELEGRAM_MD_LINK }}&parse_mode=MarkdownV2&disable_notification=true" -F document=@"openwrt-ipq807x-generic-xiaomi_ax3600.manifest" > send_manifest.json
             cat send_manifest.json | jq '.ok' > is_send_manifest.log
             is_send_manifest=$(cat is_send_manifest.log)
             if [ "$is_send_manifest" = "true" ];then
               echo "send manifest success"
               echo "start send ubi"
-              curl -sSg "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.CHANNEL_CHAT_ID }}&caption=xiaomi\-ax3600\.ubi%0A%0ABy:${{ secrets.TELEGRAM_MD_LINK }}&parse_mode=MarkdownV2&disable_notification=true" -F document=@"openwrt-ipq807x-generic-xiaomi_ax3600-squashfs-nand-factory.ubi" > send_ubi.json
+              curl -sSg "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.CHANNEL_CHAT_ID }}&caption=xiaomi\-ax3600\.ubi%0A\#AX3600%0A%0ABy:${{ secrets.TELEGRAM_MD_LINK }}&parse_mode=MarkdownV2&disable_notification=true" -F document=@"openwrt-ipq807x-generic-xiaomi_ax3600-squashfs-nand-factory.ubi" > send_ubi.json
               cat send_ubi.json | jq '.ok' > is_send_ubi.log
               is_send_ubi=$(cat is_send_ubi.log)
               if [ "$is_send_ubi" = "true" ];then
                 echo "send ubi success"
                 echo "start send bin"
-                curl -sSg "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.CHANNEL_CHAT_ID }}&caption=xiaomi\-ax3600\.bin%0A%0ABy:${{ secrets.TELEGRAM_MD_LINK }}&parse_mode=MarkdownV2&disable_notification=true" -F document=@"openwrt-ipq807x-generic-xiaomi_ax3600-squashfs-nand-sysupgrade.bin" > send_bin.json
+                curl -sSg "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.CHANNEL_CHAT_ID }}&caption=xiaomi\-ax3600\.bin%0A\#AX3600%0A%0ABy:${{ secrets.TELEGRAM_MD_LINK }}&parse_mode=MarkdownV2&disable_notification=true" -F document=@"openwrt-ipq807x-generic-xiaomi_ax3600-squashfs-nand-sysupgrade.bin" > send_bin.json
                 cat send_bin.json | jq '.ok' > is_send_bin.log
                 is_send_bin=$(cat is_send_bin.log)
                 if [ "$is_send_bin" = "true" ];then
                   echo "send bin success"
                   echo "start send msg........"
-                  curl -sSX POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -H "Content-Type: application/x-www-form-urlencoded" --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.CHANNEL_CHAT_ID }}&disable_web_page_preview=true&text=${{ secrets.TODAY_GUJIAN }}\n_Device Type: AX3600_\n_Date: ${{ env.COME_DATE }}_\n_Result: success 🎉_\n\n*What\'s New v${{ env.RECENT_DATE }}*${{ env.DATE_INFO }}\n\n_Spend Time: ${{ env.SPEND_TIME }}_\n\nBy:${{ secrets.TELEGRAM_MD_LINK }}' > res.json
+                  curl -sSX POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -H "Content-Type: application/x-www-form-urlencoded" --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.CHANNEL_CHAT_ID }}&disable_web_page_preview=true&text=${{ secrets.TODAY_GUJIAN }}\n_Device Type: \#AX3600_\n_Date: ${{ env.COME_DATE }}_\n_Result: success 🎉_\n\n*What\'s New v${{ env.RECENT_DATE }}*${{ env.DATE_INFO }}\n\n_Spend Time: ${{ env.SPEND_TIME }}_\n\nBy:${{ secrets.TELEGRAM_MD_LINK }}' > res.json
                   cat res.json | jq '.ok' > is_res.log
                   is_res=$(cat is_res.log)
                   if [ "$is_res" = "true" ];then
