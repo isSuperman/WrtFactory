@@ -41,6 +41,7 @@ jobs:
     - name: GetUrl
       run: |
         echo "123123" > openwrt-ipq807x-generic-xiaomi_ax3600.manifest
-        curl -g "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendPhoto?chat_id=${{ secrets.MY_CHAT_ID }}&caption=测试\-内容%0A\%23测试换 测试%0ABy:[OpenWrt 固件工厂](https://t.me/WrtFShare)&parse_mode=MarkdownV2&disable_notification=true&photo=https://upload.cc/i1/2021/09/07/raFO1S.png"
+        curl -sSX POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendPhoto" -H "Content-Type: application/x-www-form-urlencoded" --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.CHANNEL_CHAT_ID }}&disable_web_page_preview=true&caption=\n_Device Type: \#AX3600_\n\n*What\'s New \n\nBy:${{ secrets.TELEGRAM_MD_LINK }}&photo=https://upload.cc/i1/2021/09/07/raFO1S.png'
+        #curl -g "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendPhoto?chat_id=${{ secrets.MY_CHAT_ID }}&caption=测试\-内容%0A\%23测试换 测试%0ABy:[OpenWrt 固件工厂](https://t.me/WrtFShare)&parse_mode=MarkdownV2&disable_notification=true&photo=https://upload.cc/i1/2021/09/07/raFO1S.png"
         #curl -g "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument?chat_id=${{ secrets.MY_CHAT_ID }}&caption=测试\-内容%0A\%23测试换 测试%0ABy:[OpenWrt 固件工厂](https://t.me/WrtFShare)&parse_mode=MarkdownV2&disable_notification=true" -F document=@"openwrt-ipq807x-generic-xiaomi_ax3600.manifest"
         # curl -sSX POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -H "Content-Type: application/x-www-form-urlencoded" --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.MY_CHAT_ID }}&disable_web_page_preview=true&text=test'        
