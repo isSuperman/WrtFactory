@@ -430,7 +430,7 @@ jobs:
                 if [ "$is_send_img" = "true" ];then
                   echo "send bin success"
                   echo "start send msg........"
-                  curl -sSX POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -H "Content-Type: application/x-www-form-urlencoded" --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.CHANNEL_CHAT_ID }}&disable_web_page_preview=true&text=${{ secrets.TODAY_GUJIAN }}\n_Device Type: \#X86_\n_Date: ${{ env.COME_DATE }}_\n_Result: success 🎉_\n\n*What\'s New v${{ env.RECENT_DATE }}*${{ env.DATE_INFO }}\n\n_Spend Time: ${{ env.SPEND_TIME }}_\n\nBy:${{ secrets.TELEGRAM_MD_LINK }}' > res.json
+                  curl -sSX POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -H "Content-Type: application/x-www-form-urlencoded" --data-binary $'parse_mode=MarkdownV2&chat_id=${{ secrets.CHANNEL_CHAT_ID }}&disable_web_page_preview=true&text=${{ secrets.TODAY_GUJIAN }}\n_Device Type: \#X86_\n_Date: ${{ env.COME_DATE }}_\n_Result: success 🎉_\n\n*What\'s New v${{ env.RECENT_DATE }}*${{ env.DATE_INFO }}\n\n_Spend Time: ${{ env.SPEND_TIME }}_\n\nBy:${{ secrets.TELEGRAM_MD_LINK }}&disable_notification=true' > res.json
                   cat res.json | jq '.ok' > is_res.log
                   is_res=$(cat is_res.log)
                   if [ "$is_res" = "true" ];then
