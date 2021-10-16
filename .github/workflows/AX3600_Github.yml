@@ -103,6 +103,8 @@ jobs:
         mv config/$CONFIG_FILE openwrt/.config
         cd openwrt
         sed -i '$a src-git helloworld https://github.com/fw876/helloworld.git' feeds.conf.default
+        sed -i '$a src-git nas https://github.com/linkease/nas-packages.git;master' feeds.conf.default
+        sed -i '$a src-git nas_luci https://github.com/linkease/nas-packages-luci.git;main' feeds.conf.default
         sed -i 's@.*CYXluq4wUazHjmCDBCqXF*@#&@g' package/lean/default-settings/files/zzz-default-settings
         sed -i 's/192.168.1.1/192.168.5.1/g' package/base-files/files/bin/config_generate
 
