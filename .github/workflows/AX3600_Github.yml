@@ -109,8 +109,8 @@ jobs:
       run: |
         cd openwrt
         rm -rf package/helloworld
-        git submodule add --name helloworld https://github.com/fw876/helloworld.git package/helloworld
-        git submodule update --remote package/helloworld
+        git clone --depth=1 https://github.com/fw876/helloworld.git package/helloworld
+        git -C package/helloworld pull
         ./scripts/feeds update -a
         ./scripts/feeds install -a
 
