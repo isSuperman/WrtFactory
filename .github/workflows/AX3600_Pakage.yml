@@ -163,35 +163,6 @@ jobs:
         name: firmware_${{ env.FILE_DATE }}
         path: ${{ env.FIRMWARE }}
         
-    - name: Upload to Netdisk
-      id: upload
-      if: steps.organize.outputs.status == 'success' && env.UPLOAD_NETDISK == 'true'  && !cancelled()
-      run: |
-        cd ${{ env.FIRMWARE }}
-        zip firmware-xiaomi-ax3600.zip *
-        curl -fsSL git.io/file-transfer | sh
-        if test ${{ env.UP_COW }} = 'true';then
-          ./transfer cow --block 2621440 -s -p 64 --no-progress firmware-xiaomi-ax3600.zip 2>&1 | tee cowtransfer.log
-          echo "$(cat cowtransfer.log | grep https | cut -f3 -d" ")" > cow.log
-          sed -i 's/\./\\\./g' cow.log
-          echo "[Cowtransfer]($(cat cow.log))" >> down_md.log
-        fi
-        
-        if test ${{ env.UP_FIO }} = 'true';then
-          ./transfer fio --no-progress firmware-xiaomi-ax3600.zip 2>&1 | tee fileio.log
-          echo "$(cat fileio.log | grep https | cut -f3 -d" ")" > fio.log
-          sed -i 's/\./\\\./g' fio.log
-          echo "[Fileio]($(cat fio.log))" >> down_md.log
-        fi
-        
-        if test ${{ env.UP_LIT }} = 'true';then
-          ./transfer lit --no-progress firmware-xiaomi-ax3600.zip 2>&1 | tee litterbox.log
-          echo "$(cat litterbox.log | grep https | cut -f3 -d" ")" > lit.log
-          sed -i 's/\./\\\./g' lit.log
-          echo "[LitterBox]($(cat lit.log))" >> down_md.log
-        fi
-        mv down_md.log $GITHUB_WORKSPACE
-        
     - name: Generate release tag
       id: tag
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
