@@ -15,8 +15,8 @@ on:
   workflow_dispatch:
   schedule:
     # * is a special character in YAML so you have to quote this string
-    - cron:  '30 2 * * *'
-    - cron:  '30 9 * * *'
+    #- cron:  '30 2 * * *'
+    #- cron:  '30 9 * * *'
   
 env:
   REPO_URL: https://github.com/coolsnowwolf/lede
