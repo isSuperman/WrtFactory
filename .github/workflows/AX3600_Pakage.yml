@@ -142,7 +142,7 @@ jobs:
       if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
       run: |
         cd openwrt/bin/targets/*/*
-        ls
+        cd packages
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "::set-output name=status::success"
            
@@ -160,7 +160,7 @@ jobs:
       uses: actions/upload-artifact@main
       if: steps.organize.outputs.status == 'success' && !cancelled()
       with:
-        name: firmware_${{ env.FILE_DATE }}
+        name: packages_${{ env.FILE_DATE }}
         path: ${{ env.FIRMWARE }}
         
     - name: Generate release tag
