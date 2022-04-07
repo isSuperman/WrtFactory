@@ -141,7 +141,7 @@ jobs:
       id: organize
       if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
       run: |
-        cd openwrt/bin/packages/*
+        cd openwrt/bin/packages/
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "::set-output name=status::success"
            
@@ -180,6 +180,7 @@ jobs:
         cd ..
         cd ${{ env.FIRMWARE }}
         rm -rf *.log
+        curl https://api.day.app/{{ secrets.BARKKEY }}/Github%20Action/插件编译完成✅?sound=silence&group=GithubAction
     - name: Upload firmware to release
       uses: softprops/action-gh-release@v1
       if: steps.tag.outputs.status == 'success' && !cancelled()
