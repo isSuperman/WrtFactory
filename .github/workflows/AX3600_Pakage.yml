@@ -161,7 +161,7 @@ jobs:
       if: steps.organize.outputs.status == 'success' && !cancelled()
       with:
         name: AX3600_packages
-        path: ${{ env.FIRMWARE }}/AX3600_packages.zip
+        path: ${{ env.FIRMWARE }}
         
     - name: Generate release tag
       id: tag
