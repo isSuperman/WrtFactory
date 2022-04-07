@@ -142,7 +142,7 @@ jobs:
       if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
       run: |
         cd openwrt/bin/packages/
-        zip AX3600_packages.zip *
+        zip -r AX3600_packages.zip ./*
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "::set-output name=status::success"
            
@@ -160,8 +160,8 @@ jobs:
       uses: actions/upload-artifact@main
       if: steps.organize.outputs.status == 'success' && !cancelled()
       with:
-        name: AX3600_packages.zip
-        path: ${{ env.FIRMWARE }}
+        name: AX3600_packages
+        path: ${{ env.FIRMWARE }}/AX3600_packages.zip
         
     - name: Generate release tag
       id: tag
@@ -181,7 +181,10 @@ jobs:
         cd ..
         cd ${{ env.FIRMWARE }}
         rm -rf *.log
-        curl 'https://api.day.app/{{ secrets.BARKKEY }}/Github%20Action/%E6%8F%92%E4%BB%B6%E7%BC%96%E8%AF%91%E5%AE%8C%E6%88%90?sound=silence&group=GithubAction&icon=https://github.com/isSuperman/WrtFactory/blob/15f2afc79edd2340f46f87d415e6fc3bfae56930/images/barkGroupLogo.jpeg?raw=true'
+        curl -X POST "https://api.day.app/{{ secrets.BARKKEY }}" \
+   -H 'Content-Type: application/x-www-form-urlencoded; charset=utf-8' \
+   -d 'title=Github%20Actio&body=%E6%8F%92%E4%BB%B6%E7%BC%96%E8%AF%91%E5%AE%8C%E6%88%90&sound=silence&group=GithubAction&icon=https://github.com/isSuperman/WrtFactory/blob/15f2afc79edd2340f46f87d415e6fc3bfae56930/images/barkGroupLogo.jpeg?raw=true'
+   
     - name: Upload firmware to release
       uses: softprops/action-gh-release@v1
       if: steps.tag.outputs.status == 'success' && !cancelled()
