@@ -142,6 +142,7 @@ jobs:
       if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
       run: |
         cd openwrt/bin/packages/
+        zip AX3600_packages.zip *
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "::set-output name=status::success"
            
@@ -159,7 +160,7 @@ jobs:
       uses: actions/upload-artifact@main
       if: steps.organize.outputs.status == 'success' && !cancelled()
       with:
-        name: packages_${{ env.FILE_DATE }}
+        name: AX3600_packages.zip
         path: ${{ env.FIRMWARE }}
         
     - name: Generate release tag
@@ -189,7 +190,7 @@ jobs:
       with:
         tag_name: ${{ steps.tag.outputs.release_tag }}
         body_path: openwrt/release.log
-        files: ${{ env.FIRMWARE }}/*
+        files: ${{ env.FIRMWARE }}/AX3600_packages.zip
 
     - name: Delete workflow runs
       uses: GitRML/delete-workflow-runs@main
