@@ -96,9 +96,6 @@ jobs:
       run: |
         [ -e files ] && mv files openwrt/files
         mv config/$CONFIG_FILE openwrt/.config
-        cd openwrt
-        sed -i 's@.*CYXluq4wUazHjmCDBCqXF*@#&@g' package/lean/default-settings/files/zzz-default-settings
-        sed -i 's/192.168.1.1/192.168.5.1/g' package/base-files/files/bin/config_generate
 
     - name: Update and install feeds
       run: |
@@ -113,7 +110,7 @@ jobs:
       id: package
       run: |
         cd openwrt
-        rm -rf ./tmp ./package/feeds/luci/luci-app-nlbwmon ./package/lean/luci-app-wrtbwmon
+        rm -rf ./tmp
         echo -e 'CONFIG_DEVEL=y\nCONFIG_CCACHE=y' >> .config
         make defconfig
         make download -j8
@@ -141,8 +138,7 @@ jobs:
       id: organize
       if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
       run: |
-        cd openwrt/bin/
-        zip -r AX3600_packages.zip ./*
+        cd openwrt/bin/*/luci
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "::set-output name=status::success"
            
@@ -160,8 +156,8 @@ jobs:
       uses: actions/upload-artifact@main
       if: steps.organize.outputs.status == 'success' && !cancelled()
       with:
-        name: AX3600_packages
-        path: ${{ env.FIRMWARE }}/AX3600_packages.zip
+        name: AX3600_Packages
+        path: ${{ env.FIRMWARE }}
         
     - name: Generate release tag
       id: tag
@@ -191,7 +187,7 @@ jobs:
       with:
         tag_name: ${{ steps.tag.outputs.release_tag }}
         body_path: openwrt/release.log
-        files: ${{ env.FIRMWARE }}/AX3600_packages.zip
+        files: ${{ env.FIRMWARE }}
 
     - name: Delete workflow runs
       uses: GitRML/delete-workflow-runs@main
