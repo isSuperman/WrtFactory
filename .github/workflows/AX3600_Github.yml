@@ -109,6 +109,8 @@ jobs:
     - name: Update and install feeds
       run: |
         cd openwrt
+        rm -rf luci-theme-argon  
+        git clone -b 18.06 https://github.com/jerrykuku/luci-theme-argon.git
         rm -rf package/helloworld
         git clone --depth=1 https://github.com/fw876/helloworld.git package/helloworld
         git -C package/helloworld pull
