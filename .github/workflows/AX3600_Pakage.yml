@@ -181,7 +181,7 @@ jobs:
         cd ..
         cd ${{ env.FIRMWARE }}
         rm -rf *.log
-        curl -X POST "https://api.day.app/${{ secrets.BARKKEY }}" -H 'Content-Type: application/x-www-form-urlencoded; charset=utf-8' -d 'title=Github%20Actio&body=%E6%8F%92%E4%BB%B6%E7%BC%96%E8%AF%91%E5%AE%8C%E6%88%90&sound=silence&group=GithubAction&icon=https://github.com/isSuperman/WrtFactory/blob/15f2afc79edd2340f46f87d415e6fc3bfae56930/images/barkGroupLogo.jpeg?raw=true'
+        curl -X POST "https://api.day.app/${{ secrets.BARKKEY }}" -H 'Content-Type: application/x-www-form-urlencoded; charset=utf-8' -d 'title=Github%20Action%20Status&body=%E6%8F%92%E4%BB%B6%E7%BC%96%E8%AF%91%E5%AE%8C%E6%88%90&sound=silence&group=GithubAction&icon=https://github.com/isSuperman/WrtFactory/blob/15f2afc79edd2340f46f87d415e6fc3bfae56930/images/barkGroupLogo.jpeg?raw=true'
    
     - name: Upload firmware to release
       uses: softprops/action-gh-release@v1
