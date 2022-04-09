@@ -139,10 +139,8 @@ jobs:
       id: organize
       if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
       run: |
-        cd openwrt/bin/packages/*/base
-        for f in * ; do mv -- "$f" "base_$f" ; done
-        cd ..
-        mv base/* luci
+        cd openwrt/bin/packages/*
+        mv base/*.ipk luci
         cd luci
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "::set-output name=status::success"
@@ -192,7 +190,7 @@ jobs:
       with:
         tag_name: ${{ steps.tag.outputs.release_tag }}
         body_path: openwrt/release.log
-        files: ${{ env.FIRMWARE }}
+        files: ${{ env.FIRMWARE }}/*
 
     - name: Delete workflow runs
       uses: GitRML/delete-workflow-runs@main
