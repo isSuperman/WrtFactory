@@ -8,7 +8,7 @@
 # Description: Build Wrt Firmware using GitHub Actions
 #
 
-name: AX3600 Package
+name: AX3600 PackageTest
 
 on:
   repository_dispatch:
