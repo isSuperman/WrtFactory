@@ -120,8 +120,7 @@ jobs:
       run: |
         cd openwrt
         rm -rf ./tmp ./package/feeds/luci/luci-app-nlbwmon ./package/lean/luci-app-wrtbwmon
-
-        echo -e 'CONFIG_DEVEL=y\nCONFIG_CCACHE=y' >> .config; make defconfig
+        echo -e 'CONFIG_DEVEL=y\nCONFIG_CCACHE=y' >> .config
         make download -j8
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
