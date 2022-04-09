@@ -102,9 +102,8 @@ jobs:
         rm -rf package/lean/luci-theme-argon
         git clone -b 18.06 https://github.com/jerrykuku/luci-theme-argon.git package/lean/luci-theme-argon
         git clone https://github.com/jerrykuku/luci-app-argon-config.git package/lean/luci-app-argon-config
-        rm -rf package/helloworld
-        git clone --depth=1 https://github.com/fw876/helloworld.git package/helloworld
-        git -C package/helloworld pull
+        sed -i "/helloworld/d" "feeds.conf.default"
+        echo "src-git helloworld https://github.com/fw876/helloworld.git" >> "feeds.conf.default"
         ./scripts/feeds update -a
         ./scripts/feeds install -a
 
