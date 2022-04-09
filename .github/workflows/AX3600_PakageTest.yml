@@ -100,7 +100,8 @@ jobs:
       run: |
         cd openwrt
         rm -rf package/lean/luci-theme-argon
-        git clone -b 18.06 https://github.com/jerrykuku/luci-theme-argon.git package/luci-theme-argon
+        git clone -b 18.06 https://github.com/jerrykuku/luci-theme-argon.git package/lean/luci-theme-argon
+        git clone https://github.com/jerrykuku/luci-app-argon-config.git package/lean/luci-app-argon-config
         rm -rf package/helloworld
         git clone --depth=1 https://github.com/fw876/helloworld.git package/helloworld
         git -C package/helloworld pull
@@ -113,7 +114,6 @@ jobs:
         cd openwrt
         rm -rf ./tmp
         echo -e 'CONFIG_DEVEL=y\nCONFIG_CCACHE=y' >> .config
-        make defconfig
         make download -j8
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
