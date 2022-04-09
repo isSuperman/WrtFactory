@@ -4372,7 +4372,7 @@ CONFIG_PACKAGE_luci-app-adbyby-plus=m
 CONFIG_PACKAGE_luci-app-aliyundrive-webdav=m
 # CONFIG_PACKAGE_luci-app-amule is not set
 CONFIG_PACKAGE_luci-app-argon-config=m
-CONFIG_PACKAGE_luci-app-aria2=y
+# CONFIG_PACKAGE_luci-app-aria2 is not set
 CONFIG_PACKAGE_luci-app-arpbind=m
 # CONFIG_PACKAGE_luci-app-asterisk is not set
 # CONFIG_PACKAGE_luci-app-attendedsysupgrade is not set
@@ -4573,11 +4573,6 @@ CONFIG_PACKAGE_luci-i18n-aliyundrive-webdav-zh-cn=m
 # CONFIG_PACKAGE_luci-i18n-aliyundrive-webdav-zh_Hans is not set
 # CONFIG_PACKAGE_luci-i18n-argon-config-es is not set
 CONFIG_PACKAGE_luci-i18n-argon-config-zh-cn=m
-# CONFIG_PACKAGE_luci-i18n-aria2-pt-br is not set
-# CONFIG_PACKAGE_luci-i18n-aria2-ru is not set
-# CONFIG_PACKAGE_luci-i18n-aria2-sv is not set
-CONFIG_PACKAGE_luci-i18n-aria2-zh-cn=y
-# CONFIG_PACKAGE_luci-i18n-aria2-zh-tw is not set
 CONFIG_PACKAGE_luci-i18n-arpbind-zh-cn=m
 CONFIG_PACKAGE_luci-i18n-autoreboot-zh-cn=m
 # CONFIG_PACKAGE_luci-i18n-base-ca is not set
