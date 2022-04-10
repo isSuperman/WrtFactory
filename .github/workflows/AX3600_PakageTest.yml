@@ -79,7 +79,6 @@ jobs:
       id: commitinfo
       run: |
         cd openwrt
-        rm -rf bin/targets/*
         curl -sL git.io/commit_formate_sh > $COMMIT_INFO
         chmod +x $COMMIT_INFO
         ./$COMMIT_INFO > com_info.log
@@ -90,6 +89,10 @@ jobs:
     - name: Load custom configuration
       run: |
         [ -e files ] && mv files openwrt/files
+        echo "start move files"
+        ls
+        echo "-------------"
+        ls config
         mv config/$CONFIG_FILE openwrt/.config
 
     - name: Update and install feeds
