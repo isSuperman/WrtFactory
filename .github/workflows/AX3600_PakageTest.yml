@@ -49,7 +49,8 @@ jobs:
     - name: Compile
       run: |
         cd openwrt
-        cp $GITHUB_WORKSPACE/config/$CONFIG_FILE ./.config
+        rm -rf .config
+        cp $GITHUB_WORKSPACE/config/$CONFIG_FILE .config
         
         ./scripts/feeds update -a
         ./scripts/feeds install -a
