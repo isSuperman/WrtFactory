@@ -1,32 +1,17 @@
-#
-# Copyright (c) 2021 isSuperman
-#
-# This is free software, licensed under the MIT License.
-# See /LICENSE for more information.
-#
-# https://github.com/isSuperman/WrtFactory
-# Description: Build Wrt Firmware using GitHub Actions
-#
-
 name: AX3600 PackageTest
 
 on:
   repository_dispatch:
   workflow_dispatch:
   schedule:
-    # * is a special character in YAML so you have to quote this string
     - cron:  '30 3 * * *'
     - cron:  '30 9 * * *'
   
 env:
   REPO_URL: https://github.com/coolsnowwolf/lede
-
   REPO_BRANCH: master
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: AX3600PKG
-  SPEND_TIME: spend_time_formate.sh
-  COMMIT_INFO: commit_formate.sh
-  ETA: ETA_formate.sh
   UPLOAD_RELEASE: true
   UPLOAD_FIRMWARE: true
 
@@ -53,20 +38,6 @@ jobs:
         sudo timedatectl set-timezone "Asia/Shanghai"
         sudo mkdir -p /workdir
         sudo chown $USER:$GROUPS /workdir
-        echo "START_DATE=$(date +%s)" >> $GITHUB_ENV
-        
-    - name: Prepare to Compile
-      run: |
-        dts=$((${{ env.START_DATE }} + 6600))
-        dt_day=$(date -d @$dts '+%d')
-        dt_hour=$(date -d @$dts '+%H')
-        dt_time=$(date -d @$dts '+%H:%M')
-        echo "time is ${dt_time}"
-        curl -sL git.io/eta_formate_sh > $ETA
-        chmod +x $ETA
-        ./$ETA $dt_day $dt_hour > dta_desc.log
-        echo "$(cat dta_desc.log) $dt_time" > dt_str.log
-        echo "DT=$(cat dt_str.log)" >> $GITHUB_ENV
 
     - name: Clone source code
       working-directory: /workdir
@@ -74,17 +45,6 @@ jobs:
         df -hT $PWD
         git clone $REPO_URL -b $REPO_BRANCH openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
-                        
-    - name: Generate commit info
-      id: commitinfo
-      run: |
-        cd openwrt
-        curl -sL git.io/commit_formate_sh > $COMMIT_INFO
-        chmod +x $COMMIT_INFO
-        ./$COMMIT_INFO > com_info.log
-        sed -n '2p' com_info.log > comm.log
-        echo "DATE_INFO=$(cat comm.log)" >> $GITHUB_ENV
-        echo "RECENT_DATE=$(sed -n '1p' com_info.log)" >> $GITHUB_ENV
 
     - name: Update and install feeds
       run: |
@@ -96,7 +56,7 @@ jobs:
         ./scripts/feeds update helloworld
         ./scripts/feeds install -a -f -p helloworld
 
-    - name: Download package
+    - name: Download DL
       id: package
       run: |
         cd openwrt
@@ -105,7 +65,7 @@ jobs:
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
 
-     - name: Load custom configuration
+    - name: Load custom configuration
       run: |
         cp $GITHUB_WORKSPACE/config/$CONFIG_FILE openwrt/.config
         cd openwrt
@@ -120,9 +80,6 @@ jobs:
         echo "::set-output name=status::success"
         grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/' > DEVICE_NAME
         [ -s DEVICE_NAME ] && echo "DEVICE_NAME=_$(cat DEVICE_NAME)" >> $GITHUB_ENV
-        echo "FILE_DATE=$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
-        echo "COME_DATE=$(date +"%m\-%d %H:%M")" >> $GITHUB_ENV
-        echo "END_DATE=$(date +%s)"  >> $GITHUB_ENV
 
     - name: Organize files
       id: organize
@@ -132,16 +89,6 @@ jobs:
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "::set-output name=status::success"
            
-    - name: Cau Spend Time
-      id: caculate
-      if: steps.compile.outputs.status == 'success'
-      run: |
-        cd openwrt
-        curl -sL git.io/spend_time_formate_sh > $SPEND_TIME
-        chmod +x $SPEND_TIME
-        ./$SPEND_TIME ${{ env.START_DATE }} ${{ env.END_DATE }} 2>&1 | tee cau_time.log
-        echo "SPEND_TIME=$(cat cau_time.log)" >> $GITHUB_ENV
-        
     - name: Upload firmware directory
       uses: actions/upload-artifact@main
       if: steps.organize.outputs.status == 'success' && !cancelled()
@@ -156,13 +103,8 @@ jobs:
         cd openwrt
         echo "::set-output name=release_tag::$(date +"%Y.%m.%d-%H%M")"
         touch release.log
-        echo "### What's New v${{ env.RECENT_DATE }}" >> release.log
-        echo "$(sed -n '2p' com_info.log)" > info.log
-        sed -i 's/\\n/\n/g' info.log
-        sed -i 's/\\//g' info.log
-        sed -i 's/from /from https:\/\/github.com\//g' info.log
-        sed -i 's/\- /#### /g' info.log
-        cat info.log >> release.log
+        echo "### What's New" >> release.log
+        echo "New package" >> release.log
         echo "::set-output name=status::success"
         cd ..
         cd ${{ env.FIRMWARE }}
