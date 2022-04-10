@@ -94,6 +94,7 @@ jobs:
     - name: Update and install feeds
       run: |
         cd openwrt
+        make defconfig
         ./scripts/feeds update -a
         ./scripts/feeds install -a
         sed -i "/helloworld/d" "feeds.conf.default"
