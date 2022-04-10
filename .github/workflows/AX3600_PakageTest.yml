@@ -88,13 +88,13 @@ jobs:
 
     - name: Load custom configuration
       run: |
+        make defconfig
         rm -rf openwrt/.config
         cp $GITHUB_WORKSPACE/config/$CONFIG_FILE openwrt/.config
 
     - name: Update and install feeds
       run: |
         cd openwrt
-        make defconfig
         ./scripts/feeds update -a
         ./scripts/feeds install -a
         sed -i "/helloworld/d" "feeds.conf.default"
