@@ -86,12 +86,6 @@ jobs:
         echo "DATE_INFO=$(cat comm.log)" >> $GITHUB_ENV
         echo "RECENT_DATE=$(sed -n '1p' com_info.log)" >> $GITHUB_ENV
 
-    - name: Load custom configuration
-      run: |
-        make defconfig
-        rm -rf openwrt/.config
-        cp $GITHUB_WORKSPACE/config/$CONFIG_FILE openwrt/.config
-
     - name: Update and install feeds
       run: |
         cd openwrt
@@ -111,6 +105,12 @@ jobs:
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
 
+     - name: Load custom configuration
+      run: |
+        cp $GITHUB_WORKSPACE/config/$CONFIG_FILE openwrt/.config
+        cd openwrt
+        make defconfig
+        
     - name: Compile the firmware
       id: compile
       run: |
