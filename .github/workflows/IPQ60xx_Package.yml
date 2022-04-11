@@ -10,24 +10,17 @@
 name: OpenWrt-CI
 
 on:
-  push:
-    branches: 
-      - master
-  # schedule:
-  #   - cron: 0 20 * * *
-  release:
-    types: [published]
+  repository_dispatch:
+  workflow_dispatch:
+  schedule:
+    - cron:  '30 3 * * *'
+    - cron:  '30 9 * * *'
 
 jobs:
 
   build_openwrt:
-
     name: Build OpenWrt firmware
-
-    runs-on: ubuntu-latest
-
-    if: github.event.repository.owner.id == github.event.sender.id
-
+    runs-on: ubuntu-20.04
     steps:
 
       - name: Checkout
@@ -43,34 +36,106 @@ jobs:
           sudo rm -rf /usr/share/dotnet /etc/mysql /etc/php /etc/apt/sources.list.d /usr/local/lib/android
           sudo -E apt-get -y purge azure-cli ghc* zulu* hhvm llvm* firefox google* dotnet* powershell openjdk* adoptopenjdk* mysql* php* mongodb* dotnet* moby* snapd* || true
           sudo -E apt-get update
-          sudo -E apt-get -y install build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch python3 unzip zlib1g-dev lib32gcc1 libc6-dev-i386 subversion flex uglifyjs gcc-multilib g++-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler antlr3 gperf swig libtinfo5
+          sudo -E apt-get -y install build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch unzip zlib1g-dev lib32gcc1 libc6-dev-i386 subversion flex uglifyjs gcc-multilib g++-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler antlr3 gperf wget swig rsync
           sudo -E apt-get -y autoremove --purge
           sudo -E apt-get clean
 
+      - name: Clone source code
+        env:
+         REPO_URL: https://github.com/coolsnowwolf/lede
+         REPO_BRANCH: master
+        run: |
+          git clone $REPO_URL -b $REPO_BRANCH openwrt
+          
       - name: Update feeds
+        working-directory: ./openwrt
         run: |
           ./scripts/feeds update -a
           ./scripts/feeds install -a
+          sed -i "/helloworld/d" "feeds.conf.default"
+          echo "src-git helloworld https://github.com/fw876/helloworld.git" >> "feeds.conf.default"
+          ./scripts/feeds update helloworld
+          ./scripts/feeds install -a -f -p helloworld
 
       - name: Generate configuration file
+        working-directory: ./openwrt
         run: |
           rm -f ./.config*
           touch ./.config
-
-          #
-          # 在 cat >> .config <<EOF 到 EOF 之间粘贴你的编译配置, 需注意缩进关系
-          # 例如:
-
           cat >> .config <<EOF
-          CONFIG_TARGET_IMAGES_GZIP=y
-          CONFIG_KERNEL_BUILD_USER="OpenWrt-CI"
-          CONFIG_KERNEL_BUILD_DOMAIN="Azure"
+          CONFIG_TARGET_ipq60xx=y
+          CONFIG_TARGET_ipq60xx_generic=y
+          CONFIG_TARGET_ipq60xx_generic_Default=y
+          CONFIG_BATMAN_ADV_BATMAN_V=y
+          CONFIG_BATMAN_ADV_BLA=y
+          CONFIG_BATMAN_ADV_DAT=y
+          CONFIG_BATMAN_ADV_MCAST=y
+          # CONFIG_PACKAGE_UnblockNeteaseMusic-Go is not set
+          CONFIG_PACKAGE_adbyby=y
+          CONFIG_PACKAGE_batctl-default=y
+          CONFIG_PACKAGE_dawn=y
+          CONFIG_PACKAGE_frpc=y
+          CONFIG_PACKAGE_hd-idle=y
+          CONFIG_PACKAGE_hostapd-common=y
+          CONFIG_PACKAGE_iputils-arping=y
+          CONFIG_PACKAGE_iw=y
+          CONFIG_PACKAGE_iwinfo=y
+          CONFIG_PACKAGE_jq=y
+          CONFIG_PACKAGE_kmod-batman-adv=y
+          CONFIG_PACKAGE_kmod-cfg80211=y
+          CONFIG_PACKAGE_kmod-crypto-crc32c=y
+          CONFIG_PACKAGE_kmod-lib-crc16=y
+          CONFIG_PACKAGE_kmod-lib-crc32c=y
+          CONFIG_PACKAGE_kmod-tun=y
+          CONFIG_PACKAGE_libcap=y
+          CONFIG_PACKAGE_libgcrypt=y
+          CONFIG_PACKAGE_libgpg-error=y
+          CONFIG_PACKAGE_libminiupnpc=y
+          CONFIG_PACKAGE_libnatpmp=y
+          CONFIG_PACKAGE_libstdcpp=y
+          CONFIG_PACKAGE_libuv=y
+          CONFIG_PACKAGE_libwebsockets-full=y
+          CONFIG_PACKAGE_luci-app-adbyby-plus=y
+          CONFIG_PACKAGE_luci-app-cpufreq=y
+          CONFIG_PACKAGE_luci-app-dawn=y
+          CONFIG_PACKAGE_luci-app-easymesh=y
+          CONFIG_PACKAGE_luci-app-frpc=y
+          CONFIG_PACKAGE_luci-app-hd-idle=y
+          CONFIG_PACKAGE_luci-app-netdata=y
+          CONFIG_PACKAGE_luci-app-serverchan=y
+          CONFIG_PACKAGE_luci-app-shadowsocks-libev=y
+          CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_Simple_Obfs=y
+          CONFIG_PACKAGE_luci-app-ttyd=y
+          # CONFIG_PACKAGE_luci-app-unblockmusic is not set
+          # CONFIG_PACKAGE_luci-app-unblockmusic_INCLUDE_UnblockNeteaseMusic_Go is not set
+          CONFIG_PACKAGE_luci-app-uugamebooster=y
+          CONFIG_PACKAGE_luci-app-xlnetacc=y
+          CONFIG_PACKAGE_luci-app-zerotier=y
+          CONFIG_PACKAGE_luci-compat=y
+          CONFIG_PACKAGE_luci-i18n-adbyby-plus-zh-cn=y
+          CONFIG_PACKAGE_luci-i18n-cpufreq-zh-cn=y
+          CONFIG_PACKAGE_luci-i18n-dawn-zh-cn=y
+          CONFIG_PACKAGE_luci-i18n-easymesh-zh-cn=y
+          CONFIG_PACKAGE_luci-i18n-frpc-zh-cn=y
+          CONFIG_PACKAGE_luci-i18n-hd-idle-zh-cn=y
+          CONFIG_PACKAGE_luci-i18n-netdata-zh-cn=y
+          CONFIG_PACKAGE_luci-i18n-ttyd-zh-cn=y
+          CONFIG_PACKAGE_luci-i18n-uugamebooster-zh-cn=y
+          CONFIG_PACKAGE_luci-i18n-xlnetacc-zh-cn=y
+          CONFIG_PACKAGE_luci-i18n-zerotier-zh-cn=y
+          CONFIG_PACKAGE_luci-lib-json=y
+          CONFIG_PACKAGE_luci-theme-material=y
+          CONFIG_PACKAGE_luci-theme-netgear=y
+          CONFIG_PACKAGE_netdata=y
+          CONFIG_PACKAGE_simple-obfs-client=y
+          CONFIG_PACKAGE_ttyd=y
+          CONFIG_PACKAGE_umdns=y
+          CONFIG_PACKAGE_uugamebooster=y
+          CONFIG_PACKAGE_wireless-regdb=y
+          CONFIG_PACKAGE_wpad-openssl=y
+          CONFIG_PACKAGE_zerotier=y
+          CONFIG_WPA_MSG_MIN_PRIORITY=3
           EOF
-
-          #
-          # ===============================================================
-          # 
-
           sed -i 's/^[ \t]*//g' ./.config
           make defconfig
 
@@ -93,37 +158,45 @@ jobs:
 
       - name: Prepare artifact
         run: |
-          mkdir -p ./artifact/firmware
           mkdir -p ./artifact/package
           mkdir -p ./artifact/buildinfo
           rm -rf $(find ./bin/targets/ -type d -name "packages")
-          cp -rf $(find ./bin/targets/ -type f) ./artifact/firmware/
           cp -rf $(find ./bin/packages/ -type f -name "*.ipk") ./artifact/package/
           cp -rf $(find ./bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./artifact/buildinfo/
 
       - name: Deliver buildinfo
         uses: actions/upload-artifact@v2
         with:
-          name: OpenWrt_buildinfo
+          name: IPQ60xx_package_buildinfo
           path: ./artifact/buildinfo/
 
       - name: Deliver package
         uses: actions/upload-artifact@v2
         with:
-          name: OpenWrt_package
+          name: IPQ60xx_package
           path: ./artifact/package/
-
-      - name: Deliver firmware
-        uses: actions/upload-artifact@v2
-        with:
-          name: OpenWrt_firmware
-          path: ./bin/targets/
 
       - name: Upload release asset
         if: github.event == 'release'
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.YOURTOKEN }}
-          file: ./artifact/firmware/*
+          file: /artifact/package/*
           tag: ${{ github.ref }}
           file_glob: true
+          
+      - name: Delete workflow runs
+        uses: GitRML/delete-workflow-runs@main
+        with:
+         retain_days: 1
+         keep_minimum_runs: 3
+
+      - name: Remove old Releases
+        uses: dev-drprasad/delete-older-releases@v0.1.0
+        if: env.UPLOAD_RELEASE == 'true' && !cancelled()
+        with:
+         keep_latest: 3
+         delete_tags: true
+        env:
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+         
