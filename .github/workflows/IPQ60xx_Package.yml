@@ -168,12 +168,13 @@ jobs:
           path: openwrt/bin
 
       - name: Upload to release
-        uses: svenstaro/upload-release-action@v2
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: openwrt/artifact/package/*
-          tag: ${{ github.ref }}
-          file_glob: true
+          tag_name: ${{ github.ref }}
+          body: "new ipq69xx packages"
+          files: openwrt/artifact/package/*
           
       - name: Delete workflow runs
         uses: GitRML/delete-workflow-runs@main
