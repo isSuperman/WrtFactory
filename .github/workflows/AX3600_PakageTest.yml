@@ -47,6 +47,7 @@ jobs:
     - name: Compile Process
       working-directory: ./openwrt
       run: |
+        make defconfig
         ./scripts/feeds update -a
         ./scripts/feeds install -a
         sed -i "/helloworld/d" "feeds.conf.default"
