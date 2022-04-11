@@ -163,6 +163,7 @@ jobs:
           rm -rf $(find ./bin/targets/ -type d -name "packages")
           cp -rf $(find ./bin/packages/ -type f -name "*.ipk") ./artifact/package/
           cp -rf $(find ./bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./artifact/buildinfo/
+          curl -X POST "https://api.day.app/${{ secrets.BARKKEY }}" -H 'Content-Type: application/x-www-form-urlencoded; charset=utf-8' -d 'title=Action%20Status&body=Packages%20-%20compile%20finished!&sound=silence&group=GithubAction&icon=https://github.com/isSuperman/WrtFactory/blob/15f2afc79edd2340f46f87d415e6fc3bfae56930/images/barkGroupLogo.jpeg?raw=true'
 
       - name: Deliver buildinfo
         uses: actions/upload-artifact@v2
