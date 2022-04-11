@@ -47,18 +47,16 @@ jobs:
     - name: Compile Process
       working-directory: ./openwrt
       run: |
-        make defconfig
         ./scripts/feeds update -a
         ./scripts/feeds install -a
         sed -i "/helloworld/d" "feeds.conf.default"
         echo "src-git helloworld https://github.com/fw876/helloworld.git" >> "feeds.conf.default"
         ./scripts/feeds update helloworld
         ./scripts/feeds install -a -f -p helloworld
-        
+        make defconfig
         make download -j$(nproc)
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
-
         echo -e "$(nproc) thread compile"
         make -j$(nproc) V=s
         echo "::set-output name=status::success"
