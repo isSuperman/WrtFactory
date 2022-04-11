@@ -32,8 +32,6 @@ jobs:
         sudo apt install zip
         sudo apt-get install jq
         sudo timedatectl set-timezone "Asia/Shanghai"
-        sudo mkdir -p /workdir
-        sudo chown $USER:$GROUPS /workdir
 
     - name: Clone source code
       env:
