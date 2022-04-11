@@ -161,6 +161,7 @@ jobs:
       - name: Prepare artifact
         working-directory: ./openwrt
         run: |
+          echo "FIRMWARE=$PWD" >> $ GITHUB_ENV
           mkdir -p ./artifact/package
           mkdir -p ./artifact/buildinfo
           rm -rf $(find ./bin/targets/ -type d -name "packages")
@@ -169,27 +170,23 @@ jobs:
           curl -X POST "https://api.day.app/${{ secrets.BARKKEY }}" -H 'Content-Type: application/x-www-form-urlencoded; charset=utf-8' -d 'title=Action%20Status&body=Packages%20-%20compile%20finished!&sound=silence&group=GithubAction&icon=https://github.com/isSuperman/WrtFactory/blob/15f2afc79edd2340f46f87d415e6fc3bfae56930/images/barkGroupLogo.jpeg?raw=true'
 
       - name: Deliver buildinfo
-        working-directory: ./openwrt
         uses: actions/upload-artifact@v2
         with:
           name: IPQ60xx_package_buildinfo
-          path: ./artifact/buildinfo/
+          path: ${{ env.FIRMWARE }}/artifact/buildinfo/
 
       - name: Deliver package
-        working-directory: ./openwrt
-        working-directory: ./openwrt
         uses: actions/upload-artifact@v2
         with:
           name: IPQ60xx_package
-          path: ./artifact/package/
+          path: ${{ env.FIRMWARE }}/artifact/package/
 
       - name: Upload release asset
-        working-directory: ./openwrt
         if: github.event == 'release'
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.YOURTOKEN }}
-          file: /artifact/package/*
+          file: ${{ env.FIRMWARE }}/artifact/package/*
           tag: ${{ github.ref }}
           file_glob: true
           
