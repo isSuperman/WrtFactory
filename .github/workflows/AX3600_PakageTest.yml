@@ -10,7 +10,7 @@ on:
 env:
   REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
-  CONFIG_FILE: AX3600PKG
+  CONFIG_FILE: ipq6000.config
   UPLOAD_RELEASE: true
   UPLOAD_FIRMWARE: true
 
@@ -41,8 +41,10 @@ jobs:
     - name: Clone source code
       run: |
         git clone $REPO_URL -b $REPO_BRANCH openwrt
-        
-        mv config/$CONFIG_FILE openwrt/.config
+        echo "---------------------------"
+        ls
+        echo "---------------------------"
+        mv $CONFIG_FILE openwrt/.config
 
     - name: Compile Process
       working-directory: ./openwrt
