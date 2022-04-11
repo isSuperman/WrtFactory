@@ -167,10 +167,10 @@ jobs:
           name: IPQ60xx_package
           path: openwrt/bin
 
-      - name: Upload release asset
+      - name: Upload to release
         uses: svenstaro/upload-release-action@v2
         with:
-          repo_token: ${{ secrets.YOURTOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: openwrt/artifact/package/*
           tag: ${{ github.ref }}
           file_glob: true
