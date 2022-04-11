@@ -23,7 +23,7 @@ env:
 
   REPO_BRANCH: master
   FEEDS_CONF: feeds.conf.default
-  CONFIG_FILE: AX3600PKG
+  CONFIG_FILE: ipq6000.config
   SPEND_TIME: spend_time_formate.sh
   COMMIT_INFO: commit_formate.sh
   ETA: ETA_formate.sh
@@ -94,7 +94,7 @@ jobs:
     - name: Load custom configuration
       run: |
         [ -e files ] && mv files openwrt/files
-        mv config/$CONFIG_FILE openwrt/.config
+        mv $CONFIG_FILE openwrt/.config
 
     - name: Update and install feeds
       run: |
