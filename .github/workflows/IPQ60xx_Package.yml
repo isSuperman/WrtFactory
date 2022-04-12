@@ -182,8 +182,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          body: "new ipq69xx packages"
+          tag_name: "IPQ60xx"
+          body: "new packages"
           files: openwrt/artifact/package/*
           
       - name: Delete workflow runs
