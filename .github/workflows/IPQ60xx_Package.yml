@@ -50,6 +50,10 @@ jobs:
       - name: Update feeds
         working-directory: ./openwrt
         run: |
+          rm -rf package/lean/luci-theme-argon
+          git clone -b 18.06 https://github.com/jerrykuku/luci-theme-argon.git package/lean/luci-theme-argon
+          git clone https://github.com/jerrykuku/luci-app-argon-config.git package/lean/luci-app-argon-config
+          git clone https://github.com/thinktip/luci-theme-neobird.git package/lean/luci-theme-neobird
           ./scripts/feeds update -a
           ./scripts/feeds install -a
           sed -i "/helloworld/d" "feeds.conf.default"
@@ -96,13 +100,14 @@ jobs:
           CONFIG_PACKAGE_libuv=y
           CONFIG_PACKAGE_libwebsockets-full=y
           CONFIG_PACKAGE_luci-app-adbyby-plus=y
+          CONFIG_PACKAGE_luci-app-argon-config=y
           CONFIG_PACKAGE_luci-app-cpufreq=y
           CONFIG_PACKAGE_luci-app-dawn=y
           CONFIG_PACKAGE_luci-app-easymesh=y
           CONFIG_PACKAGE_luci-app-frpc=y
           CONFIG_PACKAGE_luci-app-hd-idle=y
           CONFIG_PACKAGE_luci-app-netdata=y
-          CONFIG_PACKAGE_luci-app-pushbot=y
+          CONFIG_PACKAGE_luci-app-serverchan=y
           CONFIG_PACKAGE_luci-app-shadowsocks-libev=y
           CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_Simple_Obfs=y
           CONFIG_PACKAGE_luci-app-ttyd=y
@@ -113,6 +118,7 @@ jobs:
           CONFIG_PACKAGE_luci-app-zerotier=y
           CONFIG_PACKAGE_luci-compat=y
           CONFIG_PACKAGE_luci-i18n-adbyby-plus-zh-cn=y
+          CONFIG_PACKAGE_luci-i18n-argon-config-zh-cn=y
           CONFIG_PACKAGE_luci-i18n-cpufreq-zh-cn=y
           CONFIG_PACKAGE_luci-i18n-dawn-zh-cn=y
           CONFIG_PACKAGE_luci-i18n-easymesh-zh-cn=y
@@ -124,7 +130,9 @@ jobs:
           CONFIG_PACKAGE_luci-i18n-xlnetacc-zh-cn=y
           CONFIG_PACKAGE_luci-i18n-zerotier-zh-cn=y
           CONFIG_PACKAGE_luci-lib-json=y
+          CONFIG_PACKAGE_luci-theme-argon=y
           CONFIG_PACKAGE_luci-theme-material=y
+          CONFIG_PACKAGE_luci-theme-neobird=y
           CONFIG_PACKAGE_luci-theme-netgear=y
           CONFIG_PACKAGE_netdata=y
           CONFIG_PACKAGE_simple-obfs-client=y
