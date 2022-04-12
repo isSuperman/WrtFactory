@@ -165,11 +165,13 @@ jobs:
 
       - name: Prepare artifact
         working-directory: ./openwrt
+        id: artifact
         run: |
           mkdir -p ./artifact/package
           rm -rf $(find ./bin/targets/ -type d -name "packages")
           cp -rf $(find ./bin/packages/ -type f -name "*.ipk") ./artifact/package/
           curl -sX POST "https://api.day.app/${{ secrets.BARKKEY }}" -H 'Content-Type: application/x-www-form-urlencoded; charset=utf-8' -d 'title=Action%20Status&body=Packages%20-%20compile%20finished!&group=GithubAction&icon=https://github.com/isSuperman/WrtFactory/blob/15f2afc79edd2340f46f87d415e6fc3bfae56930/images/barkGroupLogo.jpeg?raw=true'
+          echo "::set-output name=release_tag::$(date +"%Y.%m.%d-%H%M")"
 
       - name: Deliver package
         uses: actions/upload-artifact@v2
@@ -182,7 +184,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: "IPQ60xx"
+          tag_name: ${{ steps.tag.outputs.release_tag }}
           body: "new packages"
           files: openwrt/artifact/package/*
           
