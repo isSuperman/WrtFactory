@@ -74,13 +74,14 @@ jobs:
           CONFIG_BATMAN_ADV_BLA=y
           CONFIG_BATMAN_ADV_DAT=y
           CONFIG_BATMAN_ADV_MCAST=y
-          # CONFIG_PACKAGE_UnblockNeteaseMusic-Go is not set
           CONFIG_PACKAGE_adbyby=y
           CONFIG_PACKAGE_batctl-default=y
+          # CONFIG_PACKAGE_ca-certificates is not set
           CONFIG_PACKAGE_dawn=y
           CONFIG_PACKAGE_frpc=y
           CONFIG_PACKAGE_hd-idle=y
           CONFIG_PACKAGE_hostapd-common=y
+          # CONFIG_PACKAGE_iptables-mod-extra is not set
           CONFIG_PACKAGE_iputils-arping=y
           CONFIG_PACKAGE_iw=y
           CONFIG_PACKAGE_iwinfo=y
@@ -88,9 +89,10 @@ jobs:
           CONFIG_PACKAGE_kmod-batman-adv=y
           CONFIG_PACKAGE_kmod-cfg80211=y
           CONFIG_PACKAGE_kmod-crypto-crc32c=y
+          CONFIG_PACKAGE_kmod-inet-diag=y
+          # CONFIG_PACKAGE_kmod-ipt-extra is not set
           CONFIG_PACKAGE_kmod-lib-crc16=y
           CONFIG_PACKAGE_kmod-lib-crc32c=y
-          CONFIG_PACKAGE_kmod-tun=y
           CONFIG_PACKAGE_libcap=y
           CONFIG_PACKAGE_libgcrypt=y
           CONFIG_PACKAGE_libgpg-error=y
@@ -108,12 +110,13 @@ jobs:
           CONFIG_PACKAGE_luci-app-hd-idle=y
           CONFIG_PACKAGE_luci-app-netdata=y
           CONFIG_PACKAGE_luci-app-pushbot=y
+          CONFIG_PACKAGE_luci-app-ramfree=y
           CONFIG_PACKAGE_luci-app-serverchan=y
           CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_Simple_Obfs=y
           CONFIG_PACKAGE_luci-app-ttyd=y
-          # CONFIG_PACKAGE_luci-app-unblockmusic is not set
           # CONFIG_PACKAGE_luci-app-unblockmusic_INCLUDE_UnblockNeteaseMusic_Go is not set
           CONFIG_PACKAGE_luci-app-uugamebooster=y
+          CONFIG_PACKAGE_luci-app-watchcat=y
           CONFIG_PACKAGE_luci-app-wrtbwmon=y
           CONFIG_PACKAGE_luci-app-xlnetacc=y
           CONFIG_PACKAGE_luci-app-zerotier=y
@@ -126,8 +129,10 @@ jobs:
           CONFIG_PACKAGE_luci-i18n-frpc-zh-cn=y
           CONFIG_PACKAGE_luci-i18n-hd-idle-zh-cn=y
           CONFIG_PACKAGE_luci-i18n-netdata-zh-cn=y
+          CONFIG_PACKAGE_luci-i18n-ramfree-zh-cn=y
           CONFIG_PACKAGE_luci-i18n-ttyd-zh-cn=y
           CONFIG_PACKAGE_luci-i18n-uugamebooster-zh-cn=y
+          CONFIG_PACKAGE_luci-i18n-watchcat-zh-cn=y
           CONFIG_PACKAGE_luci-i18n-wrtbwmon-zh-cn=y
           CONFIG_PACKAGE_luci-i18n-xlnetacc-zh-cn=y
           CONFIG_PACKAGE_luci-i18n-zerotier-zh-cn=y
@@ -141,6 +146,7 @@ jobs:
           CONFIG_PACKAGE_ttyd=y
           CONFIG_PACKAGE_umdns=y
           CONFIG_PACKAGE_uugamebooster=y
+          CONFIG_PACKAGE_watchcat=y
           CONFIG_PACKAGE_wireless-regdb=y
           CONFIG_PACKAGE_wpad-openssl=y
           CONFIG_PACKAGE_zerotier=y
