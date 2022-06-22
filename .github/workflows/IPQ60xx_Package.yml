@@ -60,6 +60,8 @@ jobs:
           echo "src-git helloworld https://github.com/fw876/helloworld.git" >> "feeds.conf.default"
           ./scripts/feeds update helloworld
           ./scripts/feeds install -a -f -p helloworld
+          git clone https://github.com/jerrykuku/lua-maxminddb.git package/lean/lua-maxminddb
+          git clone https://github.com/jerrykuku/luci-app-vssr.git package/lean/luci-app-vssr
 
       - name: Generate configuration file
         working-directory: ./openwrt
@@ -74,18 +76,27 @@ jobs:
           CONFIG_BATMAN_ADV_BLA=y
           CONFIG_BATMAN_ADV_DAT=y
           CONFIG_BATMAN_ADV_MCAST=y
+          CONFIG_LIBMBEDTLS_HAVE_ARMV8CE_AES=y
           CONFIG_PACKAGE_adbyby=y
+          CONFIG_PACKAGE_bash=y
           CONFIG_PACKAGE_batctl-default=y
+          CONFIG_PACKAGE_boost=y
+          CONFIG_PACKAGE_boost-date_time=y
+          CONFIG_PACKAGE_boost-program_options=y
+          CONFIG_PACKAGE_boost-system=y
           # CONFIG_PACKAGE_ca-certificates is not set
           CONFIG_PACKAGE_dawn=y
           CONFIG_PACKAGE_frpc=y
           CONFIG_PACKAGE_hd-idle=y
           CONFIG_PACKAGE_hostapd-common=y
+          CONFIG_PACKAGE_ipt2socks=y
           # CONFIG_PACKAGE_iptables-mod-extra is not set
           CONFIG_PACKAGE_iputils-arping=y
           CONFIG_PACKAGE_iw=y
           CONFIG_PACKAGE_iwinfo=y
           CONFIG_PACKAGE_jq=y
+          CONFIG_PACKAGE_kcptun-client=y
+          CONFIG_PACKAGE_kcptun-config=y
           CONFIG_PACKAGE_kmod-batman-adv=y
           CONFIG_PACKAGE_kmod-cfg80211=y
           CONFIG_PACKAGE_kmod-crypto-crc32c=y
@@ -96,11 +107,18 @@ jobs:
           CONFIG_PACKAGE_libcap=y
           CONFIG_PACKAGE_libgcrypt=y
           CONFIG_PACKAGE_libgpg-error=y
+          CONFIG_PACKAGE_libmaxminddb=y
+          CONFIG_PACKAGE_libmbedtls=y
           CONFIG_PACKAGE_libminiupnpc=y
           CONFIG_PACKAGE_libnatpmp=y
+          CONFIG_PACKAGE_libncurses=y
+          CONFIG_PACKAGE_libreadline=y
           CONFIG_PACKAGE_libstdcpp=y
           CONFIG_PACKAGE_libuv=y
           CONFIG_PACKAGE_libwebsockets-full=y
+          CONFIG_PACKAGE_lua-cjson=y
+          CONFIG_PACKAGE_lua-maxminddb=y
+          CONFIG_PACKAGE_luasocket=y
           CONFIG_PACKAGE_luci-app-adbyby-plus=y
           CONFIG_PACKAGE_luci-app-argon-config=y
           CONFIG_PACKAGE_luci-app-cpufreq=y
@@ -116,6 +134,8 @@ jobs:
           CONFIG_PACKAGE_luci-app-ttyd=y
           # CONFIG_PACKAGE_luci-app-unblockmusic_INCLUDE_UnblockNeteaseMusic_Go is not set
           CONFIG_PACKAGE_luci-app-uugamebooster=y
+          CONFIG_PACKAGE_luci-app-vssr=y
+          CONFIG_PACKAGE_luci-app-vssr_INCLUDE_Kcptun=y
           CONFIG_PACKAGE_luci-app-watchcat=y
           CONFIG_PACKAGE_luci-app-wrtbwmon=y
           CONFIG_PACKAGE_luci-app-xlnetacc=y
@@ -132,6 +152,7 @@ jobs:
           CONFIG_PACKAGE_luci-i18n-ramfree-zh-cn=y
           CONFIG_PACKAGE_luci-i18n-ttyd-zh-cn=y
           CONFIG_PACKAGE_luci-i18n-uugamebooster-zh-cn=y
+          CONFIG_PACKAGE_luci-i18n-vssr-zh-cn=y
           CONFIG_PACKAGE_luci-i18n-watchcat-zh-cn=y
           CONFIG_PACKAGE_luci-i18n-wrtbwmon-zh-cn=y
           CONFIG_PACKAGE_luci-i18n-xlnetacc-zh-cn=y
@@ -142,15 +163,25 @@ jobs:
           CONFIG_PACKAGE_luci-theme-neobird=y
           CONFIG_PACKAGE_luci-theme-netgear=y
           CONFIG_PACKAGE_netdata=y
+          CONFIG_PACKAGE_shadowsocks-libev-ss-local=y
+          CONFIG_PACKAGE_shadowsocks-libev-ss-redir=y
+          CONFIG_PACKAGE_shadowsocksr-libev-ssr-server=y
           CONFIG_PACKAGE_simple-obfs-client=y
+          CONFIG_PACKAGE_terminfo=y
+          CONFIG_PACKAGE_trojan=y
           CONFIG_PACKAGE_ttyd=y
           CONFIG_PACKAGE_umdns=y
           CONFIG_PACKAGE_uugamebooster=y
           CONFIG_PACKAGE_watchcat=y
           CONFIG_PACKAGE_wireless-regdb=y
           CONFIG_PACKAGE_wpad-openssl=y
+          CONFIG_PACKAGE_xray-plugin=y
           CONFIG_PACKAGE_zerotier=y
           CONFIG_WPA_MSG_MIN_PRIORITY=3
+          CONFIG_boost-compile-visibility-hidden=y
+          CONFIG_boost-runtime-shared=y
+          CONFIG_boost-static-and-shared-libs=y
+          CONFIG_boost-variant-release=y
           EOF
           sed -i 's/^[ \t]*//g' ./.config
           make defconfig
