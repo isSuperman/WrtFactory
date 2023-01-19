@@ -100,8 +100,6 @@ jobs:
           CONFIG_PACKAGE_containerd=y
           CONFIG_PACKAGE_cshark=y
           CONFIG_PACKAGE_dawn=y
-          CONFIG_PACKAGE_docker=y
-          CONFIG_PACKAGE_dockerd=y
           CONFIG_PACKAGE_e2fsprogs=y
           CONFIG_PACKAGE_fdisk=y
           CONFIG_PACKAGE_frpc=y
@@ -168,7 +166,6 @@ jobs:
           CONFIG_PACKAGE_libsmartcols=y
           CONFIG_PACKAGE_libss=y
           CONFIG_PACKAGE_libstdcpp=y
-          CONFIG_PACKAGE_libustream-mbedtls=y
           CONFIG_PACKAGE_libuv=y
           CONFIG_PACKAGE_libwebsockets-full=y
           CONFIG_PACKAGE_lua-cjson=y
