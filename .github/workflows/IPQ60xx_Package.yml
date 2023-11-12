@@ -56,10 +56,6 @@ jobs:
           git clone https://github.com/thinktip/luci-theme-neobird.git package/lean/luci-theme-neobird
           ./scripts/feeds update -a
           ./scripts/feeds install -a
-          sed -i "/helloworld/d" "feeds.conf.default"
-          echo "src-git helloworld https://github.com/fw876/helloworld.git" >> "feeds.conf.default"
-          ./scripts/feeds update helloworld
-          ./scripts/feeds install -a -f -p helloworld
           git clone https://github.com/jerrykuku/lua-maxminddb.git package/lean/lua-maxminddb
           git clone https://github.com/jerrykuku/luci-app-vssr.git package/lean/luci-app-vssr
 
